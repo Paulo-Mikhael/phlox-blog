@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { createContext, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
+import { createContext, ElementType, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
 
 type TextFormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
 
@@ -10,19 +10,27 @@ interface TextFormRootProps {
   hintText?: string,
   variant?: TextFormInputVariant,
   disabled?: boolean,
+  twWidth?: string,
   children: ReactNode
 }
-interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface TextFormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   twPaddingX?: string,
-  twPaddingY?: string
+  twPaddingY?: string,
+  iconLeft?: ElementType,
+  iconRight?: ElementType
+}
+interface TextFormInputIcon {
+  icon: ElementType,
+  size?: number,
+  color?: string
 }
 
 const ThemeContext = createContext<{ variant?: TextFormInputVariant }>({});
 
-export function TextFormRoot({ variant = "default", children, disabled }: TextFormRootProps) {
+export function TextFormRoot({ variant = "default", children, disabled, twWidth = "w-full" }: TextFormRootProps) {
   disabled === true ? variant = "disabled" : variant
   return (
-    <div className="flex flex-col gap-1">
+    <div className={`flex flex-col gap-1 ${twWidth}`}>
       <ThemeContext.Provider value={{ variant }}>
         {children}
       </ThemeContext.Provider>
@@ -71,15 +79,15 @@ export function TextFormHint({ hintText }: { hintText: string }) {
   );
 }
 
-export function TextFormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", ...rest }: TextInputProps) {
+export function TextFormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", iconLeft: IconLeft, iconRight: IconRight, ...rest }: TextFormInputProps) {
   const { variant } = useContext(ThemeContext);
 
   return (
     <div
       className={clsx(
-        `${twPaddingX} ${twPaddingY} w-full border-[2px] rounded-[6px] border-typo-500`,
+        `${twPaddingX} ${twPaddingY} w-full border-[2px] rounded-[6px] flex gap-4 justify-between`,
         {
-          "text-typo-700 focus:border-main-red-200 caret-main-red-300": variant === "default",
+          "text-typo-700 border-typo-500 focus-within:border-main-red-200 caret-main-red-300": variant === "default",
           "text-feedback-success border-feedback-success": variant === "success",
           "text-feedback-warning border-feedback-warning": variant === "warning",
           "text-feedback-danger border-feedback-danger": variant === "danger",
@@ -88,12 +96,34 @@ export function TextFormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px
         }
       )}
     >
+      {IconLeft && <TextFormInputIcon icon={IconLeft} />}
       <input 
         {...rest}
         type="text" 
         disabled={variant === "disabled"}
-        className="outline-none h-full w-[90%]"
+        className="outline-none h-full w-full"
       />
+      {IconRight && <TextFormInputIcon icon={IconRight} />}
     </div>
+  );
+}
+
+function TextFormInputIcon({ icon: Icon, size = 20 }: TextFormInputIcon) {
+  const { variant } = useContext(ThemeContext)
+
+  return (
+    <Icon 
+      size={size}
+      className={clsx(
+        {
+          "text-main-red-300": variant === "default",
+          "text-feedback-success": variant === "success",
+          "text-feedback-warning": variant === "warning",
+          "text-feedback-danger": variant === "danger",
+          "text-feedback-info": variant === "info",
+          "text-typo-500": variant === "disabled"
+        }
+      )}
+   />
   );
 }
