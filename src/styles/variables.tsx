@@ -32,3 +32,14 @@ export const colors = {
     "programation": "#FF5935"
   }
 }
+
+export const sizes = {
+  font: {
+    "highlight": "45px",
+    "title": "40px",
+    "section": "24px",
+    "sectionSubtitle": "18px",
+    "normal": "16px",
+    "imageSubtitle": "14px"
+  }
+}

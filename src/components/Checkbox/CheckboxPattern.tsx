@@ -37,10 +37,10 @@ export function CheckboxInput({ id }: CheckboxInputProps) {
       disabled={disabled}
       // Mudar o valor de --chkbg por template string não está funcionando por algum motivo
       className={clsx(
-        "checkbox rounded-[6px]",
+        "checkbox rounded-[6px] border-typo-500",
         {
           "[--chkbg:#FB2A36] [--chkfg:#fff]": !disabled,
-          "[--chkbg:#BABABA] [--chkfg:#fff]": disabled
+          "[--chkbg:#BABABA] [--chkfg:#fff] border-typo-300": disabled
         }
       )}
     />
@@ -48,10 +48,17 @@ export function CheckboxInput({ id }: CheckboxInputProps) {
 }
 
 export function CheckboxLabel({ labelText, htmlFor }: CheckboxLabelProps) {
+  const disabled = useContext(DisabledContext)
+
   return (
     <label
       htmlFor={htmlFor}
-      className="cursor-pointer"
+      className={clsx(
+        {
+          "cursor-pointer text-typo-700": !disabled,
+          "cursor-not-allowed text-typo-400 border-typo-300": disabled
+        }
+      )}
     >
       {labelText}
     </label>

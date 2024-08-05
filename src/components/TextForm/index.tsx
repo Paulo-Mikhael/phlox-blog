@@ -1,4 +1,4 @@
-import { TextFormHint, TextFormInput, TextFormLabel, TextFormRoot } from "./TextFormRoot";
+import { TextFormRoot, TextFormLabel, TextFormInput, TextFormHint } from "./TextFormPattern";
 
 export const TextForm = {
   Root: TextFormRoot,

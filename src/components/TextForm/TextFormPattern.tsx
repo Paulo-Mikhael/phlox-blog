@@ -47,11 +47,12 @@ export function TextFormLabel({ labelText, ...rest }: TextFormLabelProps) {
       className={clsx(
         "text-normal font-medium",
         {
-          "text-typo-600": variant === "default" || variant === "disabled",
+          "text-typo-600": variant === "default",
           "text-feedback-success": variant === "success",
           "text-feedback-warning": variant === "warning",
           "text-feedback-danger": variant === "danger",
           "text-feedback-info": variant === "info",
+          "text-typo-600 cursor-not-allowed": variant === "disabled"
         }
       )}
     >
@@ -72,6 +73,7 @@ export function TextFormHint({ hintText }: { hintText: string }) {
         "text-feedback-warning": variant === "warning",
         "text-feedback-danger": variant === "danger",
         "text-feedback-info": variant === "info",
+        "text-typo-500 cursor-not-allowed": variant === "disabled"
       }
     )}>
       {hintText}
@@ -92,7 +94,7 @@ export function TextFormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px
           "text-feedback-warning border-feedback-warning": variant === "warning",
           "text-feedback-danger border-feedback-danger": variant === "danger",
           "text-feedback-info border-feedback-info": variant === "info",
-          "border-typo-500 bg-typo-200": variant === "disabled"
+          "border-typo-500 bg-typo-200 cursor-not-allowed": variant === "disabled"
         }
       )}
     >

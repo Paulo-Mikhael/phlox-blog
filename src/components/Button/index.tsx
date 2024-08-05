@@ -1,4 +1,4 @@
-import { ButtonIcon, ButtonRoot, ButtonText } from "./ButtonRoot";
+import { ButtonRoot, ButtonText, ButtonIcon } from "./ButtonPattern";
 
 export const Button = {
   Root: ButtonRoot,

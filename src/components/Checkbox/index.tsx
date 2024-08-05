@@ -1,4 +1,4 @@
-import { CheckboxInput, CheckboxLabel, CheckboxRoot } from "./CheckboxRoot";
+import { CheckboxRoot, CheckboxInput, CheckboxLabel } from "./CheckboxPattern";
 
 export const Checkbox = {
   Root: CheckboxRoot,
