@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import daisyui from 'daisyui'
+
 export default {
   content: [
     "./index.html",
@@ -50,5 +52,7 @@ export default {
       "image-subtitle": "14px"
     }
   },
-  plugins: [],
+  plugins: [
+    daisyui
+  ],
 }

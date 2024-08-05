@@ -25,21 +25,21 @@ interface TextFormInputIcon {
   color?: string
 }
 
-const ThemeContext = createContext<{ variant?: TextFormInputVariant }>({});
+const VariantContext = createContext<{ variant?: TextFormInputVariant }>({});
 
 export function TextFormRoot({ variant = "default", children, disabled, twWidth = "w-full" }: TextFormRootProps) {
   disabled === true ? variant = "disabled" : variant
   return (
     <div className={`flex flex-col gap-1 ${twWidth}`}>
-      <ThemeContext.Provider value={{ variant }}>
+      <VariantContext.Provider value={{ variant }}>
         {children}
-      </ThemeContext.Provider>
+      </VariantContext.Provider>
     </div>
   );
 }
 
 export function TextFormLabel({ labelText, ...rest }: TextFormLabelProps) {
-  const { variant } = useContext(ThemeContext);
+  const { variant } = useContext(VariantContext);
 
   return (
     <label
@@ -61,7 +61,7 @@ export function TextFormLabel({ labelText, ...rest }: TextFormLabelProps) {
 }
 
 export function TextFormHint({ hintText }: { hintText: string }) {
-  const { variant } = useContext(ThemeContext);
+  const { variant } = useContext(VariantContext);
 
   return (
     <p className={clsx(
@@ -80,7 +80,7 @@ export function TextFormHint({ hintText }: { hintText: string }) {
 }
 
 export function TextFormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", iconLeft: IconLeft, iconRight: IconRight, ...rest }: TextFormInputProps) {
-  const { variant } = useContext(ThemeContext);
+  const { variant } = useContext(VariantContext);
 
   return (
     <div
@@ -101,7 +101,7 @@ export function TextFormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px
         {...rest}
         type="text" 
         disabled={variant === "disabled"}
-        className="outline-none h-full w-full"
+        className="outline-none h-full w-full bg-transparent"
       />
       {IconRight && <TextFormInputIcon icon={IconRight} />}
     </div>
@@ -109,7 +109,7 @@ export function TextFormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px
 }
 
 function TextFormInputIcon({ icon: Icon, size = 20 }: TextFormInputIcon) {
-  const { variant } = useContext(ThemeContext)
+  const { variant } = useContext(VariantContext)
 
   return (
     <Icon 
