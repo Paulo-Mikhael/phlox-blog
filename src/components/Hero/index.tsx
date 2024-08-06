@@ -1,0 +1,82 @@
+import styled from "styled-components";
+import { colors, sizes } from "../../styles/variables";
+import { Album, Code, Cpu, HandHelping, Newspaper, Tag } from "lucide-react";
+import { ElementType } from "react";
+import { Button } from "../Button";
+
+const StyledDiv = styled.div<{ $backgroundColor: string }>`
+  width: 170px;
+  height: 108px;
+  background-color: ${props => props.$backgroundColor};
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: white;
+  font-size: ${sizes.font.sectionSubtitle};
+  box-shadow: 4px 6px 3px #0000002b;
+  cursor: pointer;
+`
+
+export default function Hero() {
+  const badgeCards: { icon: ElementType, title: string, backgroundColor: string }[] = [
+    {
+      icon: Album,
+      title: "Histórias",
+      backgroundColor: colors.badge.history
+    },
+    {
+      icon: Tag,
+      title: "Ofertas",
+      backgroundColor: colors.badge.offer
+    },
+    {
+      icon: Cpu,
+      title: "Tecnologia",
+      backgroundColor: colors.badge.tecnology
+    },
+    {
+      icon: Newspaper,
+      title: "Notícias",
+      backgroundColor: colors.badge.news
+    },
+    {
+      icon: HandHelping,
+      title: "Oportunidades",
+      backgroundColor: colors.badge.oportunity
+    },
+    {
+      icon: Code,
+      title: "Programação",
+      backgroundColor: colors.badge.programation
+    },
+  ]
+
+  return (
+    <div className="bg-typo-150 w-[932px] h-[563px] rounded-t-[10px] rounded-l-[10px] shadow-inner shadow-typo-700/30 px-[94px] py-[36px]">
+      <div className="flex flex-col items-center">
+        <h2 className="text-title text-typo-700">
+          Lorem ipsum dolor sit amet
+        </h2>
+        <h1 className="text-highlight text-typo-700 font-bold">
+          Lorem ipsum dolor sit amet
+        </h1>
+        <div className="flex gap-2 w-[744px] flex-wrap justify-center my-[45px]">
+          {badgeCards.map((item, index) => (
+            <StyledDiv $backgroundColor={item.backgroundColor} key={index}>
+              <item.icon size={40} />
+              <p>
+                {item.title}
+              </p>
+            </StyledDiv>
+          ))}
+        </div>
+        <Button.Root twWidth="w-[205px]">
+          <Button.Text content="VER MAIS" />
+        </Button.Root>
+      </div>
+    </div>
+  );
+}
