@@ -1,6 +1,7 @@
 import { INavItems } from "./interfaces/INavItems"
 import Header from "./components/Header"
 import Hero from "./components/Hero"
+import Posts from "./components/Posts"
 
 function App() {
   const navItems: INavItems[] = [
@@ -34,8 +35,8 @@ function App() {
       <div className="w-full flex justify-center z-[1]">
         <Hero />
       </div>
-      <div className="bg-typo-150 w-full h-[1000px] absolute top-[630px] pt-[160px] shadow-inner shadow-typo-700/30 flex">
-        
+      <div className="bg-typo-150 w-full h-[1000px] absolute top-[630px] pt-[160px] shadow-inner shadow-typo-700/30 flex justify-center">
+        <Posts />
       </div>
     </>
   )

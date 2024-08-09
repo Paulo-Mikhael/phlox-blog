@@ -1,13 +1,13 @@
 import clsx from "clsx";
-import { createContext, ElementType, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
+import { createContext, ElementType, FormHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
 import { StyledInput } from "../../utils/StyledInput";
 
 type FormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
 
 interface FormLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
-  labelText?: string
+  text?: string
 }
-interface FormRootProps {
+interface FormRootProps extends FormHTMLAttributes<HTMLFormElement> {
   hintText?: string,
   variant?: FormInputVariant,
   disabled?: boolean,
@@ -29,10 +29,10 @@ interface FormInputIcon {
 
 const VariantContext = createContext<{ variant?: FormInputVariant }>({});
 
-export function FormRoot({ variant = "default", children, disabled, twWidth = "w-full" }: FormRootProps) {
+export function FormRoot({ variant = "default", children, disabled, twWidth = "w-full", ...rest }: FormRootProps) {
   disabled === true ? variant = "disabled" : variant
   return (
-    <form className={`flex flex-col gap-1 ${twWidth}`}>
+    <form className={`flex flex-col gap-1 ${twWidth} ${rest}`}>
       <VariantContext.Provider value={{ variant }}>
         {children}
       </VariantContext.Provider>
@@ -40,7 +40,7 @@ export function FormRoot({ variant = "default", children, disabled, twWidth = "w
   );
 }
 
-export function FormLabel({ labelText, ...rest }: FormLabelProps) {
+export function FormLabel({ text, ...rest }: FormLabelProps) {
   const { variant } = useContext(VariantContext);
 
   return (
@@ -58,7 +58,7 @@ export function FormLabel({ labelText, ...rest }: FormLabelProps) {
         }
       )}
     >
-      {labelText}
+      {text}
     </label>
   );
 }
@@ -102,7 +102,6 @@ export function FormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", 
     >
       {IconLeft && <FormInputIcon icon={IconLeft} />}
       <StyledInput 
-        style={{ appearance: "none" }}
         className="outline-none h-full w-full bg-transparent"
         {...rest}
         type={type}
