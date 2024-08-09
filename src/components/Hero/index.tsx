@@ -55,7 +55,7 @@ export default function Hero() {
   ]
 
   return (
-    <div className="bg-typo-150 w-[932px] h-[563px] rounded-t-[10px] rounded-l-[10px] shadow-inner shadow-typo-700/30 px-[94px] py-[36px]">
+    <div className="bg-typo-150 w-[932px] h-[563px] rounded-t-[10px] shadow-inner shadow-typo-700/30 px-[94px] py-[36px] z-10">
       <div className="flex flex-col items-center">
         <h2 className="text-title text-typo-700">
           Lorem ipsum dolor sit amet

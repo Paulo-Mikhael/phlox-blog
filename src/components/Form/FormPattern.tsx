@@ -1,44 +1,46 @@
 import clsx from "clsx";
 import { createContext, ElementType, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
+import { StyledInput } from "../../utils/StyledInput";
 
-type TextFormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
+type FormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
 
-interface TextFormLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
+interface FormLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
   labelText?: string
 }
-interface TextFormRootProps {
+interface FormRootProps {
   hintText?: string,
-  variant?: TextFormInputVariant,
+  variant?: FormInputVariant,
   disabled?: boolean,
   twWidth?: string,
   children: ReactNode
 }
-interface TextFormInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   twPaddingX?: string,
   twPaddingY?: string,
   iconLeft?: ElementType,
-  iconRight?: ElementType
+  iconRight?: ElementType,
+  type?: React.HTMLInputTypeAttribute
 }
-interface TextFormInputIcon {
+interface FormInputIcon {
   icon: ElementType,
   size?: number,
   color?: string
 }
 
-const VariantContext = createContext<{ variant?: TextFormInputVariant }>({});
+const VariantContext = createContext<{ variant?: FormInputVariant }>({});
 
-export function TextFormRoot({ variant = "default", children, disabled, twWidth = "w-full" }: TextFormRootProps) {
+export function FormRoot({ variant = "default", children, disabled, twWidth = "w-full" }: FormRootProps) {
   disabled === true ? variant = "disabled" : variant
   return (
-    <div className={`flex flex-col gap-1 ${twWidth}`}>
+    <form className={`flex flex-col gap-1 ${twWidth}`}>
       <VariantContext.Provider value={{ variant }}>
         {children}
       </VariantContext.Provider>
-    </div>
+    </form>
   );
 }
 
-export function TextFormLabel({ labelText, ...rest }: TextFormLabelProps) {
+export function FormLabel({ labelText, ...rest }: FormLabelProps) {
   const { variant } = useContext(VariantContext);
 
   return (
@@ -61,7 +63,7 @@ export function TextFormLabel({ labelText, ...rest }: TextFormLabelProps) {
   );
 }
 
-export function TextFormHint({ hintText }: { hintText: string }) {
+export function FormHint({ hintText }: { hintText: string }) {
   const { variant } = useContext(VariantContext);
 
   return (
@@ -81,13 +83,13 @@ export function TextFormHint({ hintText }: { hintText: string }) {
   );
 }
 
-export function TextFormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", iconLeft: IconLeft, iconRight: IconRight, ...rest }: TextFormInputProps) {
+export function FormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", iconLeft: IconLeft, iconRight: IconRight, type = "text", ...rest }: FormInputProps) {
   const { variant } = useContext(VariantContext);
 
   return (
     <div
       className={clsx(
-        `${twPaddingX} ${twPaddingY} w-full border-[2px] rounded-[6px] flex gap-4 justify-between`,
+        `${twPaddingX} ${twPaddingY} w-full border-[2px] rounded-[6px] flex gap-4 justify-between ${rest.className}`,
         {
           "text-typo-700 border-typo-500 focus-within:border-main-red-200 caret-main-red-300": variant === "default",
           "text-feedback-success border-feedback-success": variant === "success",
@@ -98,19 +100,20 @@ export function TextFormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px
         }
       )}
     >
-      {IconLeft && <TextFormInputIcon icon={IconLeft} />}
-      <input 
-        {...rest}
-        type="text" 
-        disabled={variant === "disabled"}
+      {IconLeft && <FormInputIcon icon={IconLeft} />}
+      <StyledInput 
+        style={{ appearance: "none" }}
         className="outline-none h-full w-full bg-transparent"
+        {...rest}
+        type={type}
+        disabled={variant === "disabled"}
       />
-      {IconRight && <TextFormInputIcon icon={IconRight} />}
+      {IconRight && <FormInputIcon icon={IconRight} />}
     </div>
   );
 }
 
-function TextFormInputIcon({ icon: Icon, size = 20 }: TextFormInputIcon) {
+function FormInputIcon({ icon: Icon, size = 20 }: FormInputIcon) {
   const { variant } = useContext(VariantContext)
 
   return (

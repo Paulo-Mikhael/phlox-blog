@@ -7,7 +7,8 @@ interface ButtonRootProps {
   variant?: Variant,
   disabled?: boolean,
   children: ReactNode,
-  twWidth?: string
+  twWidth?: string,
+  type?: "button" | "submit" | "reset" | undefined
 }
 interface ButtonTextProps{
   content: string,
@@ -18,9 +19,10 @@ interface ButtonIconProps {
   size?: number
 }
 
-export function ButtonRoot({ variant = "primary", children, disabled = false, twWidth }: ButtonRootProps){
+export function ButtonRoot({ variant = "primary", children, disabled = false, twWidth, type = "button" }: ButtonRootProps){
   return (
     <button 
+      type={type}
       disabled={disabled}
       className={clsx(
         `rounded-[6px] text-normal px-[19px] py-[7px] border-[2px] focus:outline-none flex items-center justify-center gap-2 ${twWidth}`,

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { colors, sizes } from "../../styles/variables";
 import { Button } from "../Button";
+import { INavItems } from "../../interfaces/INavItems";
 
 const StyledLi = styled.li<{ $active: boolean }>`
   a{
@@ -15,30 +16,7 @@ const StyledLi = styled.li<{ $active: boolean }>`
   }
 `
 
-export default function Header() {
-  const navItems: { name: string, path: string, current: boolean }[] = [
-    {
-      name: "Home",
-      path: "",
-      current: true
-    },
-    {
-      name: "Categorias",
-      path: "",
-      current: false
-    },
-    {
-      name: "Shop",
-      path: "",
-      current: false
-    },
-    {
-      name: "Contate-nos",
-      path: "",
-      current: false
-    },
-  ]
-
+export default function Header({ navItems }: { navItems: INavItems[] }) {
   return (
     <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-between items-center p-4">
       <img src="icons/phlox-logo.png" alt="" className="w-[140px] h-[25px]" />
