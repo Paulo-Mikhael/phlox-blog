@@ -6,8 +6,10 @@ export function SimpleCard({ title, children }: { title: string, children: React
       <h2 className="text-section text-typo-700">
         {title}
       </h2>
-      <div className="w-[294px] bg-typo-200 h-[2px] my-[10px]" />
-      {children}
+      <div className="w-full bg-typo-200 h-[2px] my-[10px]" />
+      <div className={`w-full gap-[10px] flex flex-col`}>
+        {children}
+      </div>
     </div>
   );
 }

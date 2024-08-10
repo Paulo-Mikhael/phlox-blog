@@ -17,7 +17,7 @@ export function Badge({ text, twBackgroundColor, removeButton = false, pressed =
         `flex items-center justify-center py-[5px] p-5 rounded-full relative cursor-pointer transition-all shadow-typo-700/20 ${pressed ? pressedStyle : unpressedStyle} ${!text ? "w-20" : ""}`
       }
     >
-      <div className={clsx(
+      <span className={clsx(
         "bg-main-red-300 w-5 h-5 absolute -top-1 -right-1 rounded-full flex items-center justify-center",
         {
           "hidden": !removeButton
@@ -31,7 +31,7 @@ export function Badge({ text, twBackgroundColor, removeButton = false, pressed =
             "rotate-90": pressed || !twBackgroundColor
           }
         )} />
-      </div>
+      </span>
       <p className={clsx(
         "text-typo-100 text-normal",
         {

@@ -89,7 +89,7 @@ export function FormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", 
   return (
     <div
       className={clsx(
-        `${twPaddingX} ${twPaddingY} w-full border-[2px] rounded-[6px] flex gap-4 justify-between ${rest.className}`,
+        `${twPaddingX} ${twPaddingY} w-full border-[2px] rounded-[6px] flex gap-4 justify-between bg-typo-100 items-center ${rest.className}`,
         {
           "text-typo-700 border-typo-500 focus-within:border-main-red-200 caret-main-red-300": variant === "default",
           "text-feedback-success border-feedback-success": variant === "success",
@@ -102,7 +102,7 @@ export function FormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", 
     >
       {IconLeft && <FormInputIcon icon={IconLeft} />}
       <StyledInput 
-        className="outline-none h-full w-full bg-transparent"
+        className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-default"}`}
         {...rest}
         type={type}
         disabled={variant === "disabled"}
