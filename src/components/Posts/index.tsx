@@ -73,7 +73,7 @@ export default function Posts() {
           <Post.Card />
           <Post.Card />
           <Post.Card />
-          <Post.Pagination /> 
+          <Post.Pagination total={8} initialPage={1} /> 
         </Post.Root>
       </main>
     </div>
