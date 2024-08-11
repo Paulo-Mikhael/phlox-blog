@@ -1,7 +1,8 @@
-import { Clock } from "lucide-react";
+import { Clock, StepBack, StepForward } from "lucide-react";
 import { colors } from "../../styles/variables";
 import { Badge } from "../Bagde";
 import { createContext, ReactNode, useContext } from "react";
+import { Button } from "../Button";
 
 const FormatContext = createContext<{ format?: "table" | "list" }>({ });
 
@@ -107,5 +108,41 @@ function PostText({ text }: { text: string }) {
     <p className={`text-normal w-full max-w-[528px] text-typo-700 text-wrap text-ellipsis ${format === "list" ? "h-[45px]" : "h-auto"}`}>
       {text}
     </p>
+  );
+}
+
+export function PostPagination() {
+  return (
+    <nav className="p-16 w-full flex items-center justify-center gap-1">
+      <span>
+        <StepBack color={colors.redMain[300]}size={30} className="transition-all cursor-pointer hover:-translate-x-1" />
+      </span>
+      <Button.Root twWidth="w-[30px]">
+        <Button.Text content="1" />
+      </Button.Root>
+      <Button.Root twWidth="w-[30px]" variant="outlined">
+        <Button.Text content="2" />
+      </Button.Root>
+      <Button.Root twWidth="w-[30px]" variant="outlined">
+        <Button.Text content="3" />
+      </Button.Root>
+      <Button.Root twWidth="w-[30px]" variant="outlined">
+        <Button.Text content="4" />
+      </Button.Root>
+      <Button.Root twWidth="w-[30px]" variant="outlined">
+        <Button.Text content="5" />
+      </Button.Root>
+      <span className="flex items-end h-full gap-1 cursor-pointer">
+        <div className="w-[6px] h-[6px] bg-main-red-200 rounded-full" />
+        <div className="w-[6px] h-[6px] bg-main-red-200 rounded-full" />
+        <div className="w-[6px] h-[6px] bg-main-red-200 rounded-full" />
+      </span>
+      <Button.Root twWidth="w-[30px]" variant="outlined">
+        <Button.Text content="10" />
+      </Button.Root>
+      <span>
+        <StepForward color={colors.redMain[300]}size={30} className="transition-all cursor-pointer hover:translate-x-1" />
+      </span>
+    </nav>
   );
 }

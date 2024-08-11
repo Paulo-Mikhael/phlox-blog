@@ -73,6 +73,7 @@ export default function Posts() {
           <Post.Card />
           <Post.Card />
           <Post.Card />
+          <Post.Pagination /> 
         </Post.Root>
       </main>
     </div>
