@@ -6,10 +6,11 @@ import { UserCard } from "../UserCard";
 import { Checkbox } from "../Checkbox";
 import { SwitchButton } from "../SwitchButton";
 import { useState } from "react";
-import { PostCard } from "../PostCard";
+import { Post } from "../PostCard";
 
 export default function Posts() {
-  const [activedSide, setActivedSide] = useState<"left" | "right">("left");
+  const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
+  const [postsFormat, setPostsFormat] = useState<"table"| "list">("table");
 
   return (
     <div className="flex gap-[50px]">
@@ -45,7 +46,7 @@ export default function Posts() {
           </div>
         </SimpleCard>
       </aside>
-      <main className="w-[796px] flex flex-col gap-5">
+      <main className="w-[796px] flex flex-col gap-5 max-xl:w-[500px]">
         <span className="flex justify-between">
           <div className="flex flex-col gap-2">
             <Checkbox.Root>
@@ -57,16 +58,22 @@ export default function Posts() {
             </Form.Root>
           </div>
           <SwitchButton.Root>
-            <SwitchButton.LeftIcon icon={Table} actived={activedSide === "left"} onClick={() => setActivedSide("left")} />
-            <SwitchButton.RightIcon icon={List} actived={activedSide === "right"} onClick={() => setActivedSide("right")} />
+            <SwitchButton.LeftIcon icon={Table} actived={switchActivedSide === "left"} onClick={() => {
+              setSwitchActivedSide("left");
+              setPostsFormat("table");
+            }} />
+            <SwitchButton.RightIcon icon={List} actived={switchActivedSide === "right"} onClick={() => {
+              setSwitchActivedSide("right");
+              setPostsFormat("list");
+            }} />
           </SwitchButton.Root>
         </span>
-        <div className="flex flex-wrap justify-between gap-10">
-          <PostCard />
-          <PostCard />
-          <PostCard />
-          <PostCard />
-        </div>
+        <Post.Root format={postsFormat} >
+          <Post.Card />
+          <Post.Card />
+          <Post.Card />
+          <Post.Card />
+        </Post.Root>
       </main>
     </div>
   );

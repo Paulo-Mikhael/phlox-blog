@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import daisyui from 'daisyui'
+import daisyui from 'daisyui';
 
 export default {
   content: [
@@ -8,7 +8,7 @@ export default {
   ],
   theme: {
     extend: {
-      "colors": {
+      colors: {
         "main-red": {
           100: "#FC787F",
           200: "#FC505A",
@@ -43,7 +43,7 @@ export default {
         }
       }
     },
-    "fontSize": {
+    fontSize: {
       "highlight": "45px",
       "title": "40px",
       "section": "24px",
