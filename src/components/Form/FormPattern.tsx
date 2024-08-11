@@ -102,7 +102,7 @@ export function FormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", 
     >
       {IconLeft && <FormInputIcon icon={IconLeft} />}
       <StyledInput 
-        className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-default"}`}
+        className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
         {...rest}
         type={type}
         disabled={variant === "disabled"}

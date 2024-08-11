@@ -1,7 +1,11 @@
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { colors } from "../../styles/variables";
+import { useState } from "react";
 
-export function UserCard({ marked }: { marked: boolean }){
+export function UserCard({ marked, onClick }: { marked: boolean, onClick?: () => void }) {
+  const [handleMarked, setHandleMarked] = useState<boolean>(marked);
+  const Icon = handleMarked ? BookmarkCheck : Bookmark;
+
   return (
     <span className="w-full h-[66px] p-3 border-main-red-300 border-[2px] rounded-[6px] shadow-inner shadow-typo-700/70 flex justify-between items-center">
       <div className="flex items-center h-full gap-[10px]">
@@ -11,9 +15,11 @@ export function UserCard({ marked }: { marked: boolean }){
           <h4 className="text-image-subtitle text-typo-700">0 Posts</h4>
         </span>
       </div>
-      {marked 
-      ? <BookmarkCheck className="cursor-pointer" color={colors.redMain[300]} size={26} /> 
-      : <Bookmark className="cursor-pointer" color={colors.redMain[300]} size={26} /> }
+      <Icon onClick={() => {
+        setHandleMarked(!handleMarked);
+        onClick && onClick();
+      }} className="cursor-pointer" color={colors.redMain[300]} size={26}
+      />
     </span>
   );
 }

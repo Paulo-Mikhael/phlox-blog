@@ -1,11 +1,16 @@
-import { Calendar, Search, User } from "lucide-react";
+import { Calendar, List, Search, Table, User } from "lucide-react";
 import { Badge } from "../Bagde";
 import { Form } from "../Form";
 import { SimpleCard } from "../SimpleCard";
 import { UserCard } from "../UserCard";
 import { Checkbox } from "../Checkbox";
+import { SwitchButton } from "../SwitchButton";
+import { useState } from "react";
+import { PostCard } from "../PostCard";
 
 export default function Posts() {
+  const [activedSide, setActivedSide] = useState<"left" | "right">("left");
+
   return (
     <div className="flex gap-[50px]">
       <aside className="flex flex-col gap-5 w-[320px] pt-[7px]">
@@ -40,15 +45,27 @@ export default function Posts() {
           </div>
         </SimpleCard>
       </aside>
-      <main className="w-[796px]">
-        <div className="flex flex-col gap-2">
-          <Checkbox.Root>
-            <Checkbox.Input id="filter-checkbox" />
-            <Checkbox.Label labelText="Filtrar por data" htmlFor="filter-checkbox" />
-          </Checkbox.Root>
-          <Form.Root twWidth="w-[326px]">
-            <Form.Input iconRight={Calendar} type="date" />
-          </Form.Root>
+      <main className="w-[796px] flex flex-col gap-5">
+        <span className="flex justify-between">
+          <div className="flex flex-col gap-2">
+            <Checkbox.Root>
+              <Checkbox.Input id="filter-checkbox" />
+              <Checkbox.Label labelText="Filtrar por data" htmlFor="filter-checkbox" />
+            </Checkbox.Root>
+            <Form.Root twWidth="w-[326px]">
+              <Form.Input iconRight={Calendar} type="date" />
+            </Form.Root>
+          </div>
+          <SwitchButton.Root>
+            <SwitchButton.LeftIcon icon={Table} actived={activedSide === "left"} onClick={() => setActivedSide("left")} />
+            <SwitchButton.RightIcon icon={List} actived={activedSide === "right"} onClick={() => setActivedSide("right")} />
+          </SwitchButton.Root>
+        </span>
+        <div className="flex flex-wrap justify-between gap-10">
+          <PostCard />
+          <PostCard />
+          <PostCard />
+          <PostCard />
         </div>
       </main>
     </div>
