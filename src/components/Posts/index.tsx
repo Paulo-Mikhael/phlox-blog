@@ -1,16 +1,16 @@
 import { Calendar, List, Search, Table, User } from "lucide-react";
-import { Badge } from "../Bagde";
 import { Form } from "../Form";
 import { SimpleCard } from "../SimpleCard";
 import { UserCard } from "../UserCard";
 import { Checkbox } from "../Checkbox";
 import { SwitchButton } from "../SwitchButton";
 import { useState } from "react";
-import { Post } from "../PostCard";
+import { Post } from "./Post";
+import { Badge } from "../Bagde";
 
 export default function Posts() {
   const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
-  const [postsFormat, setPostsFormat] = useState<"table"| "list">("table");
+  const [postsFormat, setPostsFormat] = useState<"table" | "list">("table");
 
   return (
     <div className="flex gap-[50px]">
@@ -20,15 +20,14 @@ export default function Posts() {
           <Form.Input placeholder="Digite o título do post..." iconRight={Search} />
         </Form.Root>
         <SimpleCard title="Categorias">
-          <div className="flex gap-2 flex-wrap">
-            <Badge text="História" twBackgroundColor="bg-badge-history" removeButton />
-            <Badge text="Oferta" twBackgroundColor="bg-badge-offer" removeButton />
-            <Badge text="Notícia" twBackgroundColor="bg-badge-news" removeButton />
-            <Badge text="Tecnologia" twBackgroundColor="bg-badge-tecnology" removeButton />
-            <Badge text="Programação" twBackgroundColor="bg-badge-programation" removeButton />
-            <Badge text="Oportunidade" twBackgroundColor="bg-badge-oportunity" removeButton />
-            <Badge removeButton />
-          </div>
+            <Badge.HandlePress children={<Badge.Story />} />
+            <Badge.HandlePress children={<Badge.Tecnology />} />
+            <Badge.HandlePress children={<Badge.News />} />
+            <Badge.HandlePress children={<Badge.Programation />} />
+            <Badge.HandlePress children={<Badge.Opportunity />} />
+            <Badge.HandlePress children={<Badge.Offer />} />
+            <Badge.HandlePress children={<Badge.Personalize text="Tag Personalizada" />} />
+            <Badge.HandlePress children={<Badge.Add onClick={() => null} />} />
         </SimpleCard>
         <SimpleCard title="Usuários">
           <Form.Root>
@@ -73,7 +72,7 @@ export default function Posts() {
           <Post.Card />
           <Post.Card />
           <Post.Card />
-          <Post.Pagination total={8} initialPage={1} /> 
+          <Post.Pagination total={8} initialPage={1} />
         </Post.Root>
       </main>
     </div>

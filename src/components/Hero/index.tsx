@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import { colors, sizes } from "../../styles/variables";
-import { Album, Code, Cpu, HandHelping, Newspaper, Tag } from "lucide-react";
-import { ElementType } from "react";
+import { sizes } from "../../styles/variables";
+import { badges } from "../../data/badges";
 import { Button } from "../Button";
 
 const StyledDiv = styled.div<{ $backgroundColor: string }>`
@@ -21,39 +20,6 @@ const StyledDiv = styled.div<{ $backgroundColor: string }>`
 `
 
 export default function Hero() {
-  const badgeCards: { icon: ElementType, title: string, backgroundColor: string }[] = [
-    {
-      icon: Album,
-      title: "Histórias",
-      backgroundColor: colors.badge.history
-    },
-    {
-      icon: Tag,
-      title: "Ofertas",
-      backgroundColor: colors.badge.offer
-    },
-    {
-      icon: Cpu,
-      title: "Tecnologia",
-      backgroundColor: colors.badge.tecnology
-    },
-    {
-      icon: Newspaper,
-      title: "Notícias",
-      backgroundColor: colors.badge.news
-    },
-    {
-      icon: HandHelping,
-      title: "Oportunidades",
-      backgroundColor: colors.badge.oportunity
-    },
-    {
-      icon: Code,
-      title: "Programação",
-      backgroundColor: colors.badge.programation
-    },
-  ]
-
   return (
     <div className="bg-typo-150 w-[932px] h-[563px] rounded-t-[10px] shadow-inner shadow-typo-700/30 px-[94px] py-[36px] z-10">
       <div className="flex flex-col items-center">
@@ -64,7 +30,7 @@ export default function Hero() {
           Lorem ipsum dolor sit amet
         </h1>
         <div className="flex gap-2 w-[744px] flex-wrap justify-center my-[45px]">
-          {badgeCards.map((item, index) => (
+          {badges.map((item, index) => (
             <StyledDiv $backgroundColor={item.backgroundColor} key={index}>
               <item.icon size={40} />
               <p>

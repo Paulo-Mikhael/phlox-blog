@@ -1,8 +1,6 @@
-import { Clock, StepBack, StepForward } from "lucide-react";
-import { colors } from "../../styles/variables";
-import { Badge } from "../Bagde";
+import { Clock } from "lucide-react";
+import { colors } from "../../../styles/variables";
 import { createContext, ReactNode, useContext } from "react";
-import { Button } from "../Button";
 import { Pagination } from "@nextui-org/react";
 
 const FormatContext = createContext<{ format?: "table" | "list" }>({ });
@@ -38,9 +36,9 @@ function CardTable() {
       <section className="bg-typo-100 w-full h-[305px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
         <PostDateInfo />
         <span className="flex gap-2">
-          <Badge text="História" twBackgroundColor="bg-badge-history" />
+          {/* <Badge text="História" twBackgroundColor="bg-badge-history" />
           <Badge text="Oferta" twBackgroundColor="bg-badge-offer" />
-          <Badge text="Notícia" twBackgroundColor="bg-badge-news" />
+          <Badge text="Notícia" twBackgroundColor="bg-badge-news" /> */}
         </span>
         <span className="flex flex-col gap-[15px] overflow-y-scroll scrollbar scrollbar-none pb-5">
           <PostSection text="Lorem ipsum dolor sit amet" />
@@ -71,9 +69,9 @@ function CardList() {
           ornare sem, sit amet ullamcorper magna turpis eu arcu." />
         </div>
         <span className="flex gap-2 mt-2">
-          <Badge text="História" twBackgroundColor="bg-badge-history" />
+          {/* <Badge text="História" twBackgroundColor="bg-badge-history" />
           <Badge text="Oferta" twBackgroundColor="bg-badge-offer" />
-          <Badge text="Notícia" twBackgroundColor="bg-badge-news" />
+          <Badge text="Notícia" twBackgroundColor="bg-badge-news" /> */}
         </span>
       </section>
     </article>
