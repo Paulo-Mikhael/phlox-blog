@@ -1,9 +1,11 @@
 import { Clock } from "lucide-react";
 import { colors } from "../../../styles/variables";
 import { createContext, ReactNode, useContext } from "react";
-import { Pagination } from "@nextui-org/react";
+import { Pagination, ScrollShadow } from "@nextui-org/react";
+import { Badge } from "../../Bagde";
+import { IPost, IPostBadges } from "../../../interfaces/IPost";
 
-const FormatContext = createContext<{ format?: "table" | "list" }>({ });
+const FormatContext = createContext<{ format?: "table" | "list" }>({});
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
   return (
@@ -19,74 +21,67 @@ export function PostRoot({ format = "table", children }: { format?: "table" | "l
   );
 }
 
-export function PostCard() {
+export function PostCard({ ...post }: IPost) {
   const { format } = useContext(FormatContext)
 
   return (
-    format === "table" ? <CardTable /> : <CardList />
+    format === "table" ? <CardTable {...post} /> : <CardList {...post} />
   );
 }
 
-function CardTable() {
+function CardTable({ ...post }: IPost) {
   return (
     <article className="w-[375px] max-xl:w-full shadow-xl shadow-typo-700/20 rounded-[10px]">
       <figure className="h-[251px] max-xl:h-auto w-full">
-        <img src="images/post-coffee.png" alt="" className="rounded-t-[10px]" />
+        <img src={post.image} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
       </figure>
       <section className="bg-typo-100 w-full h-[305px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
-        <PostDateInfo />
-        <span className="flex gap-2">
-          {/* <Badge text="História" twBackgroundColor="bg-badge-history" />
-          <Badge text="Oferta" twBackgroundColor="bg-badge-offer" />
-          <Badge text="Notícia" twBackgroundColor="bg-badge-news" /> */}
+        <PostDateInfo date={String(post.postDate)} />
+        <span className="flex gap-2 flex-wrap">
+          <PostBadges {...post.badges} />
         </span>
-        <span className="flex flex-col gap-[15px] overflow-y-scroll scrollbar scrollbar-none pb-5">
-          <PostSection text="Lorem ipsum dolor sit amet" />
-          <PostText text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla consectetur, neque in malesuada efficitur, nunc massa 
-          ornare sem, sit amet ullamcorper magna turpis eu arcu." />
-          <figure>
-            <img src="images/post-coffee-content.png" alt="" />
-          </figure>
-          <PostText text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla consectetur, neque in malesuada efficitur, nunc massa 
-          ornare sem, sit amet ullamcorper magna turpis eu arcu." />
-        </span>
+        <ScrollShadow className="flex flex-col gap-[15px] overflow-y-scroll scrollbar scrollbar-none pb-5">
+          <PostSection text={post.title} />
+          <PostText text={post.content} />
+        </ScrollShadow>
       </section>
     </article>
   );
 }
 
-function CardList() {
+function CardList({ ...post }: IPost) {
   return (
     <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
       <figure className="w-[326px]">
-        <img src="images/post-coffee.png" alt="" className="w-full h-full rounded-l-[10px]" />
+        <img src={post.image} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
       </figure>
       <section className="p-5 w-full flex flex-col gap-2">
-        <PostDateInfo />
-        <PostSection text="Lorem ipsum dolor sit amet" />
+        <PostDateInfo date={String(post.postDate)} />
+        <PostSection text={post.title} />
         <div className="overflow-hidden">
-          <PostText text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla consectetur, neque in malesuada efficitur, nunc massa 
-          ornare sem, sit amet ullamcorper magna turpis eu arcu." />
+          <PostText text={post.content} />
         </div>
-        <span className="flex gap-2 mt-2">
-          {/* <Badge text="História" twBackgroundColor="bg-badge-history" />
-          <Badge text="Oferta" twBackgroundColor="bg-badge-offer" />
-          <Badge text="Notícia" twBackgroundColor="bg-badge-news" /> */}
-        </span>
+        <ScrollShadow size={10} hideScrollBar className="h-[30px] flex gap-2 mt-2 flex-wrap pb-2">
+          <PostBadges {...post.badges} />
+        </ScrollShadow>
       </section>
     </article>
   );
 }
 
-function PostDateInfo() {
+function PostDateInfo({ date }: { date: string }) {
+  const daysOfWeek = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+
+  const dateObjc = new Date(date);
+  
   return (
     <span className="flex items-center justify-between">
       <div className="flex items-center gap-[10px]">
         <Clock color={colors.redMain[300]} size={22} />
-        <p className="text-typo-700">01/01/2000</p>
+        <p className="text-typo-700">{`${dateObjc.toLocaleString().slice(0, 10)}`}</p>
       </div>
       <p className="text-typo-700">
-        Quarta-Feira
+        {daysOfWeek[dateObjc.getDay()]}
       </p>
     </span>
   );
@@ -110,10 +105,26 @@ function PostText({ text }: { text: string }) {
   );
 }
 
+function PostBadges({ ...postBadges }: IPostBadges) {
+  return (
+    <>
+      {postBadges.items.story === true && <Badge.Root children={<Badge.Story />} />}
+      {postBadges.items.tecnology === true && <Badge.Root children={<Badge.Tecnology />} />}
+      {postBadges.items.news === true && <Badge.Root children={<Badge.News />} />}
+      {postBadges.items.programation === true && <Badge.Root children={<Badge.Programation />} />}
+      {postBadges.items.opportunity === true && <Badge.Root children={<Badge.Opportunity />} />}
+      {postBadges.items.offer === true && <Badge.Root children={<Badge.Offer />} />}
+      {postBadges.items.personalized.map((item, index) => (
+        <Badge.Root key={index} children={<Badge.Personalize text={item} />} />
+      ))}
+    </>
+  );
+}
+
 export function PostPagination({ total, initialPage }: { total: number, initialPage: number }) {
   return (
     <nav className="p-16 w-full flex items-center justify-center gap-1">
-      <Pagination color="danger" total={total} initialPage={initialPage} />      
+      <Pagination color="danger" total={total} initialPage={initialPage} />
     </nav>
   );
 }

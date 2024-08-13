@@ -10,13 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@nextui-org/date-picker": "^2.1.6",
     "@nextui-org/react": "^2.4.6",
+    "@nextui-org/scroll-shadow": "^2.1.19",
+    "axios": "^1.7.4",
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.24",
+    "json-server": "^1.0.0-beta.1",
     "lucide-react": "^0.424.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0",
     "styled-components": "^6.1.12",
+    "uuid": "^10.0.0",
     "vite-plugin-react": "^4.0.1"
   },
   "devDependencies": {
@@ -28,6 +34,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
     "@vitejs/plugin-react-swc": "^3.5.0",

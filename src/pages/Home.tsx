@@ -1,9 +1,9 @@
-import { INavItems } from "./interfaces/INavItems"
-import Header from "./components/Header"
-import Hero from "./components/Hero"
-import Posts from "./components/Posts"
+import { INavItems } from "../interfaces/INavItems"
+import Header from "../components/Header"
+import Hero from "../components/Hero"
+import Posts from "../components/Posts"
 
-function App() {
+export default function Home() {
   const navItems: INavItems[] = [
     {
       name: "Home",
@@ -41,5 +41,3 @@ function App() {
     </>
   )
 }
-
-export default App

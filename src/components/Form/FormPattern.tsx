@@ -5,7 +5,7 @@ import { StyledInput } from "../../utils/StyledInput";
 type FormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
 
 interface FormLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
-  text?: string
+  text: string
 }
 interface FormRootProps extends FormHTMLAttributes<HTMLFormElement> {
   hintText?: string,
@@ -32,7 +32,7 @@ const VariantContext = createContext<{ variant?: FormInputVariant }>({});
 export function FormRoot({ variant = "default", children, disabled, twWidth = "w-full", ...rest }: FormRootProps) {
   disabled === true ? variant = "disabled" : variant
   return (
-    <form className={`flex flex-col gap-1 ${twWidth} ${rest}`}>
+    <form onSubmit={rest.onSubmit} className={`flex flex-col gap-1 ${twWidth} ${rest.className}`}>
       <VariantContext.Provider value={{ variant }}>
         {children}
       </VariantContext.Provider>

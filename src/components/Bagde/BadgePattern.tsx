@@ -6,7 +6,8 @@ import { colors } from "../../styles/variables";
 
 interface BadgeRootProps {
   children: ReactNode,
-  onClick?: () => void
+  onClick?: () => void,
+  pressed?: boolean
 }
 
 const badges = [
@@ -42,8 +43,8 @@ export function BadgeRoot({ children }: BadgeRootProps) {
     </HandlePressedContext.Provider>
   );
 }
-export function BadgeHandlePress({ children, onClick }: BadgeRootProps) {
-  const [handlePressed, setHandlePressed] = useState<boolean>(false);
+export function BadgeHandlePress({ children, onClick, pressed }: BadgeRootProps) {
+  const [handlePressed, setHandlePressed] = useState<boolean>(pressed ? pressed : false);
 
   return (
     <HandlePressedContext.Provider value={
@@ -69,7 +70,7 @@ function BadgeVariant({ badgeProps, personalizedText }: { badgeProps?: IBadge, p
         removeButton={context !== null}
         pressed={context ? context.handlePressed : false}
         onPress={() => context && context.setHandlePressed()}
-        text={personalizedText}
+        title={personalizedText}
         backgroundColor={colors.typo[700]}
       />
     );
@@ -82,7 +83,7 @@ function BadgeVariant({ badgeProps, personalizedText }: { badgeProps?: IBadge, p
       removeButton={context !== null}
       pressed={context ? context.handlePressed : false}
       onPress={() => context && context.setHandlePressed()}
-      text={badgeProps.title}
+      title={badgeProps.title}
       backgroundColor={badgeProps.backgroundColor}
     />
   );
@@ -94,7 +95,7 @@ export function PersonalizedBadge({ personalizedText, personalizedOnClick }: { p
       addBadge={!personalizedText}
       removeButton={true}
       onPress={() => personalizedOnClick && personalizedOnClick()}
-      text={personalizedText ? personalizedText : ""}
+      title={personalizedText ? personalizedText : ""}
       backgroundColor={colors.typo[700]}
     />
   );

@@ -4,13 +4,21 @@ import { SimpleCard } from "../SimpleCard";
 import { UserCard } from "../UserCard";
 import { Checkbox } from "../Checkbox";
 import { SwitchButton } from "../SwitchButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Post } from "./Post";
 import { Badge } from "../Bagde";
+import { ScrollShadow } from "@nextui-org/scroll-shadow";
+import { IPost } from "../../interfaces/IPost";
+import { posts as postsData } from "../../data/posts";
 
 export default function Posts() {
   const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
   const [postsFormat, setPostsFormat] = useState<"table" | "list">("table");
+  const [posts, setPosts] = useState<IPost[]>([]);
+
+  useEffect(() => {
+    setPosts(postsData);
+  }, [posts]);
 
   return (
     <div className="flex gap-[50px]">
@@ -33,7 +41,7 @@ export default function Posts() {
           <Form.Root>
             <Form.Input placeholder="Pesquisar usuário..." iconRight={User} />
           </Form.Root>
-          <div className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">
+          <ScrollShadow className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">
             <UserCard marked={false} />
             <UserCard marked={true} />
             <UserCard marked={false} />
@@ -42,7 +50,7 @@ export default function Posts() {
             <UserCard marked={true} />
             <UserCard marked={true} />
             <UserCard marked={true} />
-          </div>
+          </ScrollShadow>
         </SimpleCard>
       </aside>
       <main className="w-[796px] flex flex-col gap-5 max-xl:w-[500px]">
@@ -68,10 +76,9 @@ export default function Posts() {
           </SwitchButton.Root>
         </span>
         <Post.Root format={postsFormat} >
-          <Post.Card />
-          <Post.Card />
-          <Post.Card />
-          <Post.Card />
+          {posts.map((item) => (
+            <Post.Card key={item.id} {...item} />
+          ))}
           <Post.Pagination total={8} initialPage={1} />
         </Post.Root>
       </main>

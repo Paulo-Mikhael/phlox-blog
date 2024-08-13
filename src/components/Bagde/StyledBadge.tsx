@@ -1,3 +1,4 @@
+import { IBadge } from "../../interfaces/IBadge";
 import { colors } from "../../styles/variables";
 import styled from "styled-components";
 
@@ -43,16 +44,14 @@ const StyledDiv = styled.div<{ $backgroundColor: string, $pressed: boolean, $add
   }
 `
 
-interface StyledBadgeProps {
-  text: string,
-  backgroundColor?: string,
+interface StyledBadgeProps extends IBadge {
   removeButton?: boolean,
   pressed?: boolean,
   onPress?: () => void,
   addBadge?: boolean
 }
 
-export function StyledBadge({ text, backgroundColor, pressed, onPress, removeButton, addBadge }: StyledBadgeProps) {
+export function StyledBadge({ title, backgroundColor, pressed, onPress, removeButton, addBadge }: StyledBadgeProps) {
   return (
     <StyledDiv
       $addBadge={addBadge}
@@ -63,7 +62,7 @@ export function StyledBadge({ text, backgroundColor, pressed, onPress, removeBut
       }}
     >
       <p>
-        {text}
+        {title}
       </p>
       {removeButton && (
         <span className="floatCircle">
