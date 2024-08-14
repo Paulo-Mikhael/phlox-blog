@@ -6,3 +6,9 @@ export interface IBadge {
   backgroundColor: string,
   twBackgroundColor?: string
 }
+
+export interface IPersonalizedBadge { 
+  id: string,
+  title: string,
+  pressed: boolean
+}

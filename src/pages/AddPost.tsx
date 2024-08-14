@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { v4 as uuidV4 } from "uuid";
+import { v4 as uuidV4, v4 } from "uuid";
 import { IPost } from "../interfaces/IPost";
 import { Badge } from "../components/Bagde";
 import { Button } from "../components/Button";
 import { Form } from "../components/Form";
 import { Link } from "react-router-dom";
-import { posts } from "../data/posts";
 import { http } from "../http";
+import { IPersonalizedBadge } from "../interfaces/IBadge";
 
 export default function AddPost() {
   const [postTitle, setPostTitle] = useState<string>("");
   const [postContent, setPostContent] = useState<string>("");
-  const [personalizedTags, setPersonalizedTags] = useState<string[]>([]);
+  const [personalizedTags, setPersonalizedTags] = useState<IPersonalizedBadge[]>([]);
   const [storyPressed, setStoryPressed] = useState<boolean>(false);
   const [newsPressed, setNewsPressed] = useState<boolean>(false);
   const [programationPressed, setProgramationPressed] = useState<boolean>(false);
@@ -44,15 +44,15 @@ export default function AddPost() {
       postDate: new Date(),
       content: postContent,
       badges: {
-        items: {
-          story: storyPressed,
-          news: newsPressed,
-          programation: programationPressed,
-          offer: offerPressed,
-          tecnology: tecnologyPressed,
-          opportunity: opportunityPressed,
-          personalized: [...personalizedTags]
-        }
+        defaultBadges: {
+          storyPressed: storyPressed,
+          newsPressed: newsPressed,
+          programationPressed: programationPressed,
+          offerPressed: offerPressed,
+          tecnologyPressed: tecnologyPressed,
+          opportunityPressed: opportunityPressed,
+        },
+        personalizedBadges: [...personalizedTags]
       }
     }
 
@@ -62,7 +62,7 @@ export default function AddPost() {
       })
       .catch((err) => {
         console.log(err);
-      });;
+      });
 
     setPostTitle("");
     setPostContent("");
@@ -70,15 +70,22 @@ export default function AddPost() {
   }
 
   useEffect(() => {
-    console.log(posts);
-  }, [posts]);
+    console.log(image);
+  }, [image]);
+  useEffect(() => {
+    console.log(base64);
+  }, [base64]);
 
   return (
     <Form.Root className="gap-2 p-4" onSubmit={(evt) => submitPost(evt)}>
       <Form.Label text="Título do Post:" />
-      <Form.Input onChange={(evt) => setPostTitle(evt.target.value)} value={postTitle} />
+      <Form.Input
+        onChange={(evt) => setPostTitle(evt.target.value)} value={postTitle}
+      />
       <Form.Label text="Conteúdo do Post:" />
-      <Form.Input onChange={(evt) => setPostContent(evt.target.value)} value={postContent} />
+      <Form.Input
+        onChange={(evt) => setPostContent(evt.target.value)} value={postContent}
+      />
       <Form.Label text="Categorias/Badges do Post:" />
       <div className="flex gap-2 flex-wrap">
         <Badge.HandlePress onClick={() => setStoryPressed(!storyPressed)} children={<Badge.Story />} />
@@ -88,22 +95,44 @@ export default function AddPost() {
         <Badge.HandlePress onClick={() => setTecnologyPressed(!tecnologyPressed)} children={<Badge.Tecnology />} />
         <Badge.HandlePress onClick={() => setOpportunityPressed(!opportunityPressed)} children={<Badge.Opportunity />} />
         {personalizedTags.map((item, index) => (
-          <Badge.HandlePress key={index} children={<Badge.Personalize text={item} />} />
+          <Badge.HandlePress 
+            key={index} 
+            pressed={item.pressed} 
+            children={<Badge.Personalize text={item.title}/>}
+            onClick={() => {
+              setPersonalizedTags(previous => previous.map(badge => {
+                return {
+                  id: badge.id,
+                  title: badge.title,
+                  pressed: badge.id === item.id ? !badge.pressed : badge.pressed
+                }
+              }));
+            }}
+          />
         ))}
-        <Badge.Root children={<Badge.Add onClick={() => { setPersonalizedTags(previous => [...previous, "Tag Personalizada"]) }} />} />
+        <Badge.Root children={
+          <Badge.Add onClick={() => { setPersonalizedTags(previous => [...previous, { id: uuidV4(), title: "Tag Personalizada", pressed: false }]) }} />
+        } />
       </div>
-      <input onChange={(evt) => {
-        setImage(evt.target.files?.[0].type.startsWith("image") ? evt.target.files?.[0] : null);
-      }} type="file" className="bg-white file-input-bordered file-input-error file-input w-full max-w-xs" />
+      <Form.Input
+        type="file"
+        onChange={(evt) => setImage(evt.target.files?.[0].type.startsWith("image") ? evt.target.files?.[0] : null)}
+        twPaddingX="p-0"
+      />
       <Button.Root type="submit">
         <Button.Text content="Postar" />
       </Button.Root>
       <Link to="/">
         Voltar
       </Link>
-      <div id="img-base">
-        <img src={base64} alt="" />
-      </div>
+      {personalizedTags.map((item, index) => (
+        <p key={index}>
+          Título: {item.title}; Pressionado: {item.pressed ? "Sim" : "Não"};
+        </p>
+      ))}
+      <p>
+        {postTitle}
+      </p>
     </Form.Root>
   );
 }

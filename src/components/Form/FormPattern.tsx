@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { createContext, ElementType, FormHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
 import { StyledInput } from "../../utils/StyledInput";
+import { Button } from "../Button";
 
 type FormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
 
@@ -19,7 +20,8 @@ interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   twPaddingY?: string,
   iconLeft?: ElementType,
   iconRight?: ElementType,
-  type?: React.HTMLInputTypeAttribute
+  type?: React.HTMLInputTypeAttribute,
+  submitButtonText?: string
 }
 interface FormInputIcon {
   icon: ElementType,
@@ -83,30 +85,43 @@ export function FormHint({ hintText }: { hintText: string }) {
   );
 }
 
-export function FormInput({ twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", iconLeft: IconLeft, iconRight: IconRight, type = "text", ...rest }: FormInputProps) {
+export function FormInput(
+  { twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", iconLeft: IconLeft, iconRight: IconRight, type = "text", submitButtonText = "Enviar", ...rest }: FormInputProps
+) {
   const { variant } = useContext(VariantContext);
 
   return (
     <div
       className={clsx(
-        `${twPaddingX} ${twPaddingY} w-full border-[2px] rounded-[6px] flex gap-4 justify-between bg-typo-100 items-center ${rest.className}`,
+        `${twPaddingX} ${twPaddingY} w-full rounded-[6px] flex gap-4 justify-between bg-typo-100 items-center ${rest.className}`,
         {
           "text-typo-700 border-typo-500 focus-within:border-main-red-200 caret-main-red-300": variant === "default",
           "text-feedback-success border-feedback-success": variant === "success",
           "text-feedback-warning border-feedback-warning": variant === "warning",
           "text-feedback-danger border-feedback-danger": variant === "danger",
           "text-feedback-info border-feedback-info": variant === "info",
-          "border-typo-500 bg-typo-200 cursor-not-allowed": variant === "disabled"
+          "border-typo-500 bg-typo-200 cursor-not-allowed": variant === "disabled",
+          "border-[2px]": type !== "file"
         }
       )}
     >
       {IconLeft && <FormInputIcon icon={IconLeft} />}
-      <StyledInput 
-        className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
-        {...rest}
-        type={type}
-        disabled={variant === "disabled"}
-      />
+      {type === "text" && (
+        <StyledInput
+          className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
+          type="text"
+          disabled={variant === "disabled"}
+          onChange={rest.onChange}
+          value={rest.value}
+        />
+      )}
+      {type === "file" && (
+        <StyledInput
+          type="file"
+          className="bg-white file-input-xs file-input-bordered file-input-error file-input w-full max-w-xs"
+          onChange={rest.onChange}
+        />
+      )}
       {IconRight && <FormInputIcon icon={IconRight} />}
     </div>
   );
@@ -116,7 +131,7 @@ function FormInputIcon({ icon: Icon, size = 20 }: FormInputIcon) {
   const { variant } = useContext(VariantContext)
 
   return (
-    <Icon 
+    <Icon
       size={size}
       className={clsx(
         {
@@ -128,6 +143,6 @@ function FormInputIcon({ icon: Icon, size = 20 }: FormInputIcon) {
           "text-typo-500": variant === "disabled"
         }
       )}
-   />
+    />
   );
 }

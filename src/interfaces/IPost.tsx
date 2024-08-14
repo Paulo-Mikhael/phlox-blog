@@ -1,3 +1,5 @@
+import { IPersonalizedBadge } from "./IBadge"
+
 export interface IPost {
   id: string,
   image: string,
@@ -9,13 +11,13 @@ export interface IPost {
 }
 
 export interface IPostBadges {
-  items: {
-    story: boolean,
-    tecnology: boolean,
-    news: boolean,
-    programation: boolean,
-    opportunity: boolean,
-    offer: boolean,
-    personalized: string[]
-  }
+  defaultBadges: {
+    storyPressed: boolean,
+    tecnologyPressed: boolean,
+    newsPressed: boolean,
+    programationPressed: boolean,
+    opportunityPressed: boolean,
+    offerPressed: boolean,
+  },
+  personalizedBadges: IPersonalizedBadge[]
 }

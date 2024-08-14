@@ -38,7 +38,7 @@ function CardTable({ ...post }: IPost) {
       <section className="bg-typo-100 w-full h-[305px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
         <PostDateInfo date={String(post.postDate)} />
         <span className="flex gap-2 flex-wrap">
-          <PostBadges {...post.badges} />
+          <PostBadges defaultBadges={post.badges.defaultBadges} personalizedBadges={post.badges.personalizedBadges} />
         </span>
         <ScrollShadow className="flex flex-col gap-[15px] overflow-y-scroll scrollbar scrollbar-none pb-5">
           <PostSection text={post.title} />
@@ -61,8 +61,8 @@ function CardList({ ...post }: IPost) {
         <div className="overflow-hidden">
           <PostText text={post.content} />
         </div>
-        <ScrollShadow size={10} hideScrollBar className="h-[30px] flex gap-2 mt-2 flex-wrap pb-2">
-          <PostBadges {...post.badges} />
+        <ScrollShadow size={9} hideScrollBar className="h-[30px] flex gap-2 mt-2 flex-wrap pb-2">
+          <PostBadges defaultBadges={post.badges.defaultBadges} personalizedBadges={post.badges.personalizedBadges} />
         </ScrollShadow>
       </section>
     </article>
@@ -105,17 +105,17 @@ function PostText({ text }: { text: string }) {
   );
 }
 
-function PostBadges({ ...postBadges }: IPostBadges) {
+function PostBadges({ defaultBadges, personalizedBadges }: IPostBadges) {
   return (
     <>
-      {postBadges.items.story === true && <Badge.Root children={<Badge.Story />} />}
-      {postBadges.items.tecnology === true && <Badge.Root children={<Badge.Tecnology />} />}
-      {postBadges.items.news === true && <Badge.Root children={<Badge.News />} />}
-      {postBadges.items.programation === true && <Badge.Root children={<Badge.Programation />} />}
-      {postBadges.items.opportunity === true && <Badge.Root children={<Badge.Opportunity />} />}
-      {postBadges.items.offer === true && <Badge.Root children={<Badge.Offer />} />}
-      {postBadges.items.personalized.map((item, index) => (
-        <Badge.Root key={index} children={<Badge.Personalize text={item} />} />
+      {defaultBadges.storyPressed === false && <Badge.Root children={<Badge.Story />} />}
+      {defaultBadges.tecnologyPressed === false && <Badge.Root children={<Badge.Tecnology />} />}
+      {defaultBadges.newsPressed === false && <Badge.Root children={<Badge.News />} />}
+      {defaultBadges.programationPressed === false && <Badge.Root children={<Badge.Programation />} />}
+      {defaultBadges.opportunityPressed === false && <Badge.Root children={<Badge.Opportunity />} />}
+      {defaultBadges.offerPressed === false && <Badge.Root children={<Badge.Offer />} />}
+      {personalizedBadges.map((item, index) => (
+        item.pressed === false && <Badge.Root key={index} children={<Badge.Personalize text={item.title} />} />
       ))}
     </>
   );
