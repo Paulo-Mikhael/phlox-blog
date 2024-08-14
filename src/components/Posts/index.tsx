@@ -9,15 +9,21 @@ import { Post } from "./Post";
 import { Badge } from "../Bagde";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { IPost } from "../../interfaces/IPost";
-import { posts as postsData } from "../../data/posts";
+import { http } from "../../http";
 
 export default function Posts() {
   const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
   const [postsFormat, setPostsFormat] = useState<"table" | "list">("table");
   const [posts, setPosts] = useState<IPost[]>([]);
 
+  async function getPosts(){
+    const data = await http.get("posts");
+
+    setPosts(data.data)
+  }
+
   useEffect(() => {
-    setPosts(postsData);
+    getPosts();
   }, [posts]);
 
   return (
