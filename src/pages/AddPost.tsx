@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { v4 as uuidV4, v4 } from "uuid";
+import { v4 as uuidV4 } from "uuid";
 import { IPost } from "../interfaces/IPost";
 import { Badge } from "../components/Bagde";
 import { Button } from "../components/Button";

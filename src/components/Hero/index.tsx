@@ -32,7 +32,7 @@ export default function Hero() {
         <div className="flex gap-2 w-[744px] flex-wrap justify-center my-[45px]">
           {badges.map((item, index) => (
             <StyledDiv $backgroundColor={item.backgroundColor} key={index}>
-              <item.icon size={40} />
+              {item.icon && <item.icon size={40} />}
               <p>
                 {item.title}
               </p>
