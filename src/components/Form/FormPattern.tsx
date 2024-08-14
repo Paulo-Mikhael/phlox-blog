@@ -108,16 +108,24 @@ export function FormInput(
       {type === "text" && (
         <StyledInput
           className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
-          type="text"
+          type={type}
           disabled={variant === "disabled"}
           onChange={rest.onChange}
           value={rest.value}
+          placeholder={rest.placeholder}
         />
       )}
       {type === "file" && (
         <StyledInput
-          type="file"
+          type={type}
           className="bg-white file-input-xs file-input-bordered file-input-error file-input w-full max-w-xs"
+          onChange={rest.onChange}
+        />
+      )}
+      {type === "date" && (
+        <StyledInput
+          type={type}
+          className="w-full"
           onChange={rest.onChange}
         />
       )}
