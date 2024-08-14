@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { createContext, ElementType, FormHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
 import { StyledInput } from "../../utils/StyledInput";
-import { Button } from "../Button";
 
 type FormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
 
