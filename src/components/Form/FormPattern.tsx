@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { createContext, ElementType, FormHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
-import { StyledInput } from "../../utils/StyledInput";
+import { StyledInput, StyledTextarea } from "../../styles/StyledInput";
 
 type FormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
 
@@ -20,7 +20,8 @@ interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   iconLeft?: ElementType,
   iconRight?: ElementType,
   type?: React.HTMLInputTypeAttribute,
-  submitButtonText?: string
+  textarea?: boolean,
+  onChangeTextarea?: React.ChangeEventHandler<HTMLTextAreaElement>
 }
 interface FormInputIcon {
   icon: ElementType,
@@ -85,9 +86,14 @@ export function FormHint({ hintText }: { hintText: string }) {
 }
 
 export function FormInput(
-  { twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", iconLeft: IconLeft, iconRight: IconRight, type = "text", submitButtonText = "Enviar", ...rest }: FormInputProps
+  { twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", iconLeft: IconLeft, iconRight: IconRight, type = "text", textarea, onChangeTextarea, ...rest }: FormInputProps
 ) {
   const { variant } = useContext(VariantContext);
+  
+  const textareaEventWarnText = "Para acessar o evento onChange do textarea, use o parâmetro 'onChangeTextarea'"
+  const textareaWarnText = "Para usar o parâmetro 'onChangeTextarea', deve-se passar o parâmetro 'textarea' como true"
+  rest.onChange && textarea && console.log(textareaEventWarnText);
+  onChangeTextarea && !textarea && console.log(textareaWarnText);
 
   return (
     <div
@@ -105,13 +111,22 @@ export function FormInput(
       )}
     >
       {IconLeft && <FormInputIcon icon={IconLeft} />}
-      {type === "text" && (
+      {type === "text" && !textarea && (
         <StyledInput
           className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
           type={type}
           disabled={variant === "disabled"}
           onChange={rest.onChange}
           value={rest.value}
+          placeholder={rest.placeholder}
+        />
+      )}
+      {type === "text" && textarea && (
+        <StyledTextarea
+          className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
+          disabled={variant === "disabled"}
+          onChange={onChangeTextarea}
+          defaultValue={rest.value}
           placeholder={rest.placeholder}
         />
       )}

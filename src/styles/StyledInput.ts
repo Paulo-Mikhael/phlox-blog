@@ -8,3 +8,7 @@ export const StyledInput = styled.input`
     display: none;
   }
 `
+
+export const StyledTextarea = styled.textarea`
+  
+`
