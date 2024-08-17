@@ -126,7 +126,7 @@ export function FormInput(
           className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
           disabled={variant === "disabled"}
           onChange={onChangeTextarea}
-          defaultValue={rest.value}
+          value={rest.value}
           placeholder={rest.placeholder}
         />
       )}

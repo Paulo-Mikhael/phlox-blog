@@ -10,6 +10,7 @@ import { Badge } from "../Bagde";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { IPost } from "../../interfaces/IPost";
 import { http } from "../../http";
+import { HandleBadges } from "../../utils/HandleBadges";
 
 export default function Posts() {
   const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
@@ -34,14 +35,7 @@ export default function Posts() {
           <Form.Input placeholder="Digite o título do post..." iconRight={Search} />
         </Form.Root>
         <SimpleCard title="Categorias">
-            <Badge.HandlePress children={<Badge.Story />} />
-            <Badge.HandlePress children={<Badge.Tecnology />} />
-            <Badge.HandlePress children={<Badge.News />} />
-            <Badge.HandlePress children={<Badge.Programation />} />
-            <Badge.HandlePress children={<Badge.Opportunity />} />
-            <Badge.HandlePress children={<Badge.Offer />} />
-            <Badge.HandlePress children={<Badge.Personalize text="Tag Personalizada" />} />
-            <Badge.HandlePress children={<Badge.Add onClick={() => null} />} />
+          <HandleBadges />
         </SimpleCard>
         <SimpleCard title="Usuários">
           <Form.Root>

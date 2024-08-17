@@ -19,6 +19,20 @@ export function HandleBadges() {
   useEffect(() => {
     setHandleBadgeItems({
       defaultBadges: {
+        storyPressed: false,
+        tecnologyPressed: false,
+        newsPressed: false,
+        programationPressed: false,
+        opportunityPressed: false,
+        offerPressed: false,
+      },
+      personalizedBadges: []
+    });
+  }, []);
+
+  useEffect(() => {
+    setHandleBadgeItems({
+      defaultBadges: {
         storyPressed: storyPressed,
         tecnologyPressed: tecnologyPressed,
         newsPressed: newsPressed,

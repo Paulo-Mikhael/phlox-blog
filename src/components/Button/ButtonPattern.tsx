@@ -8,7 +8,8 @@ interface ButtonRootProps {
   disabled?: boolean,
   children: ReactNode,
   twWidth?: string,
-  type?: "button" | "submit" | "reset" | undefined
+  type?: "button" | "submit" | "reset" | undefined,
+  isLoading?: boolean
 }
 interface ButtonTextProps{
   content: string,
@@ -19,7 +20,7 @@ interface ButtonIconProps {
   size?: number
 }
 
-export function ButtonRoot({ variant = "primary", children, disabled = false, twWidth, type = "button" }: ButtonRootProps){
+export function ButtonRoot({ variant = "primary", children, disabled = false, twWidth, type = "button", isLoading }: ButtonRootProps){
   return (
     <button 
       type={type}
@@ -34,7 +35,7 @@ export function ButtonRoot({ variant = "primary", children, disabled = false, tw
         }
     )}
     >
-      {children}
+      {!isLoading ? children : "Carregando..."}
     </button>
   )
 }
