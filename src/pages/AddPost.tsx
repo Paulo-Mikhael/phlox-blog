@@ -8,12 +8,23 @@ import { http } from "../http";
 import { HandleBadges } from "../utils/HandleBadges";
 import { useRecoilValue } from "recoil";
 import { handleBadgeItems } from "../state/atom";
-import { MarkdownToHtml } from "../utils/markdownToHtml";
 import Markdown from "react-markdown";
+import styled from "styled-components";
+import { colors } from "../styles/variables";
+import { encodeImageToBase64 } from "../utils/base64Encoder";
+
+const StyledDiv = styled.div`
+  a, strong, em{
+    color: ${colors.redMain[300]};
+  }
+  a{
+    text-decoration: underline;
+  }
+`
 
 export default function AddPost() {
   const [postTitle, setPostTitle] = useState<string>("");
-  const [postContent, setPostContent] = useState<string>("");
+  const [postContent, setPostContent] = useState<string>("Imagem em Markdown: ![Imagem](images/user.png)");
   const [image, setImage] = useState<File | null>(null);
   const [base64, setBase64] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -61,14 +72,12 @@ export default function AddPost() {
   useEffect(() => {
     if (!image) return;
 
-    const readFile = new FileReader(); // Cria um novo objeto FileReader para ler o arquivo de imagem.
-
-    readFile.onload = function (event) { // Define uma função de retorno de chamada a ser executada quando a leitura do arquivo for concluída.
-      const baseMeiaQuatro = event.target?.result as string; // Obtém o resultado da leitura (base64) como uma string.
-      setBase64(baseMeiaQuatro); // Define o estado com a string base64.
-    };
-
-    readFile.readAsDataURL(image); // Inicia a leitura do arquivo de imagem como um URL de dados. OBS: "image" é do tipo File
+    encodeImageToBase64(image).then((base64Image) => {
+      console.log("Imagem codificada em Base64:", base64Image);
+      setBase64(base64);
+    }).catch(error => {
+      console.error("Erro ao codificar imagem:", error);
+    });
   }), [image];
 
   return (
@@ -97,7 +106,9 @@ export default function AddPost() {
       <Link to="/">
         Voltar
       </Link>
-      <Markdown>{postContent}</Markdown>
+      <StyledDiv>
+        <Markdown>{postContent}</Markdown>
+      </StyledDiv>
     </Form.Root>
   );
 }
