@@ -6,7 +6,6 @@ import { Checkbox } from "../Checkbox";
 import { SwitchButton } from "../SwitchButton";
 import { useEffect, useState } from "react";
 import { Post } from "./Post";
-import { Badge } from "../Bagde";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { IPost } from "../../interfaces/IPost";
 import { http } from "../../http";

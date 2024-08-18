@@ -56,7 +56,6 @@ export default {
       "image-subtitle": "14px"
     }
   },
-  lightMode: "class",
   plugins: [
     daisyui,
     require('tailwind-scrollbar'),

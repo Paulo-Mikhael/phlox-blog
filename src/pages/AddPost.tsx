@@ -9,22 +9,13 @@ import { HandleBadges } from "../utils/HandleBadges";
 import { useRecoilValue } from "recoil";
 import { handleBadgeItems } from "../state/atom";
 import Markdown from "react-markdown";
-import styled from "styled-components";
-import { colors } from "../styles/variables";
 import { encodeImageToBase64 } from "../utils/base64Encoder";
-
-const StyledDiv = styled.div`
-  a, strong, em{
-    color: ${colors.redMain[300]};
-  }
-  a{
-    text-decoration: underline;
-  }
-`
+import { StyledMarkdown } from "../styles/StyledMarkdown";
+import { languages } from "../data/languages";
 
 export default function AddPost() {
   const [postTitle, setPostTitle] = useState<string>("");
-  const [postContent, setPostContent] = useState<string>("Imagem em Markdown: ![Imagem](images/user.png)");
+  const [postContent, setPostContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [base64, setBase64] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -73,8 +64,7 @@ export default function AddPost() {
     if (!image) return;
 
     encodeImageToBase64(image).then((base64Image) => {
-      console.log("Imagem codificada em Base64:", base64Image);
-      setBase64(base64);
+      setBase64(base64Image);
     }).catch(error => {
       console.error("Erro ao codificar imagem:", error);
     });
@@ -84,7 +74,7 @@ export default function AddPost() {
     <Form.Root className="gap-2 p-4" onSubmit={(evt) => submitPost(evt)}>
       <Form.Label text="Título do Post:" />
       <Form.Input
-        onChange={(evt) => setPostTitle(evt.target.value)}
+        onChange={(evt) => setPostTitle(evt.target.value.replace("#", ""))}
         value={postTitle}
       />
       <Form.Label text="Conteúdo do Post:" />
@@ -106,9 +96,10 @@ export default function AddPost() {
       <Link to="/">
         Voltar
       </Link>
-      <StyledDiv>
+      <StyledMarkdown $languages={languages}>
+        <Markdown>{`# ${postTitle}`}</Markdown>
         <Markdown>{postContent}</Markdown>
-      </StyledDiv>
+      </StyledMarkdown>
     </Form.Root>
   );
 }

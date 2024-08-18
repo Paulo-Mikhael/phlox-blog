@@ -4,6 +4,9 @@ import { createContext, ReactNode, useContext } from "react";
 import { Pagination, ScrollShadow } from "@nextui-org/react";
 import { Badge } from "../../Bagde";
 import { IPost, IPostBadges } from "../../../interfaces/IPost";
+import Markdown from "react-markdown";
+import { StyledMarkdown } from "../../../styles/StyledMarkdown";
+import { languages } from "../../../data/languages";
 
 const FormatContext = createContext<{ format?: "table" | "list" }>({});
 
@@ -35,14 +38,16 @@ function CardTable({ ...post }: IPost) {
       <figure className="h-[251px] max-xl:h-auto w-full">
         <img src={post.image} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
       </figure>
-      <section className="bg-typo-100 w-full h-[305px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
+      <section className="bg-typo-100 w-full max-h-[405px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
         <PostDateInfo date={String(post.postDate)} />
         <span className="flex gap-2 flex-wrap">
           <PostBadges defaultBadges={post.badges.defaultBadges} personalizedBadges={post.badges.personalizedBadges} />
         </span>
-        <ScrollShadow className="flex flex-col gap-[15px] overflow-y-scroll scrollbar scrollbar-none pb-5">
-          <PostSection text={post.title} />
-          <PostText text={post.content} />
+        <ScrollShadow size={26} className="flex flex-col gap-[15px] overflow-y-scroll scrollbar scrollbar-none pb-5">
+          <StyledMarkdown $languages={languages}>
+            <Markdown>{`### **${post.title}**`}</Markdown>
+            <Markdown>{post.content}</Markdown>
+          </StyledMarkdown>
         </ScrollShadow>
       </section>
     </article>
@@ -51,21 +56,23 @@ function CardTable({ ...post }: IPost) {
 
 function CardList({ ...post }: IPost) {
   return (
-    <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
-      <figure className="w-[326px]">
-        <img src={post.image} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
-      </figure>
-      <section className="p-5 w-full flex flex-col gap-2">
-        <PostDateInfo date={String(post.postDate)} />
-        <PostSection text={post.title} />
-        <div className="overflow-hidden">
-          <PostText text={post.content} />
-        </div>
-        <ScrollShadow size={9} hideScrollBar className="h-[30px] flex gap-2 mt-2 flex-wrap pb-2">
-          <PostBadges defaultBadges={post.badges.defaultBadges} personalizedBadges={post.badges.personalizedBadges} />
+    <div className="w-full dark">
+      <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
+        <figure className="w-[326px]">
+          <img src={post.image} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
+        </figure>
+        <ScrollShadow size={18} className="p-5 w-full flex flex-col gap-2 overflow-y-scroll scrollbar scrollbar-none">
+          <PostDateInfo date={String(post.postDate)} />
+          <StyledMarkdown $languages={languages}>
+            <Markdown>{`#### **${post.title}**`}</Markdown>
+            <Markdown>{post.content}</Markdown>
+          </StyledMarkdown>
         </ScrollShadow>
-      </section>
-    </article>
+      </article>
+      <span className="flex gap-2 flex-wrap mt-3">
+        <PostBadges defaultBadges={post.badges.defaultBadges} personalizedBadges={post.badges.personalizedBadges} />
+      </span>
+    </div>
   );
 }
 
@@ -73,7 +80,7 @@ function PostDateInfo({ date }: { date: string }) {
   const daysOfWeek = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
 
   const dateObjc = new Date(date);
-  
+
   return (
     <span className="flex items-center justify-between">
       <div className="flex items-center gap-[10px]">
@@ -84,24 +91,6 @@ function PostDateInfo({ date }: { date: string }) {
         {daysOfWeek[dateObjc.getDay()]}
       </p>
     </span>
-  );
-}
-
-function PostSection({ text }: { text: string }) {
-  return (
-    <h3 className="text-main-red-300 text-section-subtitle">
-      {text}
-    </h3>
-  );
-}
-
-function PostText({ text }: { text: string }) {
-  const { format } = useContext(FormatContext);
-
-  return (
-    <p className={`text-normal w-full max-w-[528px] text-typo-700 text-wrap text-ellipsis ${format === "list" ? "h-[45px]" : "h-auto"}`}>
-      {text}
-    </p>
   );
 }
 

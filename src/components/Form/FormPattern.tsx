@@ -123,7 +123,7 @@ export function FormInput(
       )}
       {type === "text" && textarea && (
         <StyledTextarea
-          className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
+          className={`outline-none h-full w-full text-normal bg-transparent scrollbar scrollbar-none ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
           disabled={variant === "disabled"}
           onChange={onChangeTextarea}
           value={rest.value}
