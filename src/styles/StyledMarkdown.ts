@@ -13,8 +13,6 @@ export const StyledMarkdown = styled.div<{ $languages: ILanguages[] }>`
 
     img{
       background-image: url("images/post-coffee.png");
-      background-repeat: repeat;
-      background-size: 200%;
       max-height: 500px;
       margin: 20px auto;
     }
@@ -65,10 +63,12 @@ export const StyledMarkdown = styled.div<{ $languages: ILanguages[] }>`
   blockquote{
     display: flex;
     padding: 20px;
-    background-color: ${colors.typo[700]};
+    background-color: ${colors.feedback.info};
+    font-weight: bold;
   }
   pre{
     background-color: ${colors.typo[700]};
+    margin: 10px 0px;
     padding: 20px;
     padding-top: 36px;
     color: ${colors.typo[100]};

@@ -2,7 +2,7 @@ import { IPersonalizedBadge } from "./IBadge"
 
 export interface IPost {
   id: string,
-  image: string,
+  imageUrl: string,
   imageAlt?: string,
   title: string,
   content: string,
@@ -20,4 +20,9 @@ export interface IPostBadges {
     offerPressed: boolean,
   },
   personalizedBadges: IPersonalizedBadge[]
+}
+
+export interface IImage {
+  id: string,
+  base64String: string
 }

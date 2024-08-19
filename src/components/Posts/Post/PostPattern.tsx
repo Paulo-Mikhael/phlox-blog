@@ -1,12 +1,13 @@
 import { Clock } from "lucide-react";
 import { colors } from "../../../styles/variables";
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { Pagination, ScrollShadow } from "@nextui-org/react";
 import { Badge } from "../../Bagde";
 import { IPost, IPostBadges } from "../../../interfaces/IPost";
 import Markdown from "react-markdown";
 import { StyledMarkdown } from "../../../styles/StyledMarkdown";
 import { languages } from "../../../data/languages";
+import { getFromImageUrl } from "../../../utils/getFromImageUrl";
 
 const FormatContext = createContext<{ format?: "table" | "list" }>({});
 
@@ -33,17 +34,30 @@ export function PostCard({ ...post }: IPost) {
 }
 
 function CardTable({ ...post }: IPost) {
+  const [imageBase64, setImageBase64] = useState<string>("");
+
+  async function getImageBase64(){
+    const base64String = await getFromImageUrl(post.imageUrl);
+    console.log(base64String);
+
+    setImageBase64(base64String);
+  }
+
+  useEffect(() => {
+    getImageBase64();
+  }, []);
+
   return (
     <article className="w-[375px] max-xl:w-full shadow-xl shadow-typo-700/20 rounded-[10px]">
       <figure className="h-[251px] max-xl:h-auto w-full">
-        <img src={post.image} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
+        <img src={imageBase64} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
       </figure>
       <section className="bg-typo-100 w-full max-h-[405px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
         <PostDateInfo date={String(post.postDate)} />
         <span className="flex gap-2 flex-wrap">
           <PostBadges defaultBadges={post.badges.defaultBadges} personalizedBadges={post.badges.personalizedBadges} />
         </span>
-        <ScrollShadow size={26} className="flex flex-col gap-[15px] overflow-y-scroll scrollbar scrollbar-none pb-5">
+        <ScrollShadow size={26} className="flex flex-col overflow-y-scroll scrollbar scrollbar-none pb-5">
           <StyledMarkdown $languages={languages}>
             <Markdown>{`### **${post.title}**`}</Markdown>
             <Markdown>{post.content}</Markdown>
@@ -55,11 +69,23 @@ function CardTable({ ...post }: IPost) {
 }
 
 function CardList({ ...post }: IPost) {
+  const [imageBase64, setImageBase64] = useState<string>("");
+
+  async function getImageBase64(){
+    const base64String = await getFromImageUrl(post.imageUrl);
+
+    setImageBase64(base64String);
+  }
+
+  useEffect(() => {
+    getImageBase64();
+  }, []);
+
   return (
     <div className="w-full dark">
       <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
         <figure className="w-[326px]">
-          <img src={post.image} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
+          <img src={imageBase64} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
         </figure>
         <ScrollShadow size={18} className="p-5 w-full flex flex-col gap-2 overflow-y-scroll scrollbar scrollbar-none">
           <PostDateInfo date={String(post.postDate)} />

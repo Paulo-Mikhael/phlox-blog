@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
-import { IPost, IPostBadges } from "../interfaces/IPost";
+import { IImage, IPost, IPostBadges } from "../interfaces/IPost";
 import { Button } from "../components/Button";
 import { Form } from "../components/Form";
 import { Link } from "react-router-dom";
@@ -18,6 +18,7 @@ export default function AddPost() {
   const [postContent, setPostContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [base64, setBase64] = useState<string>("");
+  const [newImageId, setNewImageId] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
 
@@ -27,9 +28,15 @@ export default function AddPost() {
 
     if (base64 === "") return;
 
+    const newPostId = uuidV4();
+
+    const newImage: IImage = {
+      id: newImageId,
+      base64String: base64
+    }
     const newPost: IPost = {
-      id: uuidV4(),
-      image: base64,
+      id: newPostId,
+      imageUrl: `images/${newImageId}`,
       title: postTitle,
       postDate: new Date(),
       content: postContent,
@@ -45,6 +52,17 @@ export default function AddPost() {
         personalizedBadges: [...handleBadgesItems.personalizedBadges]
       }
     }
+
+    await http.post("images", newImage)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setPostTitle("");
+        setPostContent("");
+        setIsLoading(false);
+      });
 
     await http.post("posts", newPost)
       .then((response) => {
@@ -65,6 +83,7 @@ export default function AddPost() {
 
     encodeImageToBase64(image).then((base64Image) => {
       setBase64(base64Image);
+      setNewImageId(uuidV4());
     }).catch(error => {
       console.error("Erro ao codificar imagem:", error);
     });
