@@ -14,6 +14,7 @@ export default function AppRouter() {
             <Route path="/" element={<Home />} />
             <Route path="/add" element={<AddPost />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signin" element={<Login signUp />} />
           </Routes>
         </NextUIProvider>
       </RecoilRoot>
