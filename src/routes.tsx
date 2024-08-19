@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import { NextUIProvider } from "@nextui-org/react";
-import AddPost from "./pages/AddPost";
 import { RecoilRoot } from "recoil";
+import Home from "./pages/Home";
+import AddPost from "./pages/AddPost";
+import Login from "./pages/Login";
 
 export default function AppRouter() {
   return (
@@ -12,6 +13,7 @@ export default function AppRouter() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/add" element={<AddPost />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </NextUIProvider>
       </RecoilRoot>

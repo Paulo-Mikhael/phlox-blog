@@ -10,30 +10,20 @@ import { languages } from "../../../data/languages";
 import { getFromImageUrl } from "../../../utils/getFromImageUrl";
 
 const FormatContext = createContext<{ format?: "table" | "list" }>({});
+const ImageBase64Context = createContext<{ postImageBase64: string }>({ postImageBase64: "" });
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
   return (
     <FormatContext.Provider value={{ format }}>
-      {format === "table"
-        ? <div className="flex flex-wrap justify-between gap-10">
-          {children}
-        </div>
-        : <div className="flex flex-wrap flex-col gap-10">
-          {children}
-        </div>}
+      <div className={`flex flex-wrap ${format === "table" ? "justify-between" : "flex-col"} gap-10`}>
+        {children}
+      </div>
     </FormatContext.Provider>
   );
 }
 
 export function PostCard({ ...post }: IPost) {
   const { format } = useContext(FormatContext)
-
-  return (
-    format === "table" ? <CardTable {...post} /> : <CardList {...post} />
-  );
-}
-
-function CardTable({ ...post }: IPost) {
   const [imageBase64, setImageBase64] = useState<string>("");
 
   async function getImageBase64(){
@@ -48,9 +38,19 @@ function CardTable({ ...post }: IPost) {
   }, []);
 
   return (
-    <article className="w-[375px] max-xl:w-full shadow-xl shadow-typo-700/20 rounded-[10px]">
+    <ImageBase64Context.Provider value={{ postImageBase64: imageBase64 }}>
+      {format === "table" ? <CardTable {...post} /> : <CardList {...post} />}
+    </ImageBase64Context.Provider>
+  );
+}
+
+function CardTable({ ...post }: IPost) {
+  const { postImageBase64 } = useContext(ImageBase64Context);
+
+  return (
+    <article className="w-[375px] max-xl:w-full shadow-xl bg-transparent rounded-[10px]">
       <figure className="h-[251px] max-xl:h-auto w-full">
-        <img src={imageBase64} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
+        <img src={postImageBase64} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
       </figure>
       <section className="bg-typo-100 w-full max-h-[405px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
         <PostDateInfo date={String(post.postDate)} />
@@ -69,23 +69,13 @@ function CardTable({ ...post }: IPost) {
 }
 
 function CardList({ ...post }: IPost) {
-  const [imageBase64, setImageBase64] = useState<string>("");
-
-  async function getImageBase64(){
-    const base64String = await getFromImageUrl(post.imageUrl);
-
-    setImageBase64(base64String);
-  }
-
-  useEffect(() => {
-    getImageBase64();
-  }, []);
+  const { postImageBase64 } = useContext(ImageBase64Context);
 
   return (
     <div className="w-full dark">
       <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
-        <figure className="w-[326px]">
-          <img src={imageBase64} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
+        <figure className="w-[326px] max-xl:hidden">
+          <img src={postImageBase64} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
         </figure>
         <ScrollShadow size={18} className="p-5 w-full flex flex-col gap-2 overflow-y-scroll scrollbar scrollbar-none">
           <PostDateInfo date={String(post.postDate)} />

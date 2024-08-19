@@ -49,7 +49,7 @@ export function FormLabel({ text, ...rest }: FormLabelProps) {
     <label
       {...rest}
       className={clsx(
-        "text-normal font-medium",
+        "text-normal font-medium mt-3",
         {
           "text-typo-600": variant === "default",
           "text-feedback-success": variant === "success",
@@ -65,12 +65,12 @@ export function FormLabel({ text, ...rest }: FormLabelProps) {
   );
 }
 
-export function FormHint({ hintText }: { hintText: string }) {
+export function FormHint({ hintText, className }: { hintText: string, className: string }) {
   const { variant } = useContext(VariantContext);
 
   return (
     <p className={clsx(
-      "text-image-subtitle",
+      `text-image-subtitle ${className ? className : ""}`,
       {
         "text-typo-500": variant === "default" || variant === "disabled",
         "text-feedback-success": variant === "success",
