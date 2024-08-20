@@ -1,17 +1,27 @@
-import { useEffect, useState } from "react";
-import { v4 as uuidV4 } from "uuid";
-import { IImage, IPost, IPostBadges } from "../interfaces/IPost";
-import { Button } from "../components/Button";
-import { Form } from "../components/Form";
-import { Link } from "react-router-dom";
-import { http } from "../http";
-import { HandleBadges } from "../utils/HandleBadges";
+import { ElementType, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
+import { v4 as uuidV4 } from "uuid";
 import { handleBadgeItems } from "../state/atom";
-import Markdown from "react-markdown";
+import { IImage, IPost, IPostBadges } from "../interfaces/IPost";
 import { encodeImageToBase64 } from "../utils/base64Encoder";
+import { http } from "../http";
+import { UserCardInfos } from "../components/UserCard";
+import Header from "../components/Header";
+import { DateInfo } from "../utils/DateInfo";
+import { Form } from "../components/Form";
+import { Bold, Eraser, ImagePlus, ImageUp, Italic, Link, List, ListOrdered, Type } from "lucide-react";
+import { colors } from "../styles/variables";
+import styled from "styled-components";
+import { HandleBadges } from "../utils/HandleBadges";
 import { StyledMarkdown } from "../styles/StyledMarkdown";
-import { languages } from "../data/languages";
+import Markdown from "react-markdown";
+import { ScrollShadow } from "@nextui-org/scroll-shadow";
+
+const StyledLine = styled.div`
+  height: 24px;
+  width: 2px;
+  background-color: ${colors.typo[500]};
+`
 
 export default function AddPost() {
   const [postTitle, setPostTitle] = useState<string>("");
@@ -20,6 +30,43 @@ export default function AddPost() {
   const [base64, setBase64] = useState<string>("");
   const [newImageId, setNewImageId] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [toolbarItems, setToolbarItems] = useState<{ icon: ElementType, onClick?: () => void }[]>([
+    {
+      icon: Type,
+      onClick: () => {
+        setPostContent(prv => prv + "#");
+      }
+    },
+    {
+      icon: Bold,
+      onClick: () => {
+      }
+    },
+    {
+      icon: Italic,
+      onClick: () => null
+    },
+    {
+      icon: List,
+      onClick: () => null
+    },
+    {
+      icon: ListOrdered,
+      onClick: () => null
+    },
+    {
+      icon: ImagePlus,
+      onClick: () => null
+    },
+    {
+      icon: ImageUp,
+      onClick: () => null
+    },
+    {
+      icon: Link,
+      onClick: () => null
+    }
+  ]);
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
 
   async function submitPost(evt: React.FormEvent<HTMLFormElement>) {
@@ -37,7 +84,7 @@ export default function AddPost() {
     const newPost: IPost = {
       id: newPostId,
       imageUrl: `images/${newImageId}`,
-      title: postTitle,
+      title: "",
       postDate: new Date(),
       content: postContent,
       badges: {
@@ -90,35 +137,59 @@ export default function AddPost() {
   }), [image];
 
   return (
-    <Form.Root className="gap-2 p-4" onSubmit={(evt) => submitPost(evt)}>
-      <Form.Label text="Título do Post:" />
-      <Form.Input
-        onChange={(evt) => setPostTitle(evt.target.value.replace("#", ""))}
-        value={postTitle}
-      />
-      <Form.Label text="Conteúdo do Post:" />
-      <Form.Input
-        textarea
-        onChangeTextarea={(evt) => setPostContent(evt.target.value)}
-        value={postContent}
-      />
-      <Form.Label text="Categorias/Badges do Post:" />
-      <HandleBadges />
-      <Form.Input
-        type="file"
-        onChange={(evt) => setImage(evt.target.files?.[0].type.startsWith("image") ? evt.target.files?.[0] : null)}
-        twPaddingX="p-0"
-      />
-      <Button.Root isLoading={isLoading} type="submit">
-        <Button.Text content="Postar" />
-      </Button.Root>
-      <Link to="/">
-        Voltar
-      </Link>
-      <StyledMarkdown $languages={languages}>
-        <Markdown>{`# ${postTitle}`}</Markdown>
-        <Markdown>{postContent}</Markdown>
-      </StyledMarkdown>
-    </Form.Root>
+    <>
+      <Header items={false}>
+        <div className="w-full px-[161px] flex justify-between">
+          <UserCardInfos userAvatar="images/user.png" userName="Usuário" userPostsNumber={0} />
+          <DateInfo date={new Date().toDateString()} />
+        </div>
+      </Header>
+      <main className="w-full px-[161px] mt-[50px] flex flex-col pb-14">
+        <Form.Root className="gap-3">
+          <Form.Label text="Selecione as categorias do post:" />
+          <HandleBadges />
+        </Form.Root>
+        <Form.Root className="mt-[10px]">
+          <Form.Label text="Título do post:" id="" />
+          <Form.Input value={postTitle} onChange={(evt) => setPostTitle(evt.target.value)} placeholder="Digite o título do post" />
+          <Form.Hint hintText="Essa será a frase que será filtrada ao pesquisar esta postagem" />
+        </Form.Root>
+        <span className="h-[40px] bg-typo-200 rounded-[10px] flex justify-between items-center px-3 mt-[20px]">
+          <div className="h-full flex items-center gap-2">
+            {toolbarItems.map((item, index) => (
+              <div key={index} className="flex gap-2">
+                <item.icon 
+                  className="cursor-pointer" 
+                  color={colors.typo[600]} 
+                  size={22} 
+                  onClick={item.onClick}
+                />
+                <StyledLine />
+              </div>
+            ))}
+          </div>
+          <Eraser className="cursor-pointer" color={colors.redMain[300]} size={22} />
+        </span>
+        <Form.Root className="mt-[10px] gap-3" twFlexDirection="flex-row">
+          <Form.Input
+            textarea
+            placeholder="Qual o assunto de hoje?"
+            twMinHeightTextArea="min-h-[480px]"
+            onChangeTextarea={(evt) => setPostContent(evt.target.value)}
+            value={postContent}
+          />
+          <StyledMarkdown>
+            <ScrollShadow className="w-[430px]">
+              <Markdown>
+                {`# ${postTitle}`}
+              </Markdown>
+              <Markdown>
+                {postContent}
+              </Markdown>
+            </ScrollShadow>
+          </StyledMarkdown>
+        </Form.Root>
+      </main>
+    </>
   );
 }

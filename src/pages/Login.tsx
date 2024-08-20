@@ -19,7 +19,7 @@ export default function Login({ signUp = false }: { signUp?: boolean }) {
     <StyledDiv>
       <main className="z-[1] w-[95%] h-[590px] rounded-[10px] bg-typo-100 flex items-center justify-between p-[22px]">
         <img src={signUp ? "images/signup-image.png" : "images/login-image.png"} alt="" className="w-[550px] h-[550px]" />
-        <div className="rounded-[4px] border border-typo-300 h-full w-[569px] py-[50px] px-[28px] flex flex-col justify-between items-center gap-[20px]">
+        <div className="rounded-[4px] border border-typo-300 h-full w-[569px] py-[50px] px-[28px] flex flex-col justify-evenly items-center gap-[20px]">
           <span className="flex flex-col items-center gap-6">
             <img src="icons/phlox-logo.png" alt="" className="w-[200px]" />
             <p className="text-center text-typo-700 text-section-subtitle font-medium">

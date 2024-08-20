@@ -9,7 +9,8 @@ interface ButtonRootProps {
   children: ReactNode,
   twWidth?: string,
   type?: "button" | "submit" | "reset" | undefined,
-  isLoading?: boolean
+  isLoading?: boolean,
+  onClick?: () => void
 }
 interface ButtonTextProps{
   content: string,
@@ -20,9 +21,10 @@ interface ButtonIconProps {
   size?: number
 }
 
-export function ButtonRoot({ variant = "primary", children, disabled = false, twWidth, type = "button", isLoading }: ButtonRootProps){
+export function ButtonRoot({ variant = "primary", children, disabled = false, twWidth, type = "button", isLoading, onClick }: ButtonRootProps){
   return (
     <button 
+      onClick={onClick}
       type={type}
       disabled={disabled}
       className={clsx(

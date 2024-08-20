@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { createContext, ElementType, FormHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
-import { StyledInput, StyledTextarea } from "../../styles/StyledInput";
+import { StyledInput } from "../../styles/StyledInput";
 
 type FormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
 
@@ -12,6 +12,7 @@ interface FormRootProps extends FormHTMLAttributes<HTMLFormElement> {
   variant?: FormInputVariant,
   disabled?: boolean,
   twWidth?: string,
+  twFlexDirection?: string,
   children: ReactNode
 }
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -21,7 +22,8 @@ interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   iconRight?: ElementType,
   type?: React.HTMLInputTypeAttribute,
   textarea?: boolean,
-  onChangeTextarea?: React.ChangeEventHandler<HTMLTextAreaElement>
+  onChangeTextarea?: React.ChangeEventHandler<HTMLTextAreaElement>,
+  twMinHeightTextArea?: string
 }
 interface FormInputIcon {
   icon: ElementType,
@@ -31,10 +33,10 @@ interface FormInputIcon {
 
 const VariantContext = createContext<{ variant?: FormInputVariant }>({});
 
-export function FormRoot({ variant = "default", children, disabled, twWidth = "w-full", ...rest }: FormRootProps) {
+export function FormRoot({ variant = "default", children, disabled, twWidth = "w-full", twFlexDirection = "flex-col", ...rest }: FormRootProps) {
   disabled === true ? variant = "disabled" : variant
   return (
-    <form onSubmit={rest.onSubmit} className={`flex flex-col gap-1 ${twWidth} ${rest.className}`}>
+    <form onSubmit={rest.onSubmit} className={`flex ${twFlexDirection} gap-1 ${twWidth} ${rest.className}`}>
       <VariantContext.Provider value={{ variant }}>
         {children}
       </VariantContext.Provider>
@@ -65,12 +67,12 @@ export function FormLabel({ text, ...rest }: FormLabelProps) {
   );
 }
 
-export function FormHint({ hintText, className }: { hintText: string, className: string }) {
+export function FormHint({ hintText, className }: { hintText: string, className?: string }) {
   const { variant } = useContext(VariantContext);
 
   return (
     <p className={clsx(
-      `text-image-subtitle ${className ? className : ""}`,
+      `text-image-subtitle ${className}`,
       {
         "text-typo-500": variant === "default" || variant === "disabled",
         "text-feedback-success": variant === "success",
@@ -98,7 +100,7 @@ export function FormInput(
   return (
     <div
       className={clsx(
-        `${twPaddingX} ${twPaddingY} w-full rounded-[6px] flex gap-4 justify-between bg-typo-100 items-center ${rest.className}`,
+        `${twPaddingX} ${twPaddingY} w-full rounded-[6px] flex gap-4 justify-between bg-typo-100 ${rest.className}`,
         {
           "text-typo-700 border-typo-500 focus-within:border-main-red-200 caret-main-red-300": variant === "default",
           "text-feedback-success border-feedback-success": variant === "success",
@@ -122,8 +124,10 @@ export function FormInput(
         />
       )}
       {type === "text" && textarea && (
-        <StyledTextarea
-          className={`outline-none h-full w-full text-normal bg-transparent scrollbar scrollbar-none ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
+        <textarea
+          className={
+            `outline-none ${rest.twMinHeightTextArea} h-full w-full text-normal bg-transparent scrollbar scrollbar-none ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`
+          }
           disabled={variant === "disabled"}
           onChange={onChangeTextarea}
           value={rest.value}

@@ -1,36 +1,12 @@
-import { INavItems } from "../interfaces/INavItems"
 import Header from "../components/Header"
 import Hero from "../components/Hero"
 import Posts from "../components/Posts"
 
 export default function Home() {
-  const navItems: INavItems[] = [
-    {
-      name: "Home",
-      path: "",
-      current: true
-    },
-    {
-      name: "Categorias",
-      path: "",
-      current: false
-    },
-    {
-      name: "Shop",
-      path: "",
-      current: false
-    },
-    {
-      name: "Contate-nos",
-      path: "",
-      current: false
-    },
-  ]
-
   return (
     <>
       <div className="mb-[100px]">
-        <Header navItems={navItems} />
+        <Header />
       </div>
       <div className="w-full flex justify-center z-[1]">
         <Hero />

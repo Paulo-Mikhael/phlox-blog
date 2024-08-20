@@ -1,13 +1,11 @@
-import { Clock } from "lucide-react";
-import { colors } from "../../../styles/variables";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { Pagination, ScrollShadow } from "@nextui-org/react";
 import { Badge } from "../../Bagde";
 import { IPost, IPostBadges } from "../../../interfaces/IPost";
 import Markdown from "react-markdown";
 import { StyledMarkdown } from "../../../styles/StyledMarkdown";
-import { languages } from "../../../data/languages";
 import { getFromImageUrl } from "../../../utils/getFromImageUrl";
+import { DateInfo } from "../../../utils/DateInfo";
 
 const FormatContext = createContext<{ format?: "table" | "list" }>({});
 const ImageBase64Context = createContext<{ postImageBase64: string }>({ postImageBase64: "" });
@@ -53,12 +51,12 @@ function CardTable({ ...post }: IPost) {
         <img src={postImageBase64} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
       </figure>
       <section className="bg-typo-100 w-full max-h-[405px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
-        <PostDateInfo date={String(post.postDate)} />
+        <DateInfo icon date={String(post.postDate)} />
         <span className="flex gap-2 flex-wrap">
           <PostBadges defaultBadges={post.badges.defaultBadges} personalizedBadges={post.badges.personalizedBadges} />
         </span>
         <ScrollShadow size={26} className="flex flex-col overflow-y-scroll scrollbar scrollbar-none pb-5">
-          <StyledMarkdown $languages={languages}>
+          <StyledMarkdown>
             <Markdown>{`### **${post.title}**`}</Markdown>
             <Markdown>{post.content}</Markdown>
           </StyledMarkdown>
@@ -78,8 +76,8 @@ function CardList({ ...post }: IPost) {
           <img src={postImageBase64} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
         </figure>
         <ScrollShadow size={18} className="p-5 w-full flex flex-col gap-2 overflow-y-scroll scrollbar scrollbar-none">
-          <PostDateInfo date={String(post.postDate)} />
-          <StyledMarkdown $languages={languages}>
+          <DateInfo icon date={String(post.postDate)} />
+          <StyledMarkdown>
             <Markdown>{`#### **${post.title}**`}</Markdown>
             <Markdown>{post.content}</Markdown>
           </StyledMarkdown>
@@ -89,24 +87,6 @@ function CardList({ ...post }: IPost) {
         <PostBadges defaultBadges={post.badges.defaultBadges} personalizedBadges={post.badges.personalizedBadges} />
       </span>
     </div>
-  );
-}
-
-function PostDateInfo({ date }: { date: string }) {
-  const daysOfWeek = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
-
-  const dateObjc = new Date(date);
-
-  return (
-    <span className="flex items-center justify-between">
-      <div className="flex items-center gap-[10px]">
-        <Clock color={colors.redMain[300]} size={22} />
-        <p className="text-typo-700">{`${dateObjc.toLocaleString().slice(0, 10)}`}</p>
-      </div>
-      <p className="text-typo-700">
-        {daysOfWeek[dateObjc.getDay()]}
-      </p>
-    </span>
   );
 }
 

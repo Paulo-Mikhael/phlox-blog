@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { colors, sizes } from "./variables";
-import { ILanguages } from "../interfaces/ILanguage";
+import { languages } from "../data/languages";
 
-export const StyledMarkdown = styled.div<{ $languages: ILanguages[] }>`
+export const StyledMarkdown = styled.div`
   display: flex;
   flex-direction: column;
   color: ${colors.typo[700]};
@@ -87,7 +87,7 @@ export const StyledMarkdown = styled.div<{ $languages: ILanguages[] }>`
       font-size: ${sizes.font.imageSubtitle};
       color: ${colors.typo[300]};
     }
-    ${props => props.$languages.map(({ abbreviation, name }) => `
+    ${languages.map(({ abbreviation, name }) => `
       &.language-${abbreviation} {
         &::after {
           content: "${name}";
