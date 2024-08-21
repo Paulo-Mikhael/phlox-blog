@@ -29,8 +29,9 @@ export default function AddPost() {
   const [image, setImage] = useState<File | null>(null);
   const [base64, setBase64] = useState<string>("");
   const [newImageId, setNewImageId] = useState<string>("");
+  const [highlightedTxt, setHighlightedTxt] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [toolbarItems, setToolbarItems] = useState<{ icon: ElementType, onClick?: () => void }[]>([
+  const toolbarItems: { icon: ElementType, onClick?: () => void, onHover?: () => void }[] = [
     {
       icon: Type,
       onClick: () => {
@@ -40,11 +41,14 @@ export default function AddPost() {
     {
       icon: Bold,
       onClick: () => {
+        highlightedTxt && setPostContent(prv => prv.replace(highlightedTxt, `**${highlightedTxt}**`));
       }
     },
     {
       icon: Italic,
-      onClick: () => null
+      onClick: () => {
+        highlightedTxt && setPostContent(prv => prv.replace(highlightedTxt, `*${highlightedTxt}*`));
+      }
     },
     {
       icon: List,
@@ -66,7 +70,7 @@ export default function AddPost() {
       icon: Link,
       onClick: () => null
     }
-  ]);
+  ];
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
 
   async function submitPost(evt: React.FormEvent<HTMLFormElement>) {
@@ -126,14 +130,39 @@ export default function AddPost() {
   }
 
   useEffect(() => {
+    const setSelectedText = () => {
+      const selection = window.getSelection();
+      if (!selection) return;
+      
+      const selectedText = selection.toString();
+      if (selectedText === "") return;
+
+      setHighlightedTxt(selectedText);
+    }
+
+    document.addEventListener("mouseup", () => {
+      setSelectedText();
+    });
+    document.addEventListener("keyup", () => {
+      setSelectedText();
+    });
+
+    return () => {
+      document.removeEventListener("mouseup", setSelectedText);
+      document.removeEventListener("keyup", setSelectedText);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!image) return;
 
-    encodeImageToBase64(image).then((base64Image) => {
-      setBase64(base64Image);
-      setNewImageId(uuidV4());
-    }).catch(error => {
-      console.error("Erro ao codificar imagem:", error);
-    });
+    encodeImageToBase64(image)
+      .then((base64Image) => {
+        setBase64(base64Image);
+        setNewImageId(uuidV4());
+      }).catch(error => {
+        console.error("Erro ao codificar imagem:", error);
+      });
   }), [image];
 
   return (
@@ -144,7 +173,7 @@ export default function AddPost() {
           <DateInfo date={new Date().toDateString()} />
         </div>
       </Header>
-      <main className="w-full px-[161px] mt-[50px] flex flex-col pb-14">
+      <main className="w-full px-[161px] mt-[30px] flex flex-col pb-14">
         <Form.Root className="gap-3">
           <Form.Label text="Selecione as categorias do post:" />
           <HandleBadges />
@@ -152,7 +181,7 @@ export default function AddPost() {
         <Form.Root className="mt-[10px]">
           <Form.Label text="Título do post:" id="" />
           <Form.Input value={postTitle} onChange={(evt) => setPostTitle(evt.target.value)} placeholder="Digite o título do post" />
-          <Form.Hint hintText="Essa será a frase que será filtrada ao pesquisar esta postagem" />
+          <Form.Hint hintText="Essa será a frase que será filtrada ao pesquisar por esta postagem" />
         </Form.Root>
         <span className="h-[40px] bg-typo-200 rounded-[10px] flex justify-between items-center px-3 mt-[20px]">
           <div className="h-full flex items-center gap-2">
@@ -163,12 +192,13 @@ export default function AddPost() {
                   color={colors.typo[600]} 
                   size={22} 
                   onClick={item.onClick}
+                  onMouseOver={item.onHover}
                 />
                 <StyledLine />
               </div>
             ))}
           </div>
-          <Eraser className="cursor-pointer" color={colors.redMain[300]} size={22} />
+          <Eraser onMouseOver={() => alert(highlightedTxt)} className="cursor-pointer" color={colors.redMain[300]} size={22} />
         </span>
         <Form.Root className="mt-[10px] gap-3" twFlexDirection="flex-row">
           <Form.Input
@@ -181,7 +211,7 @@ export default function AddPost() {
           <StyledMarkdown>
             <ScrollShadow className="w-[430px]">
               <Markdown>
-                {`# ${postTitle}`}
+                {`# ${highlightedTxt}`}
               </Markdown>
               <Markdown>
                 {postContent}
