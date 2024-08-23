@@ -26,60 +26,60 @@ export default function AddPost() {
   const [newImageId, setNewImageId] = useState<string>("");
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
-  const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
+  // const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
 
-  async function submitPost(evt: React.FormEvent<HTMLFormElement>) {
-    evt.preventDefault();
+  // async function submitPost(evt: React.FormEvent<HTMLFormElement>) {
+  //   evt.preventDefault();
 
-    if (base64 === "") return;
+  //   if (base64 === "") return;
 
-    const newPostId = uuidV4();
+  //   const newPostId = uuidV4();
 
-    const newImage: IImage = {
-      id: newImageId,
-      base64String: base64
-    }
-    const newPost: IPost = {
-      id: newPostId,
-      imageUrl: `images/${newImageId}`,
-      title: "",
-      postDate: new Date(),
-      content: postContent,
-      badges: {
-        defaultBadges: {
-          storyPressed: handleBadgesItems.defaultBadges.storyPressed,
-          newsPressed: handleBadgesItems.defaultBadges.newsPressed,
-          programationPressed: handleBadgesItems.defaultBadges.programationPressed,
-          offerPressed: handleBadgesItems.defaultBadges.offerPressed,
-          tecnologyPressed: handleBadgesItems.defaultBadges.tecnologyPressed,
-          opportunityPressed: handleBadgesItems.defaultBadges.opportunityPressed,
-        },
-        personalizedBadges: [...handleBadgesItems.personalizedBadges]
-      }
-    }
+  //   const newImage: IImage = {
+  //     id: newImageId,
+  //     base64String: base64
+  //   }
+  //   const newPost: IPost = {
+  //     id: newPostId,
+  //     imageUrl: `images/${newImageId}`,
+  //     title: "",
+  //     postDate: new Date(),
+  //     content: postContent,
+  //     badges: {
+  //       defaultBadges: {
+  //         storyPressed: handleBadgesItems.defaultBadges.storyPressed,
+  //         newsPressed: handleBadgesItems.defaultBadges.newsPressed,
+  //         programationPressed: handleBadgesItems.defaultBadges.programationPressed,
+  //         offerPressed: handleBadgesItems.defaultBadges.offerPressed,
+  //         tecnologyPressed: handleBadgesItems.defaultBadges.tecnologyPressed,
+  //         opportunityPressed: handleBadgesItems.defaultBadges.opportunityPressed,
+  //       },
+  //       personalizedBadges: [...handleBadgesItems.personalizedBadges]
+  //     }
+  //   }
 
-    await http.post("images", newImage)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        setPostTitle("");
-        setPostContent("");
-      });
+  //   await http.post("images", newImage)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setPostTitle("");
+  //       setPostContent("");
+  //     });
 
-    await http.post("posts", newPost)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setPostTitle("");
-        setPostContent("");
-      });
-  }
+  //   await http.post("posts", newPost)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     })
+  //     .finally(() => {
+  //       setPostTitle("");
+  //       setPostContent("");
+  //     });
+  // }
 
   useEffect(() => {
     if (!image) return;
