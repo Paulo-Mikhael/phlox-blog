@@ -13,7 +13,7 @@ interface FormRootProps extends FormHTMLAttributes<HTMLFormElement> {
   disabled?: boolean,
   twWidth?: string,
   twFlexDirection?: string,
-  children: ReactNode
+  children: ReactNode,
 }
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   twPaddingX?: string,
@@ -23,12 +23,13 @@ interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: React.HTMLInputTypeAttribute,
   textarea?: boolean,
   onChangeTextarea?: React.ChangeEventHandler<HTMLTextAreaElement>,
-  twMinHeightTextArea?: string
+  twMinHeightTextArea?: string,
+  children?: ReactNode
 }
 interface FormInputIcon {
   icon: ElementType,
   size?: number,
-  color?: string
+  onClick?: () => void
 }
 
 const VariantContext = createContext<{ variant?: FormInputVariant }>({});
@@ -36,7 +37,13 @@ const VariantContext = createContext<{ variant?: FormInputVariant }>({});
 export function FormRoot({ variant = "default", children, disabled, twWidth = "w-full", twFlexDirection = "flex-col", ...rest }: FormRootProps) {
   disabled === true ? variant = "disabled" : variant
   return (
-    <form onSubmit={rest.onSubmit} className={`flex ${twFlexDirection} gap-1 ${twWidth} ${rest.className}`}>
+    <form
+      onSubmit={(evt) => {
+        evt.preventDefault();
+        rest.onSubmit && rest.onSubmit(evt);
+      }}
+      className={`flex ${twFlexDirection} gap-1 ${twWidth} ${rest.className}`}
+    >
       <VariantContext.Provider value={{ variant }}>
         {children}
       </VariantContext.Provider>
@@ -53,12 +60,12 @@ export function FormLabel({ text, ...rest }: FormLabelProps) {
       className={clsx(
         "text-normal font-medium mt-3",
         {
-          "text-typo-600": variant === "default",
+          "text-typo-600": variant === "default" || variant === undefined,
           "text-feedback-success": variant === "success",
           "text-feedback-warning": variant === "warning",
           "text-feedback-danger": variant === "danger",
           "text-feedback-info": variant === "info",
-          "text-typo-600 cursor-not-allowed": variant === "disabled"
+          "text-typo-600 cursor-not-allowed": variant === "disabled",
         }
       )}
     >
@@ -88,10 +95,20 @@ export function FormHint({ hintText, className }: { hintText: string, className?
 }
 
 export function FormInput(
-  { twPaddingX = "px-[16px]", twPaddingY = "py-[10px]", iconLeft: IconLeft, iconRight: IconRight, type = "text", textarea, onChangeTextarea, ...rest }: FormInputProps
+  { 
+    twPaddingX = "px-[16px]",
+    twPaddingY = "py-[10px]",
+    iconLeft: IconLeft,
+    iconRight: IconRight,
+    type = "text",
+    textarea,
+    onChangeTextarea,
+    children, 
+    ...rest 
+  }: FormInputProps
 ) {
   const { variant } = useContext(VariantContext);
-  
+
   const textareaEventWarnText = "Para acessar o evento onChange do textarea, use o parâmetro 'onChangeTextarea'"
   const textareaWarnText = "Para usar o parâmetro 'onChangeTextarea', deve-se passar o parâmetro 'textarea' como true"
   rest.onChange && textarea && console.log(textareaEventWarnText);
@@ -118,9 +135,7 @@ export function FormInput(
           className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
           type={type}
           disabled={variant === "disabled"}
-          onChange={rest.onChange}
-          value={rest.value}
-          placeholder={rest.placeholder}
+          {...rest}
         />
       )}
       {type === "text" && textarea && (
@@ -132,34 +147,38 @@ export function FormInput(
           onChange={onChangeTextarea}
           value={rest.value}
           placeholder={rest.placeholder}
+          maxLength={rest.maxLength}
         />
       )}
       {type === "file" && (
         <StyledInput
           type={type}
           className="bg-white file-input-xs file-input-bordered file-input-error file-input w-full max-w-xs"
-          onChange={rest.onChange}
+          {...rest}
         />
       )}
       {type === "date" && (
         <StyledInput
           type={type}
           className="w-full"
-          onChange={rest.onChange}
+          {...rest}
         />
       )}
-      {IconRight && <FormInputIcon icon={IconRight} />}
+      {IconRight && !children && <FormInputIcon icon={IconRight} />}
+      {children}
     </div>
   );
 }
 
-function FormInputIcon({ icon: Icon, size = 20 }: FormInputIcon) {
+export function FormInputIcon({ icon: Icon, size = 20, onClick }: FormInputIcon) {
   const { variant } = useContext(VariantContext)
 
   return (
     <Icon
+      onClick={onClick}
       size={size}
       className={clsx(
+        `${onClick ? "cursor-pointer" : "cursor-default"}`,
         {
           "text-main-red-300": variant === "default",
           "text-feedback-success": variant === "success",

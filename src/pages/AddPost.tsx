@@ -1,76 +1,33 @@
-import { ElementType, useEffect, useState } from "react";
+import { ScrollShadow } from "@nextui-org/scroll-shadow";
+import { useEffect, useRef, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { useRecoilValue } from "recoil";
+import Markdown from "react-markdown";
 import { v4 as uuidV4 } from "uuid";
-import { handleBadgeItems } from "../state/atom";
+import clsx from "clsx";
+import { http } from "../http";
 import { IImage, IPost, IPostBadges } from "../interfaces/IPost";
 import { encodeImageToBase64 } from "../utils/base64Encoder";
-import { http } from "../http";
-import { UserCardInfos } from "../components/UserCard";
-import Header from "../components/Header";
-import { DateInfo } from "../utils/DateInfo";
-import { Form } from "../components/Form";
-import { Bold, Eraser, ImagePlus, ImageUp, Italic, Link, List, ListOrdered, Type } from "lucide-react";
-import { colors } from "../styles/variables";
-import styled from "styled-components";
 import { HandleBadges } from "../utils/HandleBadges";
+import { DateInfo } from "../utils/DateInfo";
 import { StyledMarkdown } from "../styles/StyledMarkdown";
-import Markdown from "react-markdown";
-import { ScrollShadow } from "@nextui-org/scroll-shadow";
-
-const StyledLine = styled.div`
-  height: 24px;
-  width: 2px;
-  background-color: ${colors.typo[500]};
-`
+import { handleBadgeItems } from "../state/atom";
+import { UserCardInfos } from "../components/UserCard";
+import { Form } from "../components/Form";
+import { Toolbar } from "../components/Toolbar";
+import Header from "../components/Header";
 
 export default function AddPost() {
+  const fileInput = useRef<HTMLInputElement>(null);
   const [postTitle, setPostTitle] = useState<string>("");
   const [postContent, setPostContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [base64, setBase64] = useState<string>("");
   const [newImageId, setNewImageId] = useState<string>("");
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const toolbarItems: { icon: ElementType, onClick?: () => void, onHover?: () => void }[] = [
-    {
-      icon: Type,
-      onClick: () => {
-        setPostContent(prv => prv + "#");
-      }
-    },
-    {
-      icon: Bold,
-      onClick: () => {
-        highlightedTxt && setPostContent(prv => prv.replace(highlightedTxt, `**${highlightedTxt}**`));
-      }
-    },
-    {
-      icon: Italic,
-      onClick: () => {
-        highlightedTxt && setPostContent(prv => prv.replace(highlightedTxt, `*${highlightedTxt}*`));
-      }
-    },
-    {
-      icon: List,
-      onClick: () => null
-    },
-    {
-      icon: ListOrdered,
-      onClick: () => null
-    },
-    {
-      icon: ImagePlus,
-      onClick: () => null
-    },
-    {
-      icon: ImageUp,
-      onClick: () => null
-    },
-    {
-      icon: Link,
-      onClick: () => null
-    }
-  ];
+  const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
 
   async function submitPost(evt: React.FormEvent<HTMLFormElement>) {
@@ -130,43 +87,50 @@ export default function AddPost() {
   }
 
   useEffect(() => {
-    const setSelectedText = () => {
-      const selection = window.getSelection();
-      if (!selection) return;
-      
-      const selectedText = selection.toString();
-      if (selectedText === "") return;
-
-      setHighlightedTxt(selectedText);
-    }
-
-    document.addEventListener("mouseup", () => {
-      setSelectedText();
-    });
-    document.addEventListener("keyup", () => {
-      setSelectedText();
-    });
-
-    return () => {
-      document.removeEventListener("mouseup", setSelectedText);
-      document.removeEventListener("keyup", setSelectedText);
-    };
-  }, []);
-
-  useEffect(() => {
     if (!image) return;
+    setImageUrl(URL.createObjectURL(image));
 
     encodeImageToBase64(image)
       .then((base64Image) => {
         setBase64(base64Image);
         setNewImageId(uuidV4());
+        setImage(null);
       }).catch(error => {
         console.error("Erro ao codificar imagem:", error);
       });
   }), [image];
 
+  useEffect(() => {
+    if (postContent.trim() === "") {
+      setHighlightedTxt("");
+    }
+  }, [postContent]);
+
+  useEffect(() => {
+    if (base64 === "") return;
+
+    // if (imageUrl && image?.name) {
+    //   const link = document.createElement('a');
+    //   link.href = imageUrl;
+    //   link.download = image.name;
+    //   document.body.appendChild(link);
+    //   link.click();
+    //   document.body.removeChild(link);
+    // }
+  }, [base64]);
+
   return (
     <>
+      <input
+        onChange={(evt) => {
+          const file = evt.target.files?.[0].type.startsWith("image") ? evt.target.files?.[0] : null;
+          setImage(file);
+          setPostContent(prv => prv + ` ![desc](${imageUrl})`);
+        }}
+        type="file"
+        hidden
+        ref={fileInput}
+      />
       <Header items={false}>
         <div className="w-full px-[161px] flex justify-between">
           <UserCardInfos userAvatar="images/user.png" userName="Usuário" userPostsNumber={0} />
@@ -174,44 +138,38 @@ export default function AddPost() {
         </div>
       </Header>
       <main className="w-full px-[161px] mt-[30px] flex flex-col pb-14">
-        <Form.Root className="gap-3">
+        <div className="gap-3 flex flex-col">
           <Form.Label text="Selecione as categorias do post:" />
           <HandleBadges />
-        </Form.Root>
+        </div>
         <Form.Root className="mt-[10px]">
           <Form.Label text="Título do post:" id="" />
           <Form.Input value={postTitle} onChange={(evt) => setPostTitle(evt.target.value)} placeholder="Digite o título do post" />
           <Form.Hint hintText="Essa será a frase que será filtrada ao pesquisar por esta postagem" />
         </Form.Root>
-        <span className="h-[40px] bg-typo-200 rounded-[10px] flex justify-between items-center px-3 mt-[20px]">
-          <div className="h-full flex items-center gap-2">
-            {toolbarItems.map((item, index) => (
-              <div key={index} className="flex gap-2">
-                <item.icon 
-                  className="cursor-pointer" 
-                  color={colors.typo[600]} 
-                  size={22} 
-                  onClick={item.onClick}
-                  onMouseOver={item.onHover}
-                />
-                <StyledLine />
-              </div>
-            ))}
-          </div>
-          <Eraser onMouseOver={() => alert(highlightedTxt)} className="cursor-pointer" color={colors.redMain[300]} size={22} />
-        </span>
-        <Form.Root className="mt-[10px] gap-3" twFlexDirection="flex-row">
+        <Toolbar fileInput={fileInput} highlightedTxt={highlightedTxt} setHighlightedTxt={setHighlightedTxt} setContent={setPostContent} />
+        <Form.Root
+          className={clsx(
+            "mt-[10px]",
+            {
+              "gap-3": htmlPreview
+            }
+          )}
+          twFlexDirection="flex-row"
+        >
           <Form.Input
             textarea
             placeholder="Qual o assunto de hoje?"
             twMinHeightTextArea="min-h-[480px]"
             onChangeTextarea={(evt) => setPostContent(evt.target.value)}
             value={postContent}
-          />
+          >
+            <Form.InputIcon size={24} icon={htmlPreview ? EyeOff : Eye} onClick={() => setHtmlPreview(!htmlPreview)} />
+          </Form.Input>
           <StyledMarkdown>
-            <ScrollShadow className="w-[430px]">
+            <ScrollShadow className={htmlPreview ? "w-[430px] 2xl:w-[700px]" : "hidden"}>
               <Markdown>
-                {`# ${highlightedTxt}`}
+                {`# ${postTitle}`}
               </Markdown>
               <Markdown>
                 {postContent}

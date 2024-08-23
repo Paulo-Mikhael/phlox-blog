@@ -12,7 +12,6 @@ export const StyledMarkdown = styled.div`
     overflow: hidden;
 
     img{
-      background-image: url("images/post-coffee.png");
       max-height: 500px;
       margin: 20px auto;
     }
@@ -55,6 +54,10 @@ export const StyledMarkdown = styled.div`
   ul{
     margin-left: 20px;
     list-style: disc;
+  }
+  ol{
+    margin-left: 20px;
+    list-style: decimal;
   }
   blockquote, pre{
     margin-top: 8px;
