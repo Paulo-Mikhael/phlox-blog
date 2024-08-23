@@ -22,7 +22,7 @@ export function HandleBadges() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const setHandleBadgeItems = useSetRecoilState(handleBadgeItems);
 
-  function addPersonalizedBadge(evt: React.FormEvent<HTMLFormElement>) {
+  function addPersonalizedBadge() {
     setPersonalizedBadges(previous => [...previous, { id: uuidV4(), title: previewBadge, pressed: false }]);
     setPreviewBadge("");
     setOpenModal(false);
@@ -95,7 +95,7 @@ export function HandleBadges() {
         <Form.Root
           twWidth="w-96"
           className="bg-typo-100 p-6 rounded-[10px] gap-2 relative"
-          onSubmit={(evt) => addPersonalizedBadge(evt)}
+          onSubmit={() => addPersonalizedBadge()}
         >
           <Form.Label text="Escreva o nome da sua badge personalizada" />
           <Form.Input

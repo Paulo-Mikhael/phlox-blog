@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { Pagination, ScrollShadow } from "@nextui-org/react";
-import { Badge } from "../../Bagde";
+import Markdown from "markdown-to-jsx";
 import { IPost, IPostBadges } from "../../../interfaces/IPost";
-import Markdown from "react-markdown";
 import { StyledMarkdown } from "../../../styles/StyledMarkdown";
 import { getFromImageUrl } from "../../../utils/getFromImageUrl";
 import { DateInfo } from "../../../utils/DateInfo";
+import { Badge } from "../../Bagde";
 
 const FormatContext = createContext<{ format?: "table" | "list" }>({});
 const ImageBase64Context = createContext<{ postImageBase64: string }>({ postImageBase64: "" });

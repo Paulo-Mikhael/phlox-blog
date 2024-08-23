@@ -2,7 +2,7 @@ import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRecoilValue } from "recoil";
-import Markdown from "react-markdown";
+import Markdown from "markdown-to-jsx";
 import { v4 as uuidV4 } from "uuid";
 import clsx from "clsx";
 import { http } from "../http";
@@ -22,17 +22,14 @@ export default function AddPost() {
   const [postTitle, setPostTitle] = useState<string>("");
   const [postContent, setPostContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>("");
   const [base64, setBase64] = useState<string>("");
   const [newImageId, setNewImageId] = useState<string>("");
   const [highlightedTxt, setHighlightedTxt] = useState("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
 
   async function submitPost(evt: React.FormEvent<HTMLFormElement>) {
     evt.preventDefault();
-    setIsLoading(true);
 
     if (base64 === "") return;
 
@@ -69,7 +66,6 @@ export default function AddPost() {
         console.log(err);
         setPostTitle("");
         setPostContent("");
-        setIsLoading(false);
       });
 
     await http.post("posts", newPost)
@@ -82,13 +78,11 @@ export default function AddPost() {
       .finally(() => {
         setPostTitle("");
         setPostContent("");
-        setIsLoading(false);
       });
   }
 
   useEffect(() => {
     if (!image) return;
-    setImageUrl(URL.createObjectURL(image));
 
     encodeImageToBase64(image)
       .then((base64Image) => {
@@ -106,26 +100,14 @@ export default function AddPost() {
     }
   }, [postContent]);
 
-  useEffect(() => {
-    if (base64 === "") return;
-
-    // if (imageUrl && image?.name) {
-    //   const link = document.createElement('a');
-    //   link.href = imageUrl;
-    //   link.download = image.name;
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   document.body.removeChild(link);
-    // }
-  }, [base64]);
-
   return (
     <>
       <input
         onChange={(evt) => {
           const file = evt.target.files?.[0].type.startsWith("image") ? evt.target.files?.[0] : null;
           setImage(file);
-          setPostContent(prv => prv + ` ![desc](${imageUrl})`);
+          // Aqui é criado uma url local apenas para ficar "legível" ao usuário, não é necessário trabalhar com esta linha
+          setPostContent(prv => prv + ` ![desc](${file && URL.createObjectURL(file)})`);
         }}
         type="file"
         hidden
@@ -169,7 +151,7 @@ export default function AddPost() {
           <StyledMarkdown>
             <ScrollShadow className={htmlPreview ? "w-[430px] 2xl:w-[700px]" : "hidden"}>
               <Markdown>
-                {`# ${postTitle}`}
+                {`${postTitle !== "" ? "#" : ""} ${postTitle}`}
               </Markdown>
               <Markdown>
                 {postContent}

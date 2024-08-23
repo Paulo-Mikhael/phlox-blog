@@ -10,9 +10,10 @@ export const StyledMarkdown = styled.div`
   p{
     margin-top: 4px;
     overflow: hidden;
-
+  }
+  span, p{
     img{
-      max-height: 500px;
+      max-height: 300px;
       margin: 20px auto;
     }
   }
@@ -91,7 +92,7 @@ export const StyledMarkdown = styled.div`
       color: ${colors.typo[300]};
     }
     ${languages.map(({ abbreviation, name }) => `
-      &.language-${abbreviation} {
+      &.lang-${abbreviation} {
         &::after {
           content: "${name}";
         }

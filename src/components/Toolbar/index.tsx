@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { colors } from "../../styles/variables";
-import { Type, Bold, Italic, List, ListOrdered, ImagePlus, ImageUp, Eraser, Link } from "lucide-react";
+import { Type, Bold, Italic, List, ListOrdered, ImagePlus, ImageUp, Eraser, Link, Code, Table } from "lucide-react";
 import { ElementType, useEffect } from "react";
 import styled from "styled-components";
 
@@ -92,6 +92,43 @@ export function Toolbar({ highlightedTxt, setHighlightedTxt, setContent, fileInp
       }
     },
     {
+      icon: Table,
+      onClick: () => {
+        const formatedText = `\n\n| Cabeçalho 1 | Cabeçalho 2 | Cabeçalho 3 |
+|-------------|-------------|-------------|
+| Item 1      | Item 2      | Item 3      |
+| Item 4      | Item 5      | Item 6      |
+| Item 7      | Item 8      | Item 9      |`;
+
+        setContent(prv => {
+          if (prv.includes(formatedText)) {
+            return prv.replace(formatedText, "");
+          } else {
+            return prv + formatedText;
+          }
+        });
+      }
+    },
+    {
+      icon: Code,
+      onClick: () => {
+        const formatedText = `~~~linguagem\n${highlightedTxt}\n~~~`;
+
+        if (highlightedTxt.length > 1) {
+          setContent(prv => {
+            if (prv.includes(formatedText)) {
+              return prv.replace(formatedText, highlightedTxt);
+            } else {
+              return prv.replace(highlightedTxt, formatedText);
+            }
+          });
+        }
+        else {
+          return setContent(prv => prv + "\n\n~~~linguagem\nconteúdo\n~~~");
+        }
+      }
+    },
+    {
       icon: ImagePlus,
       onClick: () => {
         const formatedText = `![${highlightedTxt}](url_da_imagem)`;
@@ -134,7 +171,7 @@ export function Toolbar({ highlightedTxt, setHighlightedTxt, setContent, fileInp
           return setContent(prv => prv + " [texto do link](url_do_link)");
         }
       }
-    }
+    },
   ];
 
   useEffect(() => {

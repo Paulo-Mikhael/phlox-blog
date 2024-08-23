@@ -11,6 +11,7 @@ export const languages: ILanguages[] = [
   { abbreviation: 'java', name: 'java' },
   { abbreviation: 'c', name: 'c' },
   { abbreviation: 'cpp', name: 'c++' },
+  { abbreviation: 'csharp', name: 'C#' },
   { abbreviation: 'php', name: 'php' },
   { abbreviation: 'sql', name: 'sql' },
   { abbreviation: 'ruby', name: 'ruby' },
