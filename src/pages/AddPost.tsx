@@ -1,17 +1,12 @@
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useRecoilValue } from "recoil";
 import Markdown from "markdown-to-jsx";
-import { v4 as uuidV4 } from "uuid";
 import clsx from "clsx";
-import { http } from "../http";
-import { IImage, IPost, IPostBadges } from "../interfaces/IPost";
 import { encodeImageToBase64 } from "../utils/base64Encoder";
 import { HandleBadges } from "../utils/HandleBadges";
 import { DateInfo } from "../utils/DateInfo";
 import { StyledMarkdown } from "../styles/StyledMarkdown";
-import { handleBadgeItems } from "../state/atom";
 import { UserCardInfos } from "../components/UserCard";
 import { Form } from "../components/Form";
 import { Toolbar } from "../components/Toolbar";
@@ -22,8 +17,8 @@ export default function AddPost() {
   const [postTitle, setPostTitle] = useState<string>("");
   const [postContent, setPostContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
-  const [base64, setBase64] = useState<string>("");
-  const [newImageId, setNewImageId] = useState<string>("");
+  // const [base64, setBase64] = useState<string>("");
+  // const [newImageId, setNewImageId] = useState<string>("");
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
   // const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
@@ -85,9 +80,9 @@ export default function AddPost() {
     if (!image) return;
 
     encodeImageToBase64(image)
-      .then((base64Image) => {
-        setBase64(base64Image);
-        setNewImageId(uuidV4());
+      .then(() => {
+        // setBase64(base64Image);
+        // setNewImageId(uuidV4());
         setImage(null);
       }).catch(error => {
         console.error("Erro ao codificar imagem:", error);
