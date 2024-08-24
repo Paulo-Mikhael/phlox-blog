@@ -11,6 +11,13 @@ import { UserCardInfos } from "../components/UserCard";
 import { Form } from "../components/Form";
 import { Toolbar } from "../components/Toolbar";
 import Header from "../components/Header";
+import { useRecoilValue } from "recoil";
+import { IPostBadges } from "../interfaces/IPost";
+import { handleBadgeItems } from "../state/atom";
+import { v4 as uuidV4 } from "uuid";
+import { ref, set } from "firebase/database";
+import { firebaseRealtimeDatabase } from "../utils/firebase";
+import { Button } from "../components/Button";
 
 export default function AddPost() {
   const fileInput = useRef<HTMLInputElement>(null);
@@ -18,63 +25,53 @@ export default function AddPost() {
   const [postContent, setPostContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   // const [base64, setBase64] = useState<string>("");
-  // const [newImageId, setNewImageId] = useState<string>("");
+  const [newImageId, setNewImageId] = useState<string>("");
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
-  // const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
+  const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
+  const firebaseDb = firebaseRealtimeDatabase;
 
-  // async function submitPost(evt: React.FormEvent<HTMLFormElement>) {
-  //   evt.preventDefault();
+  async function submitPost() {
+    console.log("Submit");
+    // if (base64 === "") return;
 
-  //   if (base64 === "") return;
+    const newPostId = uuidV4();
 
-  //   const newPostId = uuidV4();
+    // const newImage: IImage = {
+    //   id: newImageId,
+    //   base64String: base64
+    // }
+    const newPost = {
+      id: newPostId,
+      imageUrl: `images/${newImageId}`,
+      title: postTitle,
+      postDate: new Date().toString(),
+      content: postContent,
+      badges: {
+        defaultBadges: {
+          storyPressed: handleBadgesItems.defaultBadges.storyPressed,
+          newsPressed: handleBadgesItems.defaultBadges.newsPressed,
+          programationPressed: handleBadgesItems.defaultBadges.programationPressed,
+          offerPressed: handleBadgesItems.defaultBadges.offerPressed,
+          tecnologyPressed: handleBadgesItems.defaultBadges.tecnologyPressed,
+          opportunityPressed: handleBadgesItems.defaultBadges.opportunityPressed,
+        },
+        personalizedBadges: [...handleBadgesItems.personalizedBadges]
+      }
+    }
 
-  //   const newImage: IImage = {
-  //     id: newImageId,
-  //     base64String: base64
-  //   }
-  //   const newPost: IPost = {
-  //     id: newPostId,
-  //     imageUrl: `images/${newImageId}`,
-  //     title: "",
-  //     postDate: new Date(),
-  //     content: postContent,
-  //     badges: {
-  //       defaultBadges: {
-  //         storyPressed: handleBadgesItems.defaultBadges.storyPressed,
-  //         newsPressed: handleBadgesItems.defaultBadges.newsPressed,
-  //         programationPressed: handleBadgesItems.defaultBadges.programationPressed,
-  //         offerPressed: handleBadgesItems.defaultBadges.offerPressed,
-  //         tecnologyPressed: handleBadgesItems.defaultBadges.tecnologyPressed,
-  //         opportunityPressed: handleBadgesItems.defaultBadges.opportunityPressed,
-  //       },
-  //       personalizedBadges: [...handleBadgesItems.personalizedBadges]
-  //     }
-  //   }
-
-  //   await http.post("images", newImage)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setPostTitle("");
-  //       setPostContent("");
-  //     });
-
-  //   await http.post("posts", newPost)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     })
-  //     .finally(() => {
-  //       setPostTitle("");
-  //       setPostContent("");
-  //     });
-  // }
+    set(ref(firebaseDb, "posts/" + uuidV4()), newPost)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setPostTitle("");
+        setPostContent("");
+      });
+  }
 
   useEffect(() => {
     if (!image) return;
@@ -82,7 +79,7 @@ export default function AddPost() {
     encodeImageToBase64(image)
       .then(() => {
         // setBase64(base64Image);
-        // setNewImageId(uuidV4());
+        setNewImageId(uuidV4());
         setImage(null);
       }).catch(error => {
         console.error("Erro ao codificar imagem:", error);
@@ -153,6 +150,11 @@ export default function AddPost() {
               </Markdown>
             </ScrollShadow>
           </StyledMarkdown>
+        </Form.Root>
+        <Form.Root className="mt-3" onSubmit={() => submitPost()}>
+          <Button.Root type="submit">
+            <Button.Text content="Enviar" />
+          </Button.Root>
         </Form.Root>
       </main>
     </>
