@@ -6,7 +6,7 @@ export interface IPost {
   imageAlt?: string,
   title: string,
   content: string,
-  postDate: Date,
+  postDate: string,
   badges: IPostBadges
 }
 

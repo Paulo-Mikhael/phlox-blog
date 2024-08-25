@@ -1,14 +1,13 @@
 import styled from "styled-components";
-import { firebaseAuth, firebaseRealtimeDatabase } from "../utils/firebase";
-import { Form } from "../components/Form";
-import { Button } from "../components/Button";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { actualUser } from "../state/atom";
-import { ref, set } from "firebase/database";
+import { createUserEmailPassword } from "../utils/firebase/functions/createUserEmailPassword";
+import { signInUserEmailPassword } from "../utils/firebase/functions/signInUserEmailPassword";
 import { v4 as uuidV4 } from "uuid";
+import { Form } from "../components/Form";
+import { Button } from "../components/Button";
+import { useSetActualUser } from "../state/hooks/useSetActualUser";
+import { insertToDatabase } from "../utils/firebase/functions/insertToDatabase";
 
 const StyledDiv = styled.div`
   background-image: url("images/background-login.png");
@@ -26,41 +25,40 @@ export default function Login({ signUp = false }: { signUp?: boolean }) {
   const [userEmail, setUserEmail] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const auth = firebaseAuth;
-  const db = firebaseRealtimeDatabase;
-  const setUser = useSetRecoilState(actualUser);
+  const setUser = useSetActualUser();
   const navigate = useNavigate();
 
   function createUser(email: string, password: string) {
     setIsLoading(true);
+    const newUser = {
+      userEmail: email
+    };
 
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserEmailPassword(email, password)
       .then(() => {
-        set(ref(db, `users/ ${uuidV4()}`), {
-          userEmail: email
-        })
+        insertToDatabase(`users/ ${uuidV4()}`, newUser)
           .then(() => {
             signInUser(email, password);
           })
           .catch((err) => {
-            console.log(err);
+            setIsLoading(false);
+            throw new Error(err);
           });
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
 
-        console.log(`Error: ${errorCode} - ${errorMessage}`);
         setIsLoading(false);
+        throw new Error(`Error: ${errorCode} - ${errorMessage}`);
       })
   };
   function signInUser(email: string, password: string) {
     setIsLoading(true);
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setUser(user);
+    signInUserEmailPassword(email, password)
+      .then((userCredentials) => {
+        setUser(userCredentials.user);
         setIsLoading(false);
         navigate("/", { replace: true });
       })
@@ -68,7 +66,7 @@ export default function Login({ signUp = false }: { signUp?: boolean }) {
         const errorCode = error.code;
         const errorMessage = error.message;
 
-        console.log(`Error: ${errorCode} - ${errorMessage}`);
+        throw new Error(`Error: ${errorCode} - ${errorMessage}`);
       })
       .finally(() => {
         setIsLoading(false);

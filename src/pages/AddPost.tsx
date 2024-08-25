@@ -3,14 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Markdown from "markdown-to-jsx";
 import { v4 as uuidV4 } from "uuid";
-import { ref as refDb, set } from "firebase/database";
-import { getDownloadURL, ref as refStorage, uploadBytes } from "firebase/storage";
 import clsx from "clsx";
 import { useRecoilValue } from "recoil";
-import { IPostBadges } from "../interfaces/IPost";
+import { IPost, IPostBadges } from "../interfaces/IPost";
 import { handleBadgeItems } from "../state/atom";
 import { StyledMarkdown } from "../styles/StyledMarkdown";
-import { firebaseRealtimeDatabase, firebaseStorage } from "../utils/firebase";
 import { HandleBadges } from "../utils/HandleBadges";
 import { DateInfo } from "../utils/DateInfo";
 import { UserCardInfos } from "../components/UserCard";
@@ -18,6 +15,9 @@ import { Toolbar } from "../components/Toolbar";
 import { Button } from "../components/Button";
 import { Form } from "../components/Form";
 import Header from "../components/Header";
+import { insertToDatabase } from "../utils/firebase/functions/insertToDatabase";
+import { insertToStorage } from "../utils/firebase/functions/insertToStorage";
+import { getUrlFromStorage } from "../utils/firebase/functions/getUrlFromStorage";
 
 export default function AddPost() {
   const fileInput = useRef<HTMLInputElement>(null);
@@ -27,33 +27,21 @@ export default function AddPost() {
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
-  const db = firebaseRealtimeDatabase;
-  const storage = firebaseStorage;
 
   async function submitPost() {
     const newPostId = uuidV4();
-    const newPost = {
+    const newPost: IPost = {
       id: newPostId,
       imageUrl: postImageUrl,
       title: postTitle,
       postDate: new Date().toString(),
       content: postContent,
-      badges: {
-        defaultBadges: {
-          storyPressed: handleBadgesItems.defaultBadges.storyPressed,
-          newsPressed: handleBadgesItems.defaultBadges.newsPressed,
-          programationPressed: handleBadgesItems.defaultBadges.programationPressed,
-          offerPressed: handleBadgesItems.defaultBadges.offerPressed,
-          tecnologyPressed: handleBadgesItems.defaultBadges.tecnologyPressed,
-          opportunityPressed: handleBadgesItems.defaultBadges.opportunityPressed,
-        },
-        personalizedBadges: [...handleBadgesItems.personalizedBadges]
-      }
+      badges: handleBadgesItems
     }
 
-    set(refDb(db, "posts/" + uuidV4()), newPost)
+    insertToDatabase("posts/" + uuidV4(), newPost)
       .catch((err) => {
-        console.log(err);
+        throw new Error(err);
       })
       .finally(() => {
         setPostTitle("");
@@ -61,20 +49,19 @@ export default function AddPost() {
       });
   }
 
-  function submitImage(image: File){
+  function submitImage(image: File) {
     if (!image) return;
+    const path = `images/${image.name.trim()}`;
 
-    const storageRef = refStorage(storage, `images/${image.name.trim()}`);
-
-    uploadBytes(storageRef, image)
-      .then((snapshot) => {
-        console.log('Uploaded a blob or file!');
-        console.log(snapshot);
-
-        getDownloadURL(storageRef)
+    insertToStorage(path, image)
+      .then(() => {
+        getUrlFromStorage(path)
           .then((url) => {
             setPostImageUrl(url);
           });
+      })
+      .catch((err) => {
+        throw new Error(err);
       });
   }
 

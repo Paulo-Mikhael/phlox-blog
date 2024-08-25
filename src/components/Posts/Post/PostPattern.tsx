@@ -33,7 +33,7 @@ function CardTable({ ...post }: IPost) {
         <img src={post.imageUrl} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
       </figure>
       <section className="bg-typo-100 w-full max-h-[405px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
-        <DateInfo icon date={String(post.postDate)} />
+        <DateInfo icon date={String(new Date(post.postDate))} />
         <span className="flex gap-2 flex-wrap">
           <PostBadges defaultBadges={post.badges.defaultBadges} personalizedBadges={post.badges.personalizedBadges} />
         </span>
@@ -56,7 +56,7 @@ function CardList({ ...post }: IPost) {
           <img src={post.imageUrl} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
         </figure>
         <ScrollShadow size={18} className="p-5 w-full flex flex-col gap-2 overflow-y-scroll scrollbar scrollbar-none">
-          <DateInfo icon date={String(post.postDate)} />
+          <DateInfo icon date={String(new Date(post.postDate))} />
           <StyledMarkdown>
             <Markdown>{`#### **${post.title}**`}</Markdown>
             <Markdown>{post.content}</Markdown>
