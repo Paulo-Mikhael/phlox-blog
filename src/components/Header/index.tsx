@@ -5,6 +5,8 @@ import { colors, sizes } from "../../styles/variables";
 import { navItems as navItemsData } from "../../data/navItems";
 import { INavItems } from "../../interfaces/INavItems";
 import { Button } from "../Button";
+import { useRecoilValue } from "recoil";
+import { actualUser } from "../../state/atom";
 
 const StyledLi = styled.li<{ $active: boolean }>`
   a{
@@ -19,16 +21,17 @@ const StyledLi = styled.li<{ $active: boolean }>`
   }
 `
 
-interface HeaderProps { 
-  items?: boolean, 
-  navItems?: INavItems[], 
-  children?: ReactNode 
+interface HeaderProps {
+  items?: boolean,
+  navItems?: INavItems[],
+  children?: ReactNode
 }
 
 export default function Header({ items = true, navItems = navItemsData, children }: HeaderProps) {
   const navigate = useNavigate();
+  const user = useRecoilValue(actualUser);
 
-  if (!items){
+  if (!items) {
     return <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-center items-center p-4">{children}</div>
   }
 
@@ -47,17 +50,28 @@ export default function Header({ items = true, navItems = navItemsData, children
         </ul>
       </nav>
       <div className="flex gap-[10px]">
-        <Button.Root 
-          variant="outlined"
-          onClick={() => navigate("/signup")}
-        >
-          <Button.Text content="Cadastrar" />
-        </Button.Root>
-        <Button.Root
-          onClick={() => navigate("/login")}
-        >
-          <Button.Text content="Login" />
-        </Button.Root>
+        {user === null && (
+          <>
+            <Button.Root
+              variant="outlined"
+              onClick={() => navigate("/signup")}
+            >
+              <Button.Text content="Cadastrar" />
+            </Button.Root>
+            <Button.Root
+              onClick={() => navigate("/login")}
+            >
+              <Button.Text content="Login" />
+            </Button.Root>
+          </>
+        )}
+        {
+          user && (
+            <div>
+              {user.email}
+            </div>
+          )
+        }
       </div>
     </div>
   );

@@ -2,48 +2,39 @@ import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Markdown from "markdown-to-jsx";
+import { v4 as uuidV4 } from "uuid";
+import { ref as refDb, set } from "firebase/database";
+import { getDownloadURL, ref as refStorage, uploadBytes } from "firebase/storage";
 import clsx from "clsx";
-import { encodeImageToBase64 } from "../utils/base64Encoder";
-import { HandleBadges } from "../utils/HandleBadges";
-import { DateInfo } from "../utils/DateInfo";
-import { StyledMarkdown } from "../styles/StyledMarkdown";
-import { UserCardInfos } from "../components/UserCard";
-import { Form } from "../components/Form";
-import { Toolbar } from "../components/Toolbar";
-import Header from "../components/Header";
 import { useRecoilValue } from "recoil";
 import { IPostBadges } from "../interfaces/IPost";
 import { handleBadgeItems } from "../state/atom";
-import { v4 as uuidV4 } from "uuid";
-import { ref, set } from "firebase/database";
-import { firebaseRealtimeDatabase } from "../utils/firebase";
+import { StyledMarkdown } from "../styles/StyledMarkdown";
+import { firebaseRealtimeDatabase, firebaseStorage } from "../utils/firebase";
+import { HandleBadges } from "../utils/HandleBadges";
+import { DateInfo } from "../utils/DateInfo";
+import { UserCardInfos } from "../components/UserCard";
+import { Toolbar } from "../components/Toolbar";
 import { Button } from "../components/Button";
+import { Form } from "../components/Form";
+import Header from "../components/Header";
 
 export default function AddPost() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [postTitle, setPostTitle] = useState<string>("");
   const [postContent, setPostContent] = useState<string>("");
-  const [image, setImage] = useState<File | null>(null);
-  // const [base64, setBase64] = useState<string>("");
-  const [newImageId, setNewImageId] = useState<string>("");
+  const [postImageUrl, setPostImageUrl] = useState<string>("");
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
-  const firebaseDb = firebaseRealtimeDatabase;
+  const db = firebaseRealtimeDatabase;
+  const storage = firebaseStorage;
 
   async function submitPost() {
-    console.log("Submit");
-    // if (base64 === "") return;
-
     const newPostId = uuidV4();
-
-    // const newImage: IImage = {
-    //   id: newImageId,
-    //   base64String: base64
-    // }
     const newPost = {
       id: newPostId,
-      imageUrl: `images/${newImageId}`,
+      imageUrl: postImageUrl,
       title: postTitle,
       postDate: new Date().toString(),
       content: postContent,
@@ -60,10 +51,7 @@ export default function AddPost() {
       }
     }
 
-    set(ref(firebaseDb, "posts/" + uuidV4()), newPost)
-      .then((response) => {
-        console.log(response);
-      })
+    set(refDb(db, "posts/" + uuidV4()), newPost)
       .catch((err) => {
         console.log(err);
       })
@@ -73,18 +61,22 @@ export default function AddPost() {
       });
   }
 
-  useEffect(() => {
+  function submitImage(image: File){
     if (!image) return;
 
-    encodeImageToBase64(image)
-      .then(() => {
-        // setBase64(base64Image);
-        setNewImageId(uuidV4());
-        setImage(null);
-      }).catch(error => {
-        console.error("Erro ao codificar imagem:", error);
+    const storageRef = refStorage(storage, `images/${image.name.trim()}`);
+
+    uploadBytes(storageRef, image)
+      .then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+        console.log(snapshot);
+
+        getDownloadURL(storageRef)
+          .then((url) => {
+            setPostImageUrl(url);
+          });
       });
-  }), [image];
+  }
 
   useEffect(() => {
     if (postContent.trim() === "") {
@@ -95,9 +87,9 @@ export default function AddPost() {
   return (
     <>
       <input
-        onChange={(evt) => {
+        onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
           const file = evt.target.files?.[0].type.startsWith("image") ? evt.target.files?.[0] : null;
-          setImage(file);
+          file && submitImage(file);
           // Aqui é criado uma url local apenas para ficar "legível" ao usuário, não é necessário trabalhar com esta linha
           setPostContent(prv => prv + ` ![desc](${file && URL.createObjectURL(file)})`);
         }}

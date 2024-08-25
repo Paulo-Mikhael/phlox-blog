@@ -1,5 +1,12 @@
 import { atom } from "recoil";
-import { IPostBadges } from "../interfaces/IPost";
+import { IPost, IPostBadges } from "../interfaces/IPost";
+import { postsAsync } from "./selectors";
+import { User } from "firebase/auth";
+
+export const postsState = atom<IPost[]>({
+  key: "postsState",
+  default: postsAsync
+});
 
 export const handleBadgeItems = atom<IPostBadges>({
   key: "handleBadgeItems",
@@ -14,4 +21,9 @@ export const handleBadgeItems = atom<IPostBadges>({
     },
     personalizedBadges: []
   }
+});
+
+export const actualUser = atom<User | null>({
+  key: "actualUser",
+  default: null
 });

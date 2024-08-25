@@ -1,6 +1,14 @@
 import styled from "styled-components";
+import { firebaseAuth, firebaseRealtimeDatabase } from "../utils/firebase";
 import { Form } from "../components/Form";
 import { Button } from "../components/Button";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useSetRecoilState } from "recoil";
+import { actualUser } from "../state/atom";
+import { ref, set } from "firebase/database";
+import { v4 as uuidV4 } from "uuid";
 
 const StyledDiv = styled.div`
   background-image: url("images/background-login.png");
@@ -15,6 +23,58 @@ const StyledDiv = styled.div`
 `
 
 export default function Login({ signUp = false }: { signUp?: boolean }) {
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [userPassword, setUserPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const auth = firebaseAuth;
+  const db = firebaseRealtimeDatabase;
+  const setUser = useSetRecoilState(actualUser);
+  const navigate = useNavigate();
+
+  function createUser(email: string, password: string) {
+    setIsLoading(true);
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        set(ref(db, `users/ ${uuidV4()}`), {
+          userEmail: email
+        })
+          .then(() => {
+            signInUser(email, password);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log(`Error: ${errorCode} - ${errorMessage}`);
+        setIsLoading(false);
+      })
+  };
+  function signInUser(email: string, password: string) {
+    setIsLoading(true);
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        setUser(user);
+        setIsLoading(false);
+        navigate("/", { replace: true });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log(`Error: ${errorCode} - ${errorMessage}`);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <StyledDiv>
       <main className="z-[1] w-[95%] h-[590px] rounded-[10px] bg-typo-100 flex items-center justify-between p-[22px]">
@@ -34,14 +94,19 @@ export default function Login({ signUp = false }: { signUp?: boolean }) {
                 </>}
             </p>
           </span>
-          <Form.Root>
+          <Form.Root
+            onSubmit={() => {
+              signUp === true && createUser(userEmail, userPassword);
+              signUp === false && signInUser(userEmail, userPassword);
+            }}
+          >
             <Form.Label text="Email" htmlFor="#email-login" />
-            <Form.Input placeholder="Digite seu email" id="email-login" />
+            <Form.Input value={userEmail} onChange={(evt) => setUserEmail(evt.target.value)} placeholder="Digite seu email" id="email-login" />
             <Form.Label text="Senha" htmlFor="#password-login" />
-            <Form.Input placeholder="Digite sua senha" id="password-login" />
+            <Form.Input value={userPassword} onChange={(evt) => setUserPassword(evt.target.value)} placeholder="Digite sua senha" id="password-login" />
             <Form.Hint className="text-center" hintText="A senha precisa ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial." />
             <span className="w-full flex justify-center mt-10">
-              <Button.Root twWidth="w-[234px]">
+              <Button.Root type="submit" twWidth="w-[234px]" isLoading={isLoading}>
                 <Button.Text content={signUp ? "CADASTRAR" : "ENTRAR"} />
               </Button.Root>
             </span>

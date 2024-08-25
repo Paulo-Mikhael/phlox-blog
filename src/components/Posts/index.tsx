@@ -8,22 +8,18 @@ import { useEffect, useState } from "react";
 import { Post } from "./Post";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { IPost } from "../../interfaces/IPost";
-import { http } from "../../http";
 import { HandleBadges } from "../../utils/HandleBadges";
+import { postsState } from "../../state/atom";
+import { useRecoilValue } from "recoil";
 
 export default function Posts() {
   const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
   const [postsFormat, setPostsFormat] = useState<"table" | "list">("table");
   const [posts, setPosts] = useState<IPost[]>([]);
-
-  async function getPosts(){
-    const data = await http.get("posts");
-
-    setPosts(data.data)
-  }
+  const postsData = useRecoilValue(postsState);
 
   useEffect(() => {
-    getPosts();
+    setPosts(postsData);
   }, [posts]);
 
   return (
