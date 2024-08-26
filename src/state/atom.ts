@@ -2,11 +2,10 @@ import { atom } from "recoil";
 import { IPost, IPostBadges } from "../interfaces/IPost";
 import { User } from "firebase/auth";
 import { IUser } from "../interfaces/IUser";
-import { getFromDatabase } from "../utils/firebase/functions/getFromDatabase";
 
 export const postsState = atom<IPost[]>({
   key: "postsState",
-  default: await getFromDatabase.Posts()
+  default: []
 });
 
 export const handleBadgeItems = atom<IPostBadges>({

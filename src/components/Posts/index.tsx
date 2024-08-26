@@ -4,23 +4,17 @@ import { SimpleCard } from "../SimpleCard";
 import { UserCard } from "../UserCard";
 import { Checkbox } from "../Checkbox";
 import { SwitchButton } from "../SwitchButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Post } from "./Post";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
-import { IPost } from "../../interfaces/IPost";
 import { HandleBadges } from "../../utils/HandleBadges";
-import { postsState } from "../../state/atom";
-import { useRecoilValue } from "recoil";
+import { useGetPosts } from "../../state/hooks/usePosts";
 
 export default function Posts() {
   const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
   const [postsFormat, setPostsFormat] = useState<"table" | "list">("table");
-  const [posts, setPosts] = useState<IPost[]>([]);
-  const postsData = useRecoilValue(postsState);
-
-  useEffect(() => {
-    setPosts(postsData);
-  }, [posts]);
+  const postsData = useGetPosts();
+  const posts = postsData();
 
   return (
     <div className="flex gap-[50px]">
