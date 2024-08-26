@@ -9,33 +9,39 @@ export function Posts(): Promise<IPost[]> {
   return new Promise((resolve, reject) => {
     get(child(dbRef, "users"))
       .then((snapshot) => {
-        if (!snapshot.exists()) console.log("Sem dados no caminho fornecido");
+        if (!snapshot.exists()) {
+          console.log("Sem dados no caminho fornecido");
+          return resolve([]);
+        };
+        
         const users = snapshot.val();
 
         for (const userId in users) {
           const currentUserPosts = users[userId].userPosts;
-          
-          for (const postId in currentUserPosts){
-            const currentPost: IPost = currentUserPosts[postId];
 
-            const newPost: IPost = {
-              ...currentPost,
-              badges: {
-                defaultBadges: {
-                  ...currentPost.badges.defaultBadges
-                },
-                personalizedBadges: currentPost.badges.personalizedBadges ? [...currentPost.badges.personalizedBadges] : []
+          if (currentUserPosts) {
+            for (const postId in currentUserPosts) {
+              const currentPost: IPost = currentUserPosts[postId];
+
+              const newPost: IPost = {
+                ...currentPost,
+                badges: {
+                  defaultBadges: {
+                    ...currentPost.badges.defaultBadges
+                  },
+                  personalizedBadges: currentPost.badges.personalizedBadges ? [...currentPost.badges.personalizedBadges] : []
+                }
               }
-            }
 
-            posts.push(newPost);
-          };
+              posts.push(newPost);
+            };
+          }
         }
 
         resolve(posts);
       })
       .catch((err) => {
-       reject(err);
+        reject(err);
       });
   });
 }

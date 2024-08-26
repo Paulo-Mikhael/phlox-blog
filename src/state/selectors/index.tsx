@@ -1,18 +1,15 @@
 import { selector } from "recoil";
 import { IPost } from "../../interfaces/IPost";
-import { getFromDatabase } from "../../utils/firebase/functions/getFromDatabase";
 
 export const postsAsync = selector<IPost[]>({
   key: "postsAsync",
-  get: () => {
-    getFromDatabase.Posts()
-      .then((posts) => {
-        return posts;
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
-
+  get: async () => {
+    // try {
+    //   const posts = await getFromDatabase.Posts()
+    //   return posts;
+    // } catch (err) {
+    //   throw new Error(String(err));
+    // }
     return []
   }
 });
