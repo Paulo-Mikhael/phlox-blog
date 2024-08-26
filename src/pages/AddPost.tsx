@@ -55,7 +55,7 @@ export default function AddPost() {
       });
   }
 
-  function submitImage(image: File) {
+  function submitPostImage(image: File) {
     if (!image) return;
     const path = `images/${image.name.trim()}`;
 
@@ -80,9 +80,9 @@ export default function AddPost() {
   return (
     <>
       <input
+        accept="image/*"
         onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-          const file = evt.target.files?.[0].type.startsWith("image") ? evt.target.files?.[0] : null;
-          file && submitImage(file);
+          const file = evt.target.files?.[0];
           // Aqui é criado uma url local apenas para ficar "legível" ao usuário, não é necessário trabalhar com esta linha
           setPostContent(prv => prv + ` ![desc](${file && URL.createObjectURL(file)})`);
         }}
@@ -102,6 +102,19 @@ export default function AddPost() {
           <HandleBadges />
         </div>
         <Form.Root className="mt-[10px]">
+          <Form.Label text="Imagem do post:" />
+          <Form.Input
+            twPaddingX="p-0"
+            type="file"
+            accept="image/*"
+            onChange={(evt) => {
+              const file = evt.target.files?.[0];
+              file && submitPostImage(file);
+              !file && setPostImageUrl("");
+            }}
+          />
+        </Form.Root>
+        <Form.Root className="">
           <Form.Label text="Título do post:" id="" />
           <Form.Input value={postTitle} onChange={(evt) => setPostTitle(evt.target.value)} placeholder="Digite o título do post" />
           <Form.Hint hintText="Essa será a frase que será filtrada ao pesquisar por esta postagem" />
@@ -130,6 +143,11 @@ export default function AddPost() {
               <Markdown>
                 {`${postTitle !== "" ? "#" : ""} ${postTitle}`}
               </Markdown>
+              {postImageUrl !== "" && (
+                <Markdown>
+                  {`![imagem do post](${postImageUrl})`}
+                </Markdown>
+              )}
               <Markdown>
                 {postContent}
               </Markdown>

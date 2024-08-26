@@ -153,7 +153,7 @@ export function FormInput(
       {type === "file" && (
         <StyledInput
           type={type}
-          className="bg-white file-input-xs file-input-bordered file-input-error file-input w-full max-w-xs"
+          className="bg-white file-input-xs file-input-bordered file-input-error file-input w-full"
           {...rest}
         />
       )}

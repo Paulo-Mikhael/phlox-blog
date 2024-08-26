@@ -24,7 +24,7 @@ export default function Posts() {
 
   return (
     <div className="flex gap-[50px]">
-      <aside className="flex flex-col gap-5 w-[320px] pt-[7px]">
+      <aside className="flex flex-col gap-5 w-[320px]">
         <Form.Root>
           <Form.Label text="Pesquisar post:" />
           <Form.Input placeholder="Digite o título do post..." iconRight={Search} />
@@ -48,7 +48,7 @@ export default function Posts() {
           </ScrollShadow>
         </SimpleCard>
       </aside>
-      <main className="w-[796px] flex flex-col gap-5 max-xl:w-[500px]">
+      <main className="w-[796px] flex flex-col gap-5 max-xl:w-[500px] pt-[7px]">
         <span className="flex justify-between">
           <div className="flex flex-col gap-2">
             <Checkbox.Root>
