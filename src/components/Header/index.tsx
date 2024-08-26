@@ -66,9 +66,9 @@ export default function Header({ items = true, navItems = navItemsData, children
           </>
         )}
         {
-          user && (
+          user?.auth?.email && (
             <div>
-              {user.email}
+              {user.auth.email}
             </div>
           )
         }

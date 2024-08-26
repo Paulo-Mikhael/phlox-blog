@@ -11,6 +11,7 @@ import { IPost } from "../../interfaces/IPost";
 import { HandleBadges } from "../../utils/HandleBadges";
 import { postsState } from "../../state/atom";
 import { useRecoilValue } from "recoil";
+import { getFromDatabase } from "../../utils/firebase/functions/getFromDatabase";
 
 export default function Posts() {
   const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
@@ -19,7 +20,13 @@ export default function Posts() {
   const postsData = useRecoilValue(postsState);
 
   useEffect(() => {
-    setPosts(postsData);
+    getFromDatabase.Posts()
+      .then((posts) => {
+        setPosts(posts);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   }, [posts]);
 
   return (

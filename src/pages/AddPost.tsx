@@ -6,7 +6,7 @@ import { v4 as uuidV4 } from "uuid";
 import clsx from "clsx";
 import { useRecoilValue } from "recoil";
 import { IPost, IPostBadges } from "../interfaces/IPost";
-import { handleBadgeItems } from "../state/atom";
+import { actualUser, handleBadgeItems } from "../state/atom";
 import { StyledMarkdown } from "../styles/StyledMarkdown";
 import { HandleBadges } from "../utils/HandleBadges";
 import { DateInfo } from "../utils/DateInfo";
@@ -27,8 +27,14 @@ export default function AddPost() {
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
+  const user = useRecoilValue(actualUser);
 
   async function submitPost() {
+    if (!user) {
+      console.log("sem usuário");
+      return;
+    };
+
     const newPostId = uuidV4();
     const newPost: IPost = {
       id: newPostId,
@@ -39,7 +45,7 @@ export default function AddPost() {
       badges: handleBadgesItems
     }
 
-    insertToDatabase("posts/" + uuidV4(), newPost)
+    insertToDatabase(`users/${user.data.userId}/userPosts/${newPost.id}`, newPost)
       .catch((err) => {
         throw new Error(err);
       })

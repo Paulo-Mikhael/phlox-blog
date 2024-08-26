@@ -8,6 +8,7 @@ import { Form } from "../components/Form";
 import { Button } from "../components/Button";
 import { useSetActualUser } from "../state/hooks/useSetActualUser";
 import { insertToDatabase } from "../utils/firebase/functions/insertToDatabase";
+import { IUser } from "../interfaces/IUser";
 
 const StyledDiv = styled.div`
   background-image: url("images/background-login.png");
@@ -30,13 +31,13 @@ export default function Login({ signUp = false }: { signUp?: boolean }) {
 
   function createUser(email: string, password: string) {
     setIsLoading(true);
-    const newUser = {
+    const newUser: IUser = {
       userEmail: email
     };
 
     createUserEmailPassword(email, password)
       .then(() => {
-        insertToDatabase(`users/ ${uuidV4()}`, newUser)
+        insertToDatabase(`users/${uuidV4()}`, newUser)
           .then(() => {
             signInUser(email, password);
           })
@@ -99,7 +100,7 @@ export default function Login({ signUp = false }: { signUp?: boolean }) {
             }}
           >
             <Form.Label text="Email" htmlFor="#email-login" />
-            <Form.Input value={userEmail} onChange={(evt) => setUserEmail(evt.target.value)} placeholder="Digite seu email" id="email-login" />
+            <Form.Input value={userEmail} onChange={(evt) => setUserEmail(evt.target.value.toLowerCase())} placeholder="Digite seu email" id="email-login" />
             <Form.Label text="Senha" htmlFor="#password-login" />
             <Form.Input value={userPassword} onChange={(evt) => setUserPassword(evt.target.value)} placeholder="Digite sua senha" id="password-login" />
             <Form.Hint className="text-center" hintText="A senha precisa ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial." />

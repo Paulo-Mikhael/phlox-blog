@@ -2,6 +2,7 @@ import { atom } from "recoil";
 import { IPost, IPostBadges } from "../interfaces/IPost";
 import { postsAsync } from "./selectors";
 import { User } from "firebase/auth";
+import { IUser } from "../interfaces/IUser";
 
 export const postsState = atom<IPost[]>({
   key: "postsState",
@@ -23,7 +24,7 @@ export const handleBadgeItems = atom<IPostBadges>({
   }
 });
 
-export const actualUser = atom<User | null>({
+export const actualUser = atom<{ auth: User | null, data: IUser } | null>({
   key: "actualUser",
   default: null
 });
