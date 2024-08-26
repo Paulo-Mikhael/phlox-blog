@@ -19,11 +19,18 @@ import { insertToDatabase } from "../utils/firebase/functions/insertToDatabase";
 import { insertToStorage } from "../utils/firebase/functions/insertToStorage";
 import { getUrlFromStorage } from "../utils/firebase/functions/getUrlFromStorage";
 
+interface IPostContentImage {
+  localUrl: string,
+  file: File,
+  databaseUrl?: string
+}
+
 export default function AddPost() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [postTitle, setPostTitle] = useState<string>("");
   const [postContent, setPostContent] = useState<string>("");
   const [postImageUrl, setPostImageUrl] = useState<string>("");
+  const [postContentImages, setPostContentImages] = useState<IPostContentImage[]>([]);
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
@@ -34,6 +41,8 @@ export default function AddPost() {
       console.log("sem usuário");
       return;
     };
+
+    changeContentUrls();
 
     const newPostId = uuidV4();
     const newPost: IPost = {
@@ -52,6 +61,7 @@ export default function AddPost() {
       .finally(() => {
         setPostTitle("");
         setPostContent("");
+        setPostImageUrl("");
       });
   }
 
@@ -64,11 +74,44 @@ export default function AddPost() {
         getUrlFromStorage(path)
           .then((url) => {
             setPostImageUrl(url);
+          })
+          .catch((err) => {
+            throw new Error(err);
           });
       })
       .catch((err) => {
         throw new Error(err);
       });
+  }
+
+  function submitPostContentImage(postContentImage: IPostContentImage) {
+    if (!postContentImage) return;
+
+    setPostContent(prv => prv + ` ![desc](${postContentImage.localUrl})`);
+    const path = `images/${postContentImage.file.name.trim()}`;
+
+    insertToStorage(path, postContentImage.file)
+      .then(() => {
+        getUrlFromStorage(path)
+          .then((url) => {
+            setPostContentImages(prv => [...prv, { ...postContentImage, databaseUrl: url }]);
+            console.log(postContentImages);
+          })
+          .catch((err) => {
+            throw new Error(err);
+          });
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  }
+
+  function changeContentUrls() {
+    for (let i = 0; i < postContentImages.length; i++) {
+      const localUrl = postContentImages[i].localUrl;
+      const databaseUrl = postContentImages[i].databaseUrl;
+      databaseUrl && setPostContent(prv => prv.replace(localUrl, databaseUrl));
+    };
   }
 
   useEffect(() => {
@@ -83,8 +126,14 @@ export default function AddPost() {
         accept="image/*"
         onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
           const file = evt.target.files?.[0];
+          if (!file) return;
           // Aqui é criado uma url local apenas para ficar "legível" ao usuário, não é necessário trabalhar com esta linha
-          setPostContent(prv => prv + ` ![desc](${file && URL.createObjectURL(file)})`);
+          const postContentImage: IPostContentImage = {
+            localUrl: URL.createObjectURL(file),
+            file: file
+          }
+
+          submitPostContentImage(postContentImage);
         }}
         type="file"
         hidden

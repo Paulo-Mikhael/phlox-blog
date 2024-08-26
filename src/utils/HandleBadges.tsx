@@ -97,7 +97,7 @@ export function HandleBadges() {
           className="bg-typo-100 p-6 rounded-[10px] gap-2 relative"
           onSubmit={() => addPersonalizedBadge()}
         >
-          <Form.Label text="Escreva o nome da sua badge personalizada" />
+          <Form.Label text="Escreva o nome da badge personalizada" />
           <Form.Input
             onChange={(evt) => setPreviewBadge(evt.target.value)}
             value={previewBadge}
