@@ -4,8 +4,8 @@ import { SimpleCard } from "../../SimpleCard";
 import { ReactNode } from "react";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { UserCard } from "../../UserCard";
-import { useGetUsers } from "../../../state/hooks/useGetUsers";
 import { Checkbox } from "../../Checkbox";
+import { useUsers } from "../../../state/hooks/useUsers";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (
@@ -24,23 +24,25 @@ export function FilterSearchPost() {
   );
 }
 
-export function FilterSearchUser() {
-  const usersData = useGetUsers();
-  const users = usersData();
+export function FilterSearchUserInput() {
+  return (
+    <Form.Root>
+      <Form.Input placeholder="Pesquisar usuário..." iconRight={User} />
+    </Form.Root>
+  );
+}
+
+export function FilterSearchUserCards() {
+  const users = useUsers();
 
   return (
-    <>
-      <Form.Root>
-        <Form.Input placeholder="Pesquisar usuário..." iconRight={User} />
-      </Form.Root>
-      <ScrollShadow className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">
-        {users.map((item) => (
-          <UserCard.HandleMark marked={false} key={item.id}>
-            <UserCard.Infos userName={item.email} userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"} userPostsNumber={item.postsNumber ? item.postsNumber : 0} />
-          </UserCard.HandleMark>
-        ))}
-      </ScrollShadow>
-    </>
+    <ScrollShadow className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">
+      {users.map((item) => (
+        <UserCard.HandleMark marked={false} key={item.id}>
+          <UserCard.Infos userName={item.email} userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"} userPostsNumber={item.postsNumber ? item.postsNumber : 0} />
+        </UserCard.HandleMark>
+      ))}
+    </ScrollShadow>
   );
 }
 

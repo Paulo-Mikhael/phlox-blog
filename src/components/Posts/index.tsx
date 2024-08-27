@@ -11,7 +11,8 @@ export default function Posts() {
           <HandleBadges />
         </Filter.Root>
         <Filter.Root title="Usuários">
-          <Filter.SearchUser />
+          <Filter.SearchUser.Input />
+          <Filter.SearchUser.Cards />
         </Filter.Root>
       </aside>
       <main className="w-[796px] flex flex-col gap-5 max-xl:w-[500px] pt-[7px]">

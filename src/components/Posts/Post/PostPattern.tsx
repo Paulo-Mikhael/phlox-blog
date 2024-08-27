@@ -9,8 +9,8 @@ import { SwitchButton } from "../../SwitchButton";
 import { List, Table } from "lucide-react";
 import { postCardFormatState } from "../../../state/atom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useGetPosts } from "../../../state/hooks/useGetPosts";
 import { Post } from ".";
+import { usePosts } from "../../../state/hooks/usePosts";
 
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
@@ -129,8 +129,7 @@ export function PostFormatButton() {
 }
 
 export function PostUserCards() {
-  const postsData = useGetPosts();
-  const posts = postsData();
+  const posts = usePosts();
 
   return (
     <Post.Root>

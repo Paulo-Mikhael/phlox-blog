@@ -1,8 +1,11 @@
-import { FilterDate, FilterRoot, FilterSearchPost, FilterSearchUser } from "./FilterPattern";
+import { FilterDate, FilterRoot, FilterSearchPost, FilterSearchUserCards, FilterSearchUserInput } from "./FilterPattern";
 
 export const Filter = {
   Root: FilterRoot,
   SearchPost: FilterSearchPost,
-  SearchUser: FilterSearchUser,
+  SearchUser: {
+    Input: FilterSearchUserInput,
+    Cards: FilterSearchUserCards
+  },
   Date: FilterDate
 }
