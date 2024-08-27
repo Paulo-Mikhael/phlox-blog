@@ -1,11 +1,17 @@
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { colors } from "../../styles/variables";
 import { ReactNode, useState } from "react";
+import clsx from "clsx";
 
-export function UserCardRoot({ children, onClick }: { children: ReactNode, onClick?: () => void }) {
+export function UserCardRoot({ children, onClick, variant = "transparent" }: { children: ReactNode, onClick?: () => void, variant?: "transparent" | "bordered" }) {
   return (
-    <span 
-      className="w-full h-[66px] flex justify-between items-center"
+    <span
+      className={clsx(
+        "w-full h-[66px] flex justify-between items-center",
+        {
+          "p-3 border-main-red-300 border-[2px] rounded-[6px] shadow-inner shadow-typo-700/70 ": variant === "bordered"
+        }
+      )}
       onClick={onClick}
     >
       {children}
@@ -14,25 +20,19 @@ export function UserCardRoot({ children, onClick }: { children: ReactNode, onCli
 }
 
 export function UserCardHandleMark(
-  { marked, markOnClick, children, onClick }: { marked: boolean, markOnClick?: () => void, children: ReactNode, onClick?: () => void }
+  { marked, onClick }: { marked: boolean, onClick?: () => void }
 ) {
   const [handleMarked, setHandleMarked] = useState<boolean>(marked);
   const Icon = handleMarked ? BookmarkCheck : Bookmark;
 
   return (
-    <span 
-      className="w-full h-[66px] p-3 border-main-red-300 border-[2px] rounded-[6px] shadow-inner shadow-typo-700/70 flex justify-between items-center"
-      onClick={onClick}
-    >
-      {children}
-      <Icon 
-        className="cursor-pointer" color={colors.redMain[300]} size={26}
-        onClick={() => {
-          setHandleMarked(!handleMarked);
-          markOnClick && markOnClick();
-        }}
-      />
-    </span>
+    <Icon
+      className="cursor-pointer" color={colors.redMain[300]} size={26}
+      onClick={() => {
+        setHandleMarked(!handleMarked);
+        onClick && onClick();
+      }}
+    />
   );
 }
 
@@ -42,10 +42,10 @@ export function UserCardInfos({ userName, userPostsNumber, userAvatar }: { userN
       <img className="w-[39px] h-[39px] rounded-full border-main-red-300 border" src={userAvatar} alt="" />
       <span>
         <h3 className="text-image-subtitle font-bold text-typo-700">
-          { userName }
+          {userName}
         </h3>
         <h4 className="text-image-subtitle text-typo-700">
-          { `${userPostsNumber} Posts` }
+          {`${userPostsNumber} Posts`}
         </h4>
       </span>
     </div>

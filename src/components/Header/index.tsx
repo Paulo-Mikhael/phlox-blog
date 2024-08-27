@@ -7,6 +7,7 @@ import { INavItems } from "../../interfaces/INavItems";
 import { Button } from "../Button";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../state/atom";
+import { Book, User } from "lucide-react";
 
 const StyledLi = styled.li<{ $active: boolean }>`
   a{
@@ -65,13 +66,16 @@ export default function Header({ items = true, navItems = navItemsData, children
             </Button.Root>
           </>
         )}
-        {
-          user?.auth?.email && (
-            <div>
-              {user.auth.email}
-            </div>
-          )
-        }
+        {user && (
+          <Button.Root
+            onClick={() => {
+              navigate("/add");
+            }}
+          >
+            <Button.Text content="MEU PERFIL" />
+            <Button.Icon icon={User} />
+          </Button.Root>
+        )}
       </div>
     </div>
   );

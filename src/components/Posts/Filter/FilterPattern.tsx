@@ -38,9 +38,10 @@ export function FilterSearchUserCards() {
   return (
     <ScrollShadow className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">
       {users.map((item) => (
-        <UserCard.HandleMark marked={false} key={item.id}>
+        <UserCard.Root variant="bordered" key={item.id}>
           <UserCard.Infos userName={item.email} userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"} userPostsNumber={item.postsNumber ? item.postsNumber : 0} />
-        </UserCard.HandleMark>
+          <UserCard.HandleMark marked={false} />
+        </UserCard.Root>
       ))}
     </ScrollShadow>
   );
