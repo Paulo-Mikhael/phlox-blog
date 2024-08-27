@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom"
 import Header from "../components/Header"
 import Hero from "../components/Hero"
 import Posts from "../components/Posts"
@@ -14,9 +13,6 @@ export default function Home() {
       </div>
       <div className="bg-typo-150 w-full absolute top-[630px] pt-[160px] shadow-inner shadow-typo-700/30 flex justify-center pb-10">
         <Posts />
-        <Link to="/add">
-          Posts
-        </Link>
       </div>
     </>
   )
