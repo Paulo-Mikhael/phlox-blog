@@ -32,3 +32,8 @@ export const actualUserState = atom<{ auth: User | null, data: IUser } | null>({
   key: "actualUserState",
   default: null
 });
+
+export const postCardFormatState = atom<"table" | "list">({
+  key: "postCardFormatState",
+  default: "table"
+});

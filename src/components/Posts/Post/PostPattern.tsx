@@ -1,25 +1,28 @@
-import { createContext, ReactNode, useContext } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Pagination, ScrollShadow } from "@nextui-org/react";
 import Markdown from "markdown-to-jsx";
 import { IPost, IPostBadges } from "../../../interfaces/IPost";
 import { StyledMarkdown } from "../../../styles/StyledMarkdown";
 import { DateInfo } from "../../../utils/DateInfo";
 import { Badge } from "../../Bagde";
+import { SwitchButton } from "../../SwitchButton";
+import { List, Table } from "lucide-react";
+import { postCardFormatState } from "../../../state/atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useGetPosts } from "../../../state/hooks/useGetPosts";
+import { Post } from ".";
 
-const FormatContext = createContext<{ format?: "table" | "list" }>({});
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
   return (
-    <FormatContext.Provider value={{ format }}>
-      <div className={`flex flex-wrap ${format === "table" ? "justify-between" : "flex-col"} gap-10`}>
-        {children}
-      </div>
-    </FormatContext.Provider>
+    <div className={`flex flex-wrap ${format === "table" ? "justify-between" : "flex-col"} gap-10`}>
+      {children}
+    </div>
   );
 }
 
 export function PostCard({ ...post }: IPost) {
-  const { format } = useContext(FormatContext)
+  const format = useRecoilValue(postCardFormatState);
 
   return (
     format === "table" ? <CardTable {...post} /> : <CardList {...post} />
@@ -91,5 +94,49 @@ export function PostPagination({ total, initialPage }: { total: number, initialP
     <nav className="p-16 w-full flex items-center justify-center gap-1">
       <Pagination color="danger" total={total} initialPage={initialPage} />
     </nav>
+  );
+}
+
+export function PostFormatButton() {
+  const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
+  const [postsFormat, setPostsFormat] = useState<"table" | "list">("table");
+  const setFormat = useSetRecoilState(postCardFormatState);
+
+  useEffect(() => {
+    setFormat(postsFormat);
+  }, [postsFormat]);
+
+  return (
+    <SwitchButton.Root>
+      <SwitchButton.LeftIcon
+        icon={Table}
+        actived={switchActivedSide === "left"}
+        onClick={() => {
+          setSwitchActivedSide("left");
+          setPostsFormat("table");
+        }}
+      />
+      <SwitchButton.RightIcon
+        icon={List}
+        actived={switchActivedSide === "right"}
+        onClick={() => {
+          setSwitchActivedSide("right");
+          setPostsFormat("list");
+        }}
+      />
+    </SwitchButton.Root>
+  );
+}
+
+export function PostUserCards() {
+  const postsData = useGetPosts();
+  const posts = postsData();
+
+  return (
+    <Post.Root>
+      {posts.map((item) => (
+        <Post.Card key={item.id} {...item} />
+      ))}
+    </Post.Root>
   );
 }

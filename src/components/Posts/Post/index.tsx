@@ -1,7 +1,9 @@
-import { PostCard, PostPagination, PostRoot } from "./PostPattern";
+import { PostCard, PostFormatButton, PostPagination, PostRoot, PostUserCards } from "./PostPattern";
 
 export const Post = {
   Root: PostRoot,
   Card: PostCard,
-  Pagination: PostPagination
+  FormatButton: PostFormatButton,
+  Pagination: PostPagination,
+  UserCards: PostUserCards
 }
