@@ -6,7 +6,7 @@ import { navItems as navItemsData } from "../../data/navItems";
 import { INavItems } from "../../interfaces/INavItems";
 import { Button } from "../Button";
 import { useRecoilValue } from "recoil";
-import { actualUser } from "../../state/atom";
+import { actualUserState } from "../../state/atom";
 
 const StyledLi = styled.li<{ $active: boolean }>`
   a{
@@ -29,7 +29,7 @@ interface HeaderProps {
 
 export default function Header({ items = true, navItems = navItemsData, children }: HeaderProps) {
   const navigate = useNavigate();
-  const user = useRecoilValue(actualUser);
+  const user = useRecoilValue(actualUserState);
 
   if (!items) {
     return <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-center items-center p-4">{children}</div>

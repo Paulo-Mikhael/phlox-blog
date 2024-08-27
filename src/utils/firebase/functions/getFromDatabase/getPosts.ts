@@ -1,8 +1,9 @@
 import { ref, get, child } from "firebase/database";
 import { IPost } from "../../../../interfaces/IPost";
 import { firebaseRealtimeDatabase } from "../../firebase";
+import { normalizePostArray } from "../../../normalizePostArray";
 
-export function Posts(): Promise<IPost[]> {
+export function getPosts(): Promise<IPost[]> {
   const dbRef = ref(firebaseRealtimeDatabase);
   const posts: IPost[] = [];
 
@@ -10,30 +11,21 @@ export function Posts(): Promise<IPost[]> {
     get(child(dbRef, "users"))
       .then((snapshot) => {
         if (!snapshot.exists()) {
-          console.log("Sem dados no caminho fornecido");
           return resolve([]);
         };
         
         const users = snapshot.val();
 
         for (const userId in users) {
-          const currentUserPosts = users[userId].userPosts;
-
+          const currentUserPosts = users[userId].posts;
+          
           if (currentUserPosts) {
-            for (const postId in currentUserPosts) {
-              const currentPost: IPost = currentUserPosts[postId];
+            const normalizedUserPosts = normalizePostArray(currentUserPosts);
 
-              const newPost: IPost = {
-                ...currentPost,
-                badges: {
-                  defaultBadges: {
-                    ...currentPost.badges.defaultBadges
-                  },
-                  personalizedBadges: currentPost.badges.personalizedBadges ? [...currentPost.badges.personalizedBadges] : []
-                }
-              }
+            for (const postId in normalizedUserPosts) {
+              const currentPost: IPost = normalizedUserPosts[postId];
 
-              posts.push(newPost);
+              posts.push(currentPost);
             };
           }
         }

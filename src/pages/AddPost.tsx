@@ -6,11 +6,10 @@ import { v4 as uuidV4 } from "uuid";
 import clsx from "clsx";
 import { useRecoilValue } from "recoil";
 import { IPost, IPostBadges } from "../interfaces/IPost";
-import { actualUser, handleBadgeItems } from "../state/atom";
+import { actualUserState, handleBadgeItemsState } from "../state/atom";
 import { StyledMarkdown } from "../styles/StyledMarkdown";
 import { HandleBadges } from "../utils/HandleBadges";
 import { DateInfo } from "../utils/DateInfo";
-import { UserCardInfos } from "../components/UserCard";
 import { Toolbar } from "../components/Toolbar";
 import { Button } from "../components/Button";
 import { Form } from "../components/Form";
@@ -18,6 +17,7 @@ import Header from "../components/Header";
 import { insertToDatabase } from "../utils/firebase/functions/insertToDatabase";
 import { insertToStorage } from "../utils/firebase/functions/insertToStorage";
 import { getUrlFromStorage } from "../utils/firebase/functions/getUrlFromStorage";
+import { UserCard } from "../components/UserCard";
 
 interface IPostContentImage {
   localUrl: string,
@@ -33,8 +33,8 @@ export default function AddPost() {
   const [postContentImages, setPostContentImages] = useState<IPostContentImage[]>([]);
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
-  const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItems);
-  const user = useRecoilValue(actualUser);
+  const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItemsState);
+  const user = useRecoilValue(actualUserState);
 
   async function submitPost() {
     if (!user) {
@@ -54,7 +54,7 @@ export default function AddPost() {
       badges: handleBadgesItems
     }
 
-    insertToDatabase(`users/${user.data.userId}/userPosts/${newPost.id}`, newPost)
+    insertToDatabase(`users/${user.data.id}/posts/${newPost.id}`, newPost)
       .catch((err) => {
         throw new Error(err);
       })
@@ -141,8 +141,12 @@ export default function AddPost() {
       />
       <Header items={false}>
         <div className="w-full px-[161px] flex justify-between">
-          <UserCardInfos userAvatar="images/user.png" userName="Usuário" userPostsNumber={0} />
-          <DateInfo date={new Date().toDateString()} />
+          {user && (
+            <UserCard.Root>
+              <UserCard.Infos userName={user.data.email} userAvatar={user.data.avatarUrl ? user.data.avatarUrl : "images/user.png"} userPostsNumber={user.data.postsNumber ? user.data.postsNumber : 0} />
+              <DateInfo date={new Date().toDateString()} />
+            </UserCard.Root>
+          )}
         </div>
       </Header>
       <main className="w-full px-[161px] mt-[30px] flex flex-col pb-14">

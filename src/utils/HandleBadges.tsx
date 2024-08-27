@@ -3,7 +3,7 @@ import { v4 as uuidV4 } from "uuid";
 import { Badge } from "../components/Bagde";
 import { IPersonalizedBadge } from "../interfaces/IBadge";
 import { useSetRecoilState } from "recoil";
-import { handleBadgeItems } from "../state/atom";
+import { handleBadgeItemsState } from "../state/atom";
 import { Form } from "../components/Form";
 import { Button } from "../components/Button";
 import clsx from "clsx";
@@ -20,7 +20,7 @@ export function HandleBadges() {
   const [personalizedBadges, setPersonalizedBadges] = useState<IPersonalizedBadge[]>([]);
   const [previewBadge, setPreviewBadge] = useState<string>("");
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const setHandleBadgeItems = useSetRecoilState(handleBadgeItems);
+  const setHandleBadgeItems = useSetRecoilState(handleBadgeItemsState);
 
   function addPersonalizedBadge() {
     setPersonalizedBadges(previous => [...previous, { id: uuidV4(), title: previewBadge, pressed: false }]);

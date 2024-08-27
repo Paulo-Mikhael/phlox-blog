@@ -1,5 +1,7 @@
-import { Posts } from "./getPosts";
+import { getPosts } from "./getPosts";
+import { getUsers } from "./getUsers";
 
 export const getFromDatabase = {
-  Posts: Posts
+  Posts: getPosts,
+  Users: getUsers
 }

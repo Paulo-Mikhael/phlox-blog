@@ -1,20 +1,23 @@
 import { Calendar, List, Search, Table, User } from "lucide-react";
 import { Form } from "../Form";
 import { SimpleCard } from "../SimpleCard";
-import { UserCard } from "../UserCard";
 import { Checkbox } from "../Checkbox";
 import { SwitchButton } from "../SwitchButton";
 import { useState } from "react";
 import { Post } from "./Post";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { HandleBadges } from "../../utils/HandleBadges";
-import { useGetPosts } from "../../state/hooks/usePosts";
+import { useGetPosts } from "../../state/hooks/useGetPosts";
+import { useGetUsers } from "../../state/hooks/useGetUsers";
+import { UserCard } from "../UserCard";
 
 export default function Posts() {
   const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
   const [postsFormat, setPostsFormat] = useState<"table" | "list">("table");
   const postsData = useGetPosts();
   const posts = postsData();
+  const usersData = useGetUsers();
+  const users = usersData();
 
   return (
     <div className="flex gap-[50px]">
@@ -31,14 +34,11 @@ export default function Posts() {
             <Form.Input placeholder="Pesquisar usuário..." iconRight={User} />
           </Form.Root>
           <ScrollShadow className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">
-            <UserCard marked={false} />
-            <UserCard marked={true} />
-            <UserCard marked={false} />
-            <UserCard marked={false} />
-            <UserCard marked={false} />
-            <UserCard marked={true} />
-            <UserCard marked={true} />
-            <UserCard marked={true} />
+            {users.map((item) => (
+              <UserCard.HandleMark marked={false} key={item.id}>
+                <UserCard.Infos userName={item.email} userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"} userPostsNumber={item.postsNumber ? item.postsNumber : 0} />
+              </UserCard.HandleMark>
+            ))}
           </ScrollShadow>
         </SimpleCard>
       </aside>
@@ -54,14 +54,22 @@ export default function Posts() {
             </Form.Root>
           </div>
           <SwitchButton.Root>
-            <SwitchButton.LeftIcon icon={Table} actived={switchActivedSide === "left"} onClick={() => {
-              setSwitchActivedSide("left");
-              setPostsFormat("table");
-            }} />
-            <SwitchButton.RightIcon icon={List} actived={switchActivedSide === "right"} onClick={() => {
-              setSwitchActivedSide("right");
-              setPostsFormat("list");
-            }} />
+            <SwitchButton.LeftIcon 
+              icon={Table} 
+              actived={switchActivedSide === "left"} 
+              onClick={() => {
+                setSwitchActivedSide("left");
+                setPostsFormat("table");
+              }} 
+            />
+            <SwitchButton.RightIcon 
+              icon={List} 
+              actived={switchActivedSide === "right"} 
+              onClick={() => {
+                setSwitchActivedSide("right");
+                setPostsFormat("list");
+              }} 
+            />
           </SwitchButton.Root>
         </span>
         <Post.Root format={postsFormat} >

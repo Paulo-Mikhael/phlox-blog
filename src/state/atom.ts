@@ -8,8 +8,13 @@ export const postsState = atom<IPost[]>({
   default: []
 });
 
-export const handleBadgeItems = atom<IPostBadges>({
-  key: "handleBadgeItems",
+export const usersState = atom<IUser[]>({
+  key: "usersState",
+  default: []
+});
+
+export const handleBadgeItemsState = atom<IPostBadges>({
+  key: "handleBadgeItemsState",
   default: {
     defaultBadges: {
       storyPressed: false,
@@ -23,7 +28,7 @@ export const handleBadgeItems = atom<IPostBadges>({
   }
 });
 
-export const actualUser = atom<{ auth: User | null, data: IUser } | null>({
-  key: "actualUser",
+export const actualUserState = atom<{ auth: User | null, data: IUser } | null>({
+  key: "actualUserState",
   default: null
 });

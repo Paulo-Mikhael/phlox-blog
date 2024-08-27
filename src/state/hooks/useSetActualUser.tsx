@@ -1,12 +1,13 @@
 import { useSetRecoilState } from "recoil";
-import { actualUser } from "../atom";
+import { actualUserState } from "../atom";
 import { User } from "firebase/auth";
 import { ref, get, child } from "firebase/database";
 import { firebaseRealtimeDatabase } from "../../utils/firebase/firebase";
 import { IUser } from "../../interfaces/IUser";
+import { getFirebaseArrayLength } from "../../utils/firebase/functions/getFirebaseArrayLength";
 
 export function useSetActualUser() {
-  const setUser = useSetRecoilState(actualUser);
+  const setActualUser = useSetRecoilState(actualUserState);
   const dbRef = ref(firebaseRealtimeDatabase);
 
   function getUserData(userEmail: string | null): Promise<IUser> {
@@ -17,16 +18,19 @@ export function useSetActualUser() {
           const users = snapshot.val();
 
           for (const userId in users) {
-            const currentUserEmail = users[userId].userEmail;
-            const currentUserAvatarUrl = users[userId].userAvatarUrl;
-            const currentUserPosts = users[userId].userPosts;
+            const currentUserEmail = users[userId].email;
+            const currentUserAvatarUrl = users[userId].avatarUrl;
+            const currentUserPosts = users[userId].posts;
 
             if (currentUserEmail === userEmail) {
+              let postsNumber = getFirebaseArrayLength(currentUserPosts);
+
               const newUserData: IUser = {
-                userId: userId,
-                userEmail: currentUserEmail,
-                userAvatarUrl: currentUserAvatarUrl,
-                userPosts: currentUserPosts
+                id: userId,
+                email: currentUserEmail,
+                avatarUrl: currentUserAvatarUrl,
+                posts: currentUserPosts,
+                postsNumber: postsNumber
               }
 
               resolve(newUserData);
@@ -42,7 +46,7 @@ export function useSetActualUser() {
   return async (user: User) => {
     getUserData(user.email)
       .then((newUser) => {
-        setUser({
+        setActualUser({
           auth: user,
           data: newUser
         });

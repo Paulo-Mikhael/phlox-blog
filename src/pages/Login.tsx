@@ -32,7 +32,7 @@ export default function Login({ signUp = false }: { signUp?: boolean }) {
   function createUser(email: string, password: string) {
     setIsLoading(true);
     const newUser: IUser = {
-      userEmail: email
+      email: email
     };
 
     createUserEmailPassword(email, password)
