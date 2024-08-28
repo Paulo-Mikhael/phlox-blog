@@ -6,12 +6,14 @@ import AddPost from "./pages/AddPost";
 import Login from "./pages/Login";
 import ViewPost from "./pages/ViewPost";
 import NotFound from "./pages/NotFound";
+import Data from "./components/Data";
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <RecoilRoot>
         <NextUIProvider>
+          <Data />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/add" element={<AddPost />} />

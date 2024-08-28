@@ -1,9 +1,8 @@
-import { useSetRecoilState } from "recoil";
-import { usersState } from "../state/atom";
+import { SetterOrUpdater } from "recoil";
 import { getFromDatabase } from "./firebase/functions/getFromDatabase";
+import { IUser } from "../interfaces/IUser";
 
-export function getUsers() {
-  const setUsers = useSetRecoilState(usersState);
+export function getUsers(setUsers: SetterOrUpdater<IUser[]>) {
 
   getFromDatabase.Users()
     .then((users) => {
