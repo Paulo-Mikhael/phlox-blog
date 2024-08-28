@@ -28,7 +28,7 @@ interface HeaderProps {
   children?: ReactNode
 }
 
-export default function Header({ items = true, navItems = navItemsData, children }: HeaderProps) {
+export function Header({ items = true, navItems = navItemsData, children }: HeaderProps) {
   const navigate = useNavigate();
   const user = useRecoilValue(actualUserState);
 

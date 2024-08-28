@@ -37,7 +37,7 @@ export const StyledMarkdown = styled.div`
     font-size: ${sizes.font.title};
   }
   h3{
-    margin-top: 8px;
+    margin: 20px 0px 10px 0px;
     font-size: ${sizes.font.section};
   }
   h4{
@@ -52,12 +52,13 @@ export const StyledMarkdown = styled.div`
   a{
     text-decoration: underline;
   }
-  ul{
+  ul, ol{
     margin-left: 20px;
+  }
+  ul{
     list-style: disc;
   }
   ol{
-    margin-left: 20px;
     list-style: decimal;
   }
   blockquote, pre{

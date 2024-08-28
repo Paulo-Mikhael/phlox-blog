@@ -13,7 +13,7 @@ import { DateInfo } from "../utils/DateInfo";
 import { Toolbar } from "../components/Toolbar";
 import { Button } from "../components/Button";
 import { Form } from "../components/Form";
-import Header from "../components/Header";
+import { Header } from "../components/Header";
 import { insertToDatabase } from "../utils/firebase/functions/insertToDatabase";
 import { insertToStorage } from "../utils/firebase/functions/insertToStorage";
 import { getUrlFromStorage } from "../utils/firebase/functions/getUrlFromStorage";
