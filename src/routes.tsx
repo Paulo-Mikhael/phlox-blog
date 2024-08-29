@@ -19,7 +19,7 @@ export default function AppRouter() {
               <Route path="add" element={<AddPost />} />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<Login signUp />} />
-              <Route path="view/:postId" element={<ViewPost />} />
+              <Route path="view" element={<ViewPost />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

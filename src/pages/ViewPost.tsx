@@ -5,12 +5,13 @@ import { DateInfo } from "../utils/DateInfo";
 import { colors } from "../styles/variables";
 import { StyledMarkdown } from "../styles/StyledMarkdown";
 import Markdown from "markdown-to-jsx";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { getPostById } from "../utils/getPostById";
 import NotFound from "./NotFound";
 
 export default function ViewPost() {
-  const { postId } = useParams();
+  const location = useLocation();
+  const postId = location.search.replace("?", "");;
   if (!postId) return <NotFound />;
 
   const post = getPostById(postId);
@@ -35,7 +36,7 @@ export default function ViewPost() {
         </div>
         <div className="bg-typo-150 shadow-typo-700/30 shadow-inner w-full h-[80px] flex items-center justify-between px-[160px]">
           <UserCard.Root>
-            <UserCard.Infos userName="Usuário" userAvatar="icons/phlox-p-icon.png" userPostsNumber={1} />
+            <UserCard.Infos userName="Usuário" userAvatar="images/user.png" userPostsNumber={1} />
             <UserCard.HandleMark marked />
           </UserCard.Root>
         </div>
