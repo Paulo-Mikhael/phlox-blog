@@ -1,4 +1,5 @@
-import { Clock } from "lucide-react";
+import { Clock, House } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Header } from "../components/Header";
 import { UserCard } from "../components/UserCard";
 import { DateInfo } from "../utils/DateInfo";
@@ -8,20 +9,29 @@ import Markdown from "markdown-to-jsx";
 import { useLocation } from "react-router-dom";
 import { getPostById } from "../utils/getPostById";
 import NotFound from "./NotFound";
+import { Button } from "../components/Button";
+import { useEffect } from "react";
+import { setCurrentNavItem } from "../utils/setCurrentNavItem";
 
 export default function ViewPost() {
   const location = useLocation();
-  const postId = location.search.replace("?", "");;
+  const postId = location.search.replace("?", "");
+  const navItems = setCurrentNavItem("");
+
   if (!postId) return <NotFound />;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const post = getPostById(postId);
   if (!post) return <NotFound />;
 
   return (
     <>
-      <Header />
-      <main>
-        <div className="px-[160px] py-[40px] flex flex-col gap-[30px]">
+      <Header navItems={navItems} />
+      <main className="pb-10 flex flex-col items-center">
+        <div className="w-full px-[160px] py-[40px] flex flex-col gap-[30px]">
           <h1 className="text-highlight text-main-red-300 font-bold">
             {post && post.title}
           </h1>
@@ -56,6 +66,12 @@ export default function ViewPost() {
             </StyledMarkdown>
           </article>
         </section>
+        <Link to="/">
+          <Button.Root>
+            <Button.Text content="VOLTAR À HOME" />
+            <Button.Icon icon={House} />
+          </Button.Root>
+        </Link>
       </main>
     </>
   );
