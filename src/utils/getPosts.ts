@@ -6,7 +6,6 @@ export function getPosts(setPosts: SetterOrUpdater<IPost[]>) {
   getFromDatabase.Posts()
     .then((posts) => {
       setPosts(posts);
-      console.log(posts);
     })
     .catch((err) => {
       throw new Error(err);

@@ -3,12 +3,12 @@ import { INavItems } from "../interfaces/INavItems";
 export const navItems: INavItems[] = [
   {
     name: "Home",
-    path: "",
+    path: "/",
     current: true
   },
   {
     name: "Categorias",
-    path: "",
+    path: "/",
     current: false
   },
   {
@@ -18,7 +18,7 @@ export const navItems: INavItems[] = [
   },
   {
     name: "Contate-nos",
-    path: "",
+    path: "/",
     current: false
   },
 ]

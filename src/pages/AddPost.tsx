@@ -18,6 +18,11 @@ import { insertToDatabase } from "../utils/firebase/functions/insertToDatabase";
 import { insertToStorage } from "../utils/firebase/functions/insertToStorage";
 import { getUrlFromStorage } from "../utils/firebase/functions/getUrlFromStorage";
 import { UserCard } from "../components/UserCard";
+import { useSetUsers } from "../state/hooks/useSetUsers";
+import { useSetPosts } from "../state/hooks/useSetPosts";
+import { getPosts } from "../utils/getPosts";
+import { getUsers } from "../utils/getUsers";
+import { useNavigate } from "react-router-dom";
 
 interface IPostContentImage {
   localUrl: string,
@@ -28,13 +33,16 @@ interface IPostContentImage {
 export default function AddPost() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [postTitle, setPostTitle] = useState<string>("");
-  const [postContent, setPostContent] = useState<string>("");
   const [postImageUrl, setPostImageUrl] = useState<string>("");
+  const [postContent, setPostContent] = useState<string>("");
   const [postContentImages, setPostContentImages] = useState<IPostContentImage[]>([]);
   const [highlightedTxt, setHighlightedTxt] = useState("");
   const [htmlPreview, setHtmlPreview] = useState<boolean>(false);
   const handleBadgesItems: IPostBadges = useRecoilValue(handleBadgeItemsState);
   const user = useRecoilValue(actualUserState);
+  const navigate = useNavigate();
+  const setUsers = useSetUsers();
+  const setPosts = useSetPosts();
 
   async function submitPost() {
     if (!user) {
@@ -62,6 +70,9 @@ export default function AddPost() {
         setPostTitle("");
         setPostContent("");
         setPostImageUrl("");
+        getPosts(setPosts);
+        getUsers(setUsers);
+        navigate(-1);
       });
   }
 
@@ -139,6 +150,7 @@ export default function AddPost() {
         hidden
         ref={fileInput}
       />
+      <Header />
       <Header items={false}>
         <div className="w-full px-[161px] flex justify-between">
           {user && (

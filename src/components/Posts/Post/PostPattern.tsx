@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { Pagination, ScrollShadow } from "@nextui-org/react";
 import Markdown from "markdown-to-jsx";
 import { IPost, IPostBadges } from "../../../interfaces/IPost";
@@ -11,7 +11,7 @@ import { postCardFormatState } from "../../../state/atom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Post } from ".";
 import { usePosts } from "../../../state/hooks/usePosts";
-
+import { Link } from "react-router-dom";
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
   return (
@@ -33,7 +33,9 @@ function CardTable({ ...post }: IPost) {
   return (
     <article className="w-[375px] max-xl:w-full shadow-xl bg-transparent rounded-[10px]">
       <figure className="h-[251px] max-xl:h-auto w-full">
-        <img src={post.imageUrl} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
+        <Link to={`view/${post.id}`}>
+          <img src={post.imageUrl} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
+        </Link>
       </figure>
       <section className="bg-typo-100 w-full max-h-[405px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
         <DateInfo icon date={String(new Date(post.postDate))} />
@@ -56,7 +58,9 @@ function CardList({ ...post }: IPost) {
     <div className="w-full dark">
       <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
         <figure className="w-[326px] max-xl:hidden">
-          <img src={post.imageUrl} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
+          <Link to={`view/${post.id}`}>
+            <img src={post.imageUrl} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
+          </Link>
         </figure>
         <ScrollShadow size={18} className="p-5 w-full flex flex-col gap-2 overflow-y-scroll scrollbar scrollbar-none">
           <DateInfo icon date={String(new Date(post.postDate))} />
@@ -99,12 +103,7 @@ export function PostPagination({ total, initialPage }: { total: number, initialP
 
 export function PostFormatButton() {
   const [switchActivedSide, setSwitchActivedSide] = useState<"left" | "right">("left");
-  const [postsFormat, setPostsFormat] = useState<"table" | "list">("table");
   const setFormat = useSetRecoilState(postCardFormatState);
-
-  useEffect(() => {
-    setFormat(postsFormat);
-  }, [postsFormat]);
 
   return (
     <SwitchButton.Root>
@@ -113,7 +112,7 @@ export function PostFormatButton() {
         actived={switchActivedSide === "left"}
         onClick={() => {
           setSwitchActivedSide("left");
-          setPostsFormat("table");
+          setFormat("table");
         }}
       />
       <SwitchButton.RightIcon
@@ -121,7 +120,7 @@ export function PostFormatButton() {
         actived={switchActivedSide === "right"}
         onClick={() => {
           setSwitchActivedSide("right");
-          setPostsFormat("list");
+          setFormat("list");
         }}
       />
     </SwitchButton.Root>
@@ -134,7 +133,10 @@ export function PostUserCards() {
   return (
     <Post.Root>
       {posts.map((item) => (
-        <Post.Card key={item.id} {...item} />
+        <Post.Card
+          key={item.id}
+          {...item}
+        />
       ))}
     </Post.Root>
   );

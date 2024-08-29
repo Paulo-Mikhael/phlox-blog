@@ -103,6 +103,7 @@ export function HandleBadges() {
             value={previewBadge}
             placeholder="Ex: Saúde, Esporte, Brincadeira..."
             maxLength={20}
+            autoFocus
           />
           <Badge.Root>
             <Badge.Personalize text={previewBadge} />

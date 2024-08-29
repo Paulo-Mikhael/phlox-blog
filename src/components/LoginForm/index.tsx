@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidV4 } from "uuid";
 import { IUser } from "../../interfaces/IUser";
 import { useSetActualUser } from "../../state/hooks/useSetActualUser";
 import { createUserEmailPassword } from "../../utils/firebase/functions/createUserEmailPassword";
@@ -8,6 +7,8 @@ import { insertToDatabase } from "../../utils/firebase/functions/insertToDatabas
 import { signInUserEmailPassword } from "../../utils/firebase/functions/signInUserEmailPassword";
 import { Button } from "../Button";
 import { Form } from "../Form";
+import { useSetUsers } from "../../state/hooks/useSetUsers";
+import { getUsers } from "../../utils/getUsers";
 
 export function LoginForm({ signUp }: { signUp: boolean }) {
   const [userEmail, setUserEmail] = useState<string>("");
@@ -15,6 +16,7 @@ export function LoginForm({ signUp }: { signUp: boolean }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const setUser = useSetActualUser();
   const navigate = useNavigate();
+  const setUsers = useSetUsers();
 
   function createUser(email: string, password: string) {
     setIsLoading(true);
@@ -23,8 +25,8 @@ export function LoginForm({ signUp }: { signUp: boolean }) {
     };
 
     createUserEmailPassword(email, password)
-      .then(() => {
-        insertToDatabase(`users/${uuidV4()}`, newUser)
+      .then((userCredentials) => {
+        insertToDatabase(`users/${userCredentials.user.uid}`, newUser)
           .then(() => {
             signInUser(email, password);
           })
@@ -47,6 +49,7 @@ export function LoginForm({ signUp }: { signUp: boolean }) {
     signInUserEmailPassword(email, password)
       .then((userCredentials) => {
         setUser(userCredentials.user);
+        getUsers(setUsers);
         setIsLoading(false);
         navigate("/", { replace: true });
       })
@@ -56,9 +59,6 @@ export function LoginForm({ signUp }: { signUp: boolean }) {
 
         throw new Error(`Error: ${errorCode} - ${errorMessage}`);
       })
-      .finally(() => {
-        setIsLoading(false);
-      });
   };
 
   return (

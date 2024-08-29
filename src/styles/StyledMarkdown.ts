@@ -13,7 +13,7 @@ export const StyledMarkdown = styled.div`
   }
   span, p{
     img{
-      max-height: 200px;
+      max-height: 300px;
       margin: 20px auto;
     }
   }

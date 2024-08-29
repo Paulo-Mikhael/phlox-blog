@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { colors, sizes } from "../../styles/variables";
 import { navItems as navItemsData } from "../../data/navItems";
 import { INavItems } from "../../interfaces/INavItems";
@@ -38,14 +38,14 @@ export function Header({ items = true, navItems = navItemsData, children }: Head
 
   return (
     <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-between items-center p-4">
-      <img src="icons/phlox-logo.png" alt="" className="w-[140px] h-[25px]" />
+      <img loading="eager" src="icons/phlox-logo.png" alt="" className="w-[140px] h-[25px]" />
       <nav>
         <ul className="flex gap-[30px]">
           {navItems.map((item, index) => (
             <StyledLi key={index} $active={item.current}>
-              <a href={item.path} target="_blank">
+              <Link to={item.path}>
                 {item.name}
-              </a>
+              </Link>
             </StyledLi>
           ))}
         </ul>

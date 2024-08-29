@@ -1,12 +1,13 @@
 import { useEffect } from "react";
-import { useSetRecoilState } from "recoil";
-import { usersState, postsState } from "../../state/atom";
 import { getPosts } from "../../utils/getPosts";
 import { getUsers } from "../../utils/getUsers";
+import { Outlet } from "react-router-dom";
+import { useSetPosts } from "../../state/hooks/useSetPosts";
+import { useSetUsers } from "../../state/hooks/useSetUsers";
 
 export default function Data() {
-  const setUsers = useSetRecoilState(usersState);
-  const setPosts = useSetRecoilState(postsState);
+  const setUsers = useSetUsers();
+  const setPosts = useSetPosts();
 
   function getData() {
     getPosts(setPosts);
@@ -18,6 +19,8 @@ export default function Data() {
   }, []);
   
   return (
-    <></>
+    <div>
+      <Outlet />
+    </div>
   );
 }
