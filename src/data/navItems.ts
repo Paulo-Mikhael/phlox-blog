@@ -14,7 +14,8 @@ export const navItems: INavItems[] = [
   {
     name: "Shop",
     path: "https://phlox-psi.vercel.app/",
-    current: false
+    current: false,
+    target: "_blank"
   },
   {
     name: "Contate-nos",

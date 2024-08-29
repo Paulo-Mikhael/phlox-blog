@@ -23,6 +23,7 @@ import { useSetPosts } from "../state/hooks/useSetPosts";
 import { getPosts } from "../utils/getPosts";
 import { getUsers } from "../utils/getUsers";
 import { useNavigate } from "react-router-dom";
+import NotFound from "./NotFound";
 
 interface IPostContentImage {
   localUrl: string,
@@ -43,6 +44,10 @@ export default function AddPost() {
   const navigate = useNavigate();
   const setUsers = useSetUsers();
   const setPosts = useSetPosts();
+
+  if (!user){
+    return <NotFound />;
+  }
 
   async function submitPost() {
     if (!user) {

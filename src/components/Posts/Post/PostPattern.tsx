@@ -14,6 +14,9 @@ import { usePosts } from "../../../state/hooks/usePosts";
 import { Link } from "react-router-dom";
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
+  const setFormat = useSetRecoilState(postCardFormatState);
+  setFormat(format);
+
   return (
     <div className={`flex flex-wrap ${format === "table" ? "justify-between" : "flex-col"} gap-10`}>
       {children}

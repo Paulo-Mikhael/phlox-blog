@@ -11,12 +11,12 @@ import { getPostById } from "../utils/getPostById";
 import NotFound from "./NotFound";
 import { Button } from "../components/Button";
 import { useEffect } from "react";
-import { setCurrentNavItem } from "../utils/setCurrentNavItem";
+import { getNavItem } from "../utils/getNavItem";
 
 export default function ViewPost() {
   const location = useLocation();
   const postId = location.search.replace("?", "");
-  const navItems = setCurrentNavItem("");
+  const navItems = getNavItem("");
 
   if (!postId) return <NotFound />;
 

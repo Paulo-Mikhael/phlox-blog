@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import ViewPost from "./pages/ViewPost";
 import NotFound from "./pages/NotFound";
 import Data from "./components/Data";
+import UserPerfil from "./pages/UserPerfil";
 
 export default function AppRouter() {
   return (
@@ -20,6 +21,7 @@ export default function AppRouter() {
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<Login signUp />} />
               <Route path="view" element={<ViewPost />} />
+              <Route path="user" element={<UserPerfil />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

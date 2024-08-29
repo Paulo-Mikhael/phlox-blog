@@ -7,7 +7,7 @@ import { INavItems } from "../../interfaces/INavItems";
 import { Button } from "../Button";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../state/atom";
-import { Book } from "lucide-react";
+import { Book, User } from "lucide-react";
 
 const StyledLi = styled.li<{ $active: boolean }>`
   a{
@@ -25,10 +25,11 @@ const StyledLi = styled.li<{ $active: boolean }>`
 interface HeaderProps {
   items?: boolean,
   navItems?: INavItems[],
-  children?: ReactNode
+  children?: ReactNode,
+  userPerfil?: boolean
 }
 
-export function Header({ items = true, navItems = navItemsData, children }: HeaderProps) {
+export function Header({ items = true, navItems = navItemsData, children, userPerfil = false }: HeaderProps) {
   const navigate = useNavigate();
   const user = useRecoilValue(actualUserState);
 
@@ -43,41 +44,45 @@ export function Header({ items = true, navItems = navItemsData, children }: Head
         <ul className="flex gap-[30px]">
           {navItems.map((item, index) => (
             <StyledLi key={index} $active={item.current}>
-              <Link to={item.path}>
+              <Link to={item.path} target={item.target}>
                 {item.name}
               </Link>
             </StyledLi>
           ))}
         </ul>
       </nav>
-      <div className="flex gap-[10px]">
-        {user === null && (
-          <>
+      {userPerfil && (
+        children
+      )}
+      {!userPerfil && (
+        <div className="flex gap-[10px]">
+          {user === null && (
+            <>
+              <Button.Root
+                variant="outlined"
+                onClick={() => navigate("/signup")}
+              >
+                <Button.Text content="Cadastrar" />
+              </Button.Root>
+              <Button.Root
+                onClick={() => navigate("/login")}
+              >
+                <Button.Text content="Login" />
+              </Button.Root>
+            </>
+          )}
+          {user && (
             <Button.Root
-              variant="outlined"
-              onClick={() => navigate("/signup")}
+              onClick={() => {
+                navigate("/user");
+              }}
             >
-              <Button.Text content="Cadastrar" />
+              <Button.Text content="MEU PERFIL" />
+              <Button.Icon icon={User} />
             </Button.Root>
-            <Button.Root
-              onClick={() => navigate("/login")}
-            >
-              <Button.Text content="Login" />
-            </Button.Root>
-          </>
-        )}
-        {user && (
-          <Button.Root
-            variant="outlined"
-            onClick={() => {
-              navigate("/add");
-            }}
-          >
-            <Button.Text content="FAZER UM POST" />
-            <Button.Icon icon={Book} />
-          </Button.Root>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
