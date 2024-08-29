@@ -150,7 +150,6 @@ export default function AddPost() {
         hidden
         ref={fileInput}
       />
-      <Header />
       <Header items={false}>
         <div className="w-full px-[161px] flex justify-between">
           {user && (
