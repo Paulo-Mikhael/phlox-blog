@@ -50,7 +50,7 @@ export default function AddPost() {
   }
 
   async function submitPost() {
-    if (!user) {
+    if (!user || !user.auth || !user.data.id) {
       console.log("sem usuário");
       return;
     };
@@ -60,6 +60,7 @@ export default function AddPost() {
     const newPostId = uuidV4();
     const newPost: IPost = {
       id: newPostId,
+      userAuthorId: user.data.id,
       imageUrl: postImageUrl,
       title: postTitle,
       postDate: new Date().toString(),

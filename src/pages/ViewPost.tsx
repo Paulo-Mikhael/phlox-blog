@@ -8,24 +8,27 @@ import { StyledMarkdown } from "../styles/StyledMarkdown";
 import Markdown from "markdown-to-jsx";
 import { useLocation } from "react-router-dom";
 import { getPostById } from "../utils/getPostById";
-import NotFound from "./NotFound";
 import { Button } from "../components/Button";
 import { useEffect } from "react";
 import { getNavItem } from "../utils/getNavItem";
+import { getUserById } from "../utils/getUserById";
+import NotFound from "./NotFound";
 
 export default function ViewPost() {
   const location = useLocation();
-  const postId = location.search.replace("?", "");
   const navItems = getNavItem("");
+  const postId = location.search.replace("?", "");
 
-  if (!postId) return <NotFound />;
+  const post = getPostById(postId);
+  const userAuthor = getUserById(post.userAuthorId);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const post = getPostById(postId);
-  if (!post) return <NotFound />;
+  if (post.id === "invalid data"){
+    return <NotFound />;
+  }
 
   return (
     <>
@@ -44,12 +47,18 @@ export default function ViewPost() {
             </div>
           )}
         </div>
-        <div className="bg-typo-150 shadow-typo-700/30 shadow-inner w-full h-[80px] flex items-center justify-between px-[160px]">
-          <UserCard.Root>
-            <UserCard.Infos userName="Usuário" userAvatar="images/user.png" userPostsNumber={1} />
-            <UserCard.HandleMark marked />
-          </UserCard.Root>
-        </div>
+        {userAuthor && (
+          <div className="bg-typo-150 shadow-typo-700/30 shadow-inner w-full h-[80px] flex items-center justify-between px-[160px]">
+            <UserCard.Root>
+              <UserCard.Infos
+                userName={userAuthor?.email}
+                userAvatar={userAuthor.avatarUrl ? userAuthor.avatarUrl : "images/user.png"}
+                userPostsNumber={userAuthor.postsNumber}
+              />
+              <UserCard.HandleMark marked />
+            </UserCard.Root>
+          </div>
+        )}
         <section className="px-[30px] py-[30px] flex justify-between gap-[30px]">
           <article className="w-full">
             <div className="flex justify-between w-full">

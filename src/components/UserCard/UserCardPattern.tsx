@@ -36,7 +36,7 @@ export function UserCardHandleMark(
   );
 }
 
-export function UserCardInfos({ userName, userPostsNumber, userAvatar }: { userName: string, userPostsNumber: number, userAvatar: string }) {
+export function UserCardInfos({ userName, userPostsNumber, userAvatar }: { userName: string, userPostsNumber: number | undefined, userAvatar: string }) {
   return (
     <div className="flex items-center h-full gap-[10px]">
       <img className="w-[39px] h-[39px] rounded-full border-main-red-300 border" src={userAvatar} alt="" />
@@ -45,7 +45,7 @@ export function UserCardInfos({ userName, userPostsNumber, userAvatar }: { userN
           {userName}
         </h3>
         <h4 className="text-image-subtitle text-typo-700">
-          {`${userPostsNumber} Posts`}
+          {`${userPostsNumber ? userPostsNumber : 0} Posts`}
         </h4>
       </span>
     </div>

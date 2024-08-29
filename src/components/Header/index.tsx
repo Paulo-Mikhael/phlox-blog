@@ -7,7 +7,7 @@ import { INavItems } from "../../interfaces/INavItems";
 import { Button } from "../Button";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../state/atom";
-import { Book, User } from "lucide-react";
+import { User } from "lucide-react";
 
 const StyledLi = styled.li<{ $active: boolean }>`
   a{

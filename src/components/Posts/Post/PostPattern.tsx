@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Pagination, ScrollShadow } from "@nextui-org/react";
 import Markdown from "markdown-to-jsx";
 import { IPost, IPostBadges } from "../../../interfaces/IPost";
@@ -15,7 +15,10 @@ import { Link } from "react-router-dom";
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
   const setFormat = useSetRecoilState(postCardFormatState);
-  setFormat(format);
+
+  useEffect(() => {
+    setFormat(format);
+  }, []);
 
   return (
     <div className={`flex flex-wrap ${format === "table" ? "justify-between" : "flex-col"} gap-10`}>
@@ -36,7 +39,7 @@ function CardTable({ ...post }: IPost) {
   return (
     <article className="w-[375px] max-xl:w-full shadow-xl bg-transparent rounded-[10px]">
       <figure className="h-[251px] max-xl:h-auto w-full">
-        <Link to={`view?${post.id}`}>
+        <Link to={`/view?${post.id}`}>
           <img src={post.imageUrl} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
         </Link>
       </figure>
@@ -61,7 +64,7 @@ function CardList({ ...post }: IPost) {
     <div className="w-full dark">
       <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
         <figure className="w-[326px] max-xl:hidden">
-          <Link to={`view?${post.id}`}>
+          <Link to={`/view?${post.id}`}>
             <img src={post.imageUrl} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
           </Link>
         </figure>

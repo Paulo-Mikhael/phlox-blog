@@ -8,9 +8,16 @@ import { usePosts } from "../state/hooks/usePosts";
 import { HandleBadges } from "../utils/HandleBadges";
 import { Link } from "react-router-dom";
 import { getNavItem } from "../utils/getNavItem";
+import { useRecoilValue } from "recoil";
+import { actualUserState } from "../state/atom";
+import NotFound from "./NotFound";
 
 export default function UserPerfil() {
   const posts = usePosts();
+  const user = useRecoilValue(actualUserState);
+
+  if (!user) return <NotFound />;
+
   const navItems = getNavItem("Meu Perfil", [
     { 
       name: "Meu Perfil", 
@@ -32,7 +39,11 @@ export default function UserPerfil() {
       <main className="px-[100px] py-[30px]">
         <div className="flex justify-between items-center">
           <UserCard.Root>
-            <UserCard.Infos userName="Usuário" userAvatar="images/user.png" userPostsNumber={1} />
+            <UserCard.Infos 
+            userName={user.data.email}
+            userAvatar={user.data.avatarUrl ? user.data.avatarUrl : "images/user.png"}
+            userPostsNumber={user.data.postsNumber}
+          />
           </UserCard.Root>
           <Button.Root>
             <Button.Text content="PERSONALIZAR" />

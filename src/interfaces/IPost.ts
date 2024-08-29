@@ -7,6 +7,7 @@ export interface IPost {
   title: string,
   content: string,
   postDate: string,
+  userAuthorId: string,
   badges: IPostBadges
 }
 
@@ -20,9 +21,4 @@ export interface IPostBadges {
     offerPressed: boolean,
   },
   personalizedBadges: IPersonalizedBadge[]
-}
-
-export interface IImage {
-  id: string,
-  base64String: string
 }
