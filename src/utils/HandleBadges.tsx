@@ -7,7 +7,7 @@ import { handleBadgeItemsState } from "../state/atom";
 import { Form } from "../components/Form";
 import { Button } from "../components/Button";
 import clsx from "clsx";
-import { BadgePlus, X } from "lucide-react";
+import { BadgePlus, Trash, X } from "lucide-react";
 import { colors } from "../styles/variables";
 
 export function HandleBadges() {
@@ -83,6 +83,27 @@ export function HandleBadges() {
       <Badge.Root
         children={<Badge.Add onClick={() => { setOpenModal(true) }} />}
       />
+      {personalizedBadges.length > 0 && (
+        <div className="ml-1 flex items-center cursor-pointer">
+          <Button.Root 
+            twPaddingY="p-1" 
+            twPaddingX="p-1"
+            onClick={() => {
+              setPersonalizedBadges(prv => {
+                const removedLast = [
+                  ...prv
+                ];
+
+                removedLast.pop()
+
+                return removedLast;
+              });
+            }}
+          >
+            <Button.Icon icon={Trash} />
+          </Button.Root>
+        </div>
+      )}
       <div
         className={clsx(
           "fixed bg-typo-700/20 w-full h-full top-0 left-0 items-center justify-center z-[2]",
@@ -118,7 +139,7 @@ export function HandleBadges() {
           <span
             className="rounded-full bg-main-red-300 p-2 flex items-center justify-center absolute -top-3 -right-3 cursor-pointer"
             onClick={() => {
-            setOpenModal(false);
+              setOpenModal(false);
               setPreviewBadge("");
             }}
           >

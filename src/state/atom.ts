@@ -41,5 +41,5 @@ export const postCardFormatState = atom<"table" | "list">({
 
 export const postsFilterState = atom<IPostFilter | null>({
   key: "postsFilterState",
-  default: null
+  default: { postTitle: "" }
 });
