@@ -2,6 +2,7 @@ import { atom } from "recoil";
 import { IPost, IPostBadges } from "../interfaces/IPost";
 import { User } from "firebase/auth";
 import { IUser } from "../interfaces/IUser";
+import { IPostFilter } from "../interfaces/IPostFilter";
 
 export const postsState = atom<IPost[]>({
   key: "postsState",
@@ -36,4 +37,9 @@ export const actualUserState = atom<{ auth: User | null, data: IUser } | null>({
 export const postCardFormatState = atom<"table" | "list">({
   key: "postCardFormatState",
   default: "table"
+});
+
+export const postsFilterState = atom<IPostFilter | null>({
+  key: "postsFilterState",
+  default: null
 });

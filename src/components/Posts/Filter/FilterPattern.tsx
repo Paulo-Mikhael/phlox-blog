@@ -6,6 +6,7 @@ import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { UserCard } from "../../UserCard";
 import { Checkbox } from "../../Checkbox";
 import { useUsers } from "../../../state/hooks/useUsers";
+import { useSetFilterPostTitle } from "../../../state/hooks/useSetFilterPostTitle";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (
@@ -16,10 +17,20 @@ export function FilterRoot({ title, children }: { title: string, children: React
 }
 
 export function FilterSearchPost() {
+  const setFilterPostTitle = useSetFilterPostTitle();
+
   return (
     <Form.Root>
       <Form.Label text="Pesquisar post:" />
-      <Form.Input placeholder="Digite o título do post..." iconRight={Search} />
+      <Form.Input 
+        onChange={(evt) => {
+          const value = evt.target.value;
+
+          value !== "" ? setFilterPostTitle(value) : setFilterPostTitle("");
+        }} 
+        placeholder="Digite o título do post..." 
+        iconRight={Search} 
+      />
     </Form.Root>
   );
 }

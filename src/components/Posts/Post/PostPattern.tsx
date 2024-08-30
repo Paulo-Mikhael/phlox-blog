@@ -10,8 +10,8 @@ import { List, Table } from "lucide-react";
 import { postCardFormatState } from "../../../state/atom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Post } from ".";
-import { usePosts } from "../../../state/hooks/usePosts";
 import { Link } from "react-router-dom";
+import { useFilteredPosts } from "../../../state/hooks/useFilteredPosts";
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
   const setFormat = useSetRecoilState(postCardFormatState);
@@ -134,7 +134,7 @@ export function PostFormatButton() {
 }
 
 export function PostUserCards() {
-  const posts = usePosts();
+  const posts = useFilteredPosts();
 
   return (
     <Post.Root>
