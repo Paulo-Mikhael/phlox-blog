@@ -7,6 +7,10 @@ import { UserCard } from "../../UserCard";
 import { Checkbox } from "../../Checkbox";
 import { useUsers } from "../../../state/hooks/useUsers";
 import { useSetFilterPostTitle } from "../../../state/hooks/useSetFilterPostTitle";
+import { useFilteredUsers } from "../../../state/hooks/useFilteredUsers";
+import { useSetRecoilState } from "recoil";
+import { usersFilterState } from "../../../state/atom";
+import { useSetFilterUserEmail } from "../../../state/hooks/useSetFilterUserEmail";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (
@@ -36,15 +40,21 @@ export function FilterSearchPost() {
 }
 
 export function FilterSearchUserInput() {
+  const setFilterUserEmail = useSetFilterUserEmail();
+
   return (
     <Form.Root>
-      <Form.Input placeholder="Pesquisar usuário..." iconRight={User} />
+      <Form.Input 
+        placeholder="Pesquisar usuário..." 
+        iconRight={User} 
+        onChange={(evt) => setFilterUserEmail(evt.target.value)}
+      />
     </Form.Root>
   );
 }
 
 export function FilterSearchUserCards() {
-  const users = useUsers();
+  const users = useFilteredUsers();
 
   return (
     <ScrollShadow className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">

@@ -45,7 +45,7 @@ export default function AddPost() {
   const setUsers = useSetUsers();
   const setPosts = useSetPosts();
 
-  if (!user){
+  if (!user) {
     return <NotFound />;
   }
 
@@ -55,16 +55,14 @@ export default function AddPost() {
       return;
     };
 
-    changeContentUrls();
-
     const newPostId = uuidV4();
     const newPost: IPost = {
       id: newPostId,
-      userAuthorId: user.data.id,
-      imageUrl: postImageUrl,
       title: postTitle,
+      content: changeContentUrls(postContent),
+      imageUrl: postImageUrl,
       postDate: new Date().toString(),
-      content: postContent,
+      userAuthorId: user.data.id,
       badges: handleBadgesItems
     }
 
@@ -104,7 +102,7 @@ export default function AddPost() {
   function submitPostContentImage(postContentImage: IPostContentImage) {
     if (!postContentImage) return;
 
-    setPostContent(prv => prv + ` ![desc](${postContentImage.localUrl})`);
+    setPostContent(prv => prv + ` ![${postContentImage.file.name}](${postContentImage.localUrl})`);
     const path = `images/${postContentImage.file.name.trim()}`;
 
     insertToStorage(path, postContentImage.file)
@@ -112,7 +110,6 @@ export default function AddPost() {
         getUrlFromStorage(path)
           .then((url) => {
             setPostContentImages(prv => [...prv, { ...postContentImage, databaseUrl: url }]);
-            console.log(postContentImages);
           })
           .catch((err) => {
             throw new Error(err);
@@ -123,12 +120,19 @@ export default function AddPost() {
       });
   }
 
-  function changeContentUrls() {
+  function changeContentUrls(content: string): string {
+    let updatedContent = content;
+
     for (let i = 0; i < postContentImages.length; i++) {
       const localUrl = postContentImages[i].localUrl;
       const databaseUrl = postContentImages[i].databaseUrl;
-      databaseUrl && setPostContent(prv => prv.replace(localUrl, databaseUrl));
+      
+      if (!databaseUrl) return "";
+      
+      updatedContent = updatedContent.replace(localUrl, databaseUrl);
     };
+
+    return updatedContent;
   }
 
   useEffect(() => {

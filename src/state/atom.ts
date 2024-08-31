@@ -3,6 +3,7 @@ import { IPost, IPostBadges } from "../interfaces/IPost";
 import { User } from "firebase/auth";
 import { IUser } from "../interfaces/IUser";
 import { IPostFilter } from "../interfaces/IPostFilter";
+import { IUserFilter } from "../interfaces/IUsersFilter";
 
 export const postsState = atom<IPost[]>({
   key: "postsState",
@@ -39,7 +40,12 @@ export const postCardFormatState = atom<"table" | "list">({
   default: "table"
 });
 
-export const postsFilterState = atom<IPostFilter | null>({
+export const postsFilterState = atom<IPostFilter>({
   key: "postsFilterState",
   default: { postTitle: "" }
+});
+
+export const usersFilterState = atom<IUserFilter>({
+  key: "usersFilterState",
+  default: { userEmail: "" }
 });

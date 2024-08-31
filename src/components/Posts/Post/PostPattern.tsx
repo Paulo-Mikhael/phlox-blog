@@ -12,6 +12,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Post } from ".";
 import { Link } from "react-router-dom";
 import { useFilteredPosts } from "../../../state/hooks/useFilteredPosts";
+import { getUserById } from "../../../utils/getUserById";
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
   const setFormat = useSetRecoilState(postCardFormatState);
@@ -36,11 +37,18 @@ export function PostCard({ ...post }: IPost) {
 }
 
 function CardTable({ ...post }: IPost) {
+  const user = getUserById(post.userAuthorId);
+  if (!user) return;
+
   return (
     <article className="w-[375px] max-xl:w-full shadow-xl bg-transparent rounded-[10px]">
       <figure className="h-[251px] max-xl:h-auto w-full">
-        <Link to={`/view?${post.id}`}>
-          <img src={post.imageUrl} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full" />
+        <Link to={`/view?${post.id}`} className="relative">
+          <img 
+            src={user.avatarUrl ? user.avatarUrl : "images/user.png"} 
+            className="w-14 h-14 z-[2] rounded-full border border-main-red-300 absolute bottom-2 left-2"
+          />
+          <img src={post.imageUrl} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full z-[1]" />
         </Link>
       </figure>
       <section className="bg-typo-100 w-full max-h-[405px] rounded-b-[10px] px-[18px] pt-[18px] flex flex-col gap-5">
@@ -60,11 +68,18 @@ function CardTable({ ...post }: IPost) {
 }
 
 function CardList({ ...post }: IPost) {
+  const user = getUserById(post.userAuthorId);
+  if (!user) return;
+
   return (
     <div className="w-full dark">
       <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
         <figure className="w-[326px] max-xl:hidden">
-          <Link to={`/view?${post.id}`}>
+          <Link to={`/view?${post.id}`} className="relative">
+            <img 
+              src={user.avatarUrl ? user.avatarUrl : "images/user.png"} 
+              className="w-12 h-12 z-[2] rounded-full border border-main-red-300 absolute bottom-2 left-2" 
+            />
             <img src={post.imageUrl} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
           </Link>
         </figure>

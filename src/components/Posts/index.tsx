@@ -21,7 +21,6 @@ export default function Posts() {
           <Post.FormatButton />
         </span>
         <Post.UserCards />
-        <Post.Pagination total={10} initialPage={1} />
       </main>
     </div>
   );

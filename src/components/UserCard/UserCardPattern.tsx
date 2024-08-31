@@ -7,7 +7,7 @@ export function UserCardRoot({ children, onClick, variant = "transparent" }: { c
   return (
     <span
       className={clsx(
-        "w-full h-[66px] flex justify-between items-center",
+        "w-full h-[66px] flex justify-between items-center cursor-pointer",
         {
           "p-3 border-main-red-300 border-[2px] rounded-[6px] shadow-inner shadow-typo-700/70 ": variant === "bordered"
         }
@@ -27,7 +27,7 @@ export function UserCardHandleMark(
 
   return (
     <Icon
-      className="cursor-pointer" color={colors.redMain[300]} size={26}
+      className="cursor-default" color={colors.redMain[300]} size={26}
       onClick={() => {
         setHandleMarked(!handleMarked);
         onClick && onClick();

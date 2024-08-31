@@ -1,3 +1,3 @@
 export interface IPostFilter {
-  postTitle?: string
+  postTitle: string
 }
