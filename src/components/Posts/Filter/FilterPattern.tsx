@@ -5,12 +5,10 @@ import { ReactNode } from "react";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { UserCard } from "../../UserCard";
 import { Checkbox } from "../../Checkbox";
-import { useUsers } from "../../../state/hooks/useUsers";
 import { useSetFilterPostTitle } from "../../../state/hooks/useSetFilterPostTitle";
 import { useFilteredUsers } from "../../../state/hooks/useFilteredUsers";
-import { useSetRecoilState } from "recoil";
-import { usersFilterState } from "../../../state/atom";
 import { useSetFilterUserEmail } from "../../../state/hooks/useSetFilterUserEmail";
+import { useNavigate } from "react-router-dom";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (
@@ -55,12 +53,21 @@ export function FilterSearchUserInput() {
 
 export function FilterSearchUserCards() {
   const users = useFilteredUsers();
+  const navigate = useNavigate();
 
   return (
     <ScrollShadow className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">
       {users.map((item) => (
         <UserCard.Root variant="bordered" key={item.id}>
-          <UserCard.Infos userName={item.email} userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"} userPostsNumber={item.postsNumber ? item.postsNumber : 0} />
+          <UserCard.Infos 
+            userName={item.email} 
+            userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"} 
+            userPostsNumber={item.postsNumber ? item.postsNumber : 0} 
+            onClick={() => {
+              navigate(`/user?${item.id}`);
+              window.scrollTo(0, 0);
+            }}
+          />
           <UserCard.HandleMark marked={false} />
         </UserCard.Root>
       ))}

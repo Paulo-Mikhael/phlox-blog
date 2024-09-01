@@ -1,8 +1,12 @@
+import { useEffect } from "react";
 import { Header } from "../components/Header"
 import Hero from "../components/Hero"
 import Posts from "../components/Posts"
 
 export default function Home() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>

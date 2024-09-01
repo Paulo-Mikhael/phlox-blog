@@ -6,9 +6,8 @@ import { useSetRecoilState } from "recoil";
 import { handleBadgeItemsState } from "../state/atom";
 import { Form } from "../components/Form";
 import { Button } from "../components/Button";
-import clsx from "clsx";
 import { BadgePlus, Trash, X } from "lucide-react";
-import { colors } from "../styles/variables";
+import { Modal } from "../components/Modal";
 
 export function HandleBadges() {
   const [storyPressed, setStoryPressed] = useState<boolean>(false);
@@ -104,18 +103,10 @@ export function HandleBadges() {
           </Button.Root>
         </div>
       )}
-      <div
-        className={clsx(
-          "fixed bg-typo-700/20 w-full h-full top-0 left-0 items-center justify-center z-[2]",
-          {
-            "hidden": !openModal,
-            "flex": openModal
-          }
-        )}
-      >
+      <Modal openModal={openModal} setOpenModal={setOpenModal} onClose={() => setPreviewBadge("")}>
         <Form.Root
-          twWidth="w-96"
-          className="bg-typo-100 p-6 rounded-[10px] gap-2 relative"
+          twWidth="w-80"
+          className="gap-2"
           onSubmit={() => addPersonalizedBadge()}
         >
           <Form.Label text="Escreva o nome da badge personalizada" />
@@ -136,19 +127,8 @@ export function HandleBadges() {
             <Button.Text content="Adicionar" />
             <Button.Icon size={20} icon={BadgePlus} />
           </Button.Root>
-          <span
-            className="rounded-full bg-main-red-300 p-2 flex items-center justify-center absolute -top-3 -right-3 cursor-pointer"
-            onClick={() => {
-              setOpenModal(false);
-              setPreviewBadge("");
-            }}
-          >
-            <X
-              color={colors.typo[100]}
-            />
-          </span>
         </Form.Root>
-      </div>
+      </Modal>
     </div>
   );
 }

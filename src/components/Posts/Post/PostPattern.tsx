@@ -148,7 +148,7 @@ export function PostFormatButton() {
   );
 }
 
-export function PostUserCards() {
+export function PostCards() {
   const posts = useFilteredPosts();
 
   return (

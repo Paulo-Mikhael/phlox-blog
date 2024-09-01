@@ -5,5 +5,6 @@ export interface IUser {
   email: string,
   avatarUrl?: string,
   posts?: IPost[],
-  postsNumber?: number
+  postsNumber?: number,
+  usersSaved?: boolean
 }

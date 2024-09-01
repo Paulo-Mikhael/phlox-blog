@@ -6,29 +6,38 @@ import { Post } from "../components/Posts/Post";
 import { UserCard } from "../components/UserCard";
 import { usePosts } from "../state/hooks/usePosts";
 import { HandleBadges } from "../utils/HandleBadges";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { getNavItem } from "../utils/getNavItem";
+import NotFound from "./NotFound";
+import { getUserById } from "../utils/getUserById";
+import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../state/atom";
-import NotFound from "./NotFound";
 
 export default function UserPerfil() {
+  const location = useLocation();
+  const userId = location.search.replace("?", "");
+  const user = getUserById(userId);
+  const actualUser = useRecoilValue(actualUserState);
   const posts = usePosts();
-  const user = useRecoilValue(actualUserState);
-
-  if (!user) return <NotFound />;
-
-  const navItems = getNavItem("Meu Perfil", [
-    { 
-      name: "Meu Perfil", 
-      path: "/user", 
+  const navItems = getNavItem("");
+  const navItemsActualUser = getNavItem("Meu Perfil", [
+    {
+      name: "Meu Perfil",
+      path: `${actualUser ? `/user?${actualUser.data.id}` : ""}`,
       current: false
     }
   ]);
 
+  if (user.email === "invalid data") return <NotFound />;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
-      <Header userPerfil navItems={navItems}>
+      <Header userPerfil={actualUser !== null} navItems={actualUser && userId === actualUser.data.id ? navItemsActualUser : navItems}>
         <Link to="/add">
           <Button.Root variant="outlined">
             <Button.Text content="FAZER UM POST" />
@@ -39,11 +48,11 @@ export default function UserPerfil() {
       <main className="px-[100px] py-[30px]">
         <div className="flex justify-between items-center">
           <UserCard.Root>
-            <UserCard.Infos 
-            userName={user.data.email}
-            userAvatar={user.data.avatarUrl ? user.data.avatarUrl : "images/user.png"}
-            userPostsNumber={user.data.postsNumber}
-          />
+            <UserCard.Infos
+              userName={user.email}
+              userAvatar={user.avatarUrl ? user.avatarUrl : "images/user.png"}
+              userPostsNumber={user.postsNumber}
+            />
           </UserCard.Root>
           <Button.Root>
             <Button.Text content="PERSONALIZAR" />

@@ -20,7 +20,7 @@ export default function Posts() {
           <Filter.Date />
           <Post.FormatButton />
         </span>
-        <Post.UserCards />
+        <Post.Cards />
       </main>
     </div>
   );

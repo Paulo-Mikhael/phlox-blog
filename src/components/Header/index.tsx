@@ -74,7 +74,7 @@ export function Header({ items = true, navItems = navItemsData, children, userPe
           {user && (
             <Button.Root
               onClick={() => {
-                navigate("/user");
+                navigate(`/user?${user.data.id}`);
               }}
             >
               <Button.Text content="MEU PERFIL" />

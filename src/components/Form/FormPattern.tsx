@@ -58,7 +58,7 @@ export function FormLabel({ text, ...rest }: FormLabelProps) {
     <label
       {...rest}
       className={clsx(
-        "text-normal font-medium mt-3",
+        `text-normal font-medium mt-3 ${rest.className}`,
         {
           "text-typo-600": variant === "default" || variant === undefined,
           "text-feedback-success": variant === "success",
