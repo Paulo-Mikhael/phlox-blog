@@ -13,12 +13,14 @@ import { useEffect } from "react";
 import { getNavItem } from "../utils/getNavItem";
 import { getUserById } from "../utils/getUserById";
 import NotFound from "./NotFound";
+import { useRecoilValue } from "recoil";
+import { actualUserState } from "../state/atom";
 
 export default function ViewPost() {
   const location = useLocation();
   const navItems = getNavItem("");
   const postId = location.search.replace("?", "");
-
+  const actualUser = useRecoilValue(actualUserState);
   const post = getPostById(postId);
   const userAuthor = getUserById(post.userAuthorId);
 
@@ -26,7 +28,7 @@ export default function ViewPost() {
     window.scrollTo(0, 0);
   }, []);
 
-  if (post.id === "invalid data"){
+  if (post.id === "invalid data") {
     return <NotFound />;
   }
 
@@ -55,7 +57,20 @@ export default function ViewPost() {
                 userAvatar={userAuthor.avatarUrl ? userAuthor.avatarUrl : "images/user.png"}
                 userPostsNumber={userAuthor.postsNumber}
               />
-              <UserCard.HandleMark marked />
+              {actualUser && actualUser.data.id !== userAuthor.id && (
+                <UserCard.HandleMark 
+                  userId={userAuthor.id}
+                  marked={
+                    Boolean(actualUser.data.usersFavorited?.find((item) => item.id === userAuthor.id && item.favorited === true))
+                    && actualUser.data.id !== userAuthor.id
+                  }
+                />
+              )}
+              {!actualUser && (
+                <UserCard.HandleMark 
+                  marked={false} 
+                />
+              )}
             </UserCard.Root>
           </div>
         )}
