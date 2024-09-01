@@ -14,7 +14,7 @@ interface UserCardRootProps {
 interface UserCardHandleMarkProps {
   marked: boolean,
   onClick?: () => void,
-  userId: string | undefined
+  userId?: string | undefined
 }
 interface UserCardInfosProps {
   userName: string,

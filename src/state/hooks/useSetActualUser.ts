@@ -3,7 +3,7 @@ import { actualUserState } from "../atom";
 import { User } from "firebase/auth";
 import { ref, get, child } from "firebase/database";
 import { firebaseRealtimeDatabase } from "../../utils/firebase/firebase";
-import { IUser } from "../../interfaces/IUser";
+import { IUser, IUserFavorite } from "../../interfaces/IUser";
 import { getFirebaseArrayLength } from "../../utils/firebase/functions/getFirebaseArrayLength";
 
 export function useSetActualUser() {
@@ -21,16 +21,26 @@ export function useSetActualUser() {
             const currentUserEmail = users[userId].email;
             const currentUserAvatarUrl = users[userId].avatarUrl;
             const currentUserPosts = users[userId].posts;
+            const currentUserFavorites = users[userId].usersFavorited;
 
             if (currentUserEmail === userEmail) {
+              const usersFavorited: IUserFavorite[] = [];
               let postsNumber = getFirebaseArrayLength(currentUserPosts);
+
+              for (const userId in currentUserFavorites){
+                usersFavorited.push({
+                  id: userId,
+                  favorited: currentUserFavorites[userId].favorited
+                });
+              };
 
               const newUserData: IUser = {
                 id: userId,
                 email: currentUserEmail,
                 avatarUrl: currentUserAvatarUrl,
                 posts: currentUserPosts,
-                postsNumber: postsNumber
+                postsNumber: postsNumber,
+                usersFavorited: usersFavorited
               }
 
               resolve(newUserData);

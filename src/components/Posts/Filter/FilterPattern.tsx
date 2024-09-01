@@ -74,6 +74,11 @@ export function FilterSearchUserCards() {
           {actualUser && actualUser.data.id !== item.id && (
             <UserCard.HandleMark
               userId={item.id}
+              marked={actualUser.data.usersFavorited?.find((userId) => userId.id === item.id && userId.favorited === true) ? true : false}
+            />
+          )}
+          {!actualUser && (
+            <UserCard.HandleMark
               marked={false}
             />
           )}

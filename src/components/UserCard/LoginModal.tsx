@@ -14,16 +14,16 @@ export function LoginModal({ openModal, setOpenModal }: LoginModalProps) {
       <Form.Root className="gap-4">
         <Form.Label className="max-w-64 text-center" text="Para favoritar usuários você precisa estar logado na plataforma" />
         <div className="flex justify-between">
-          <Button.Root>
-            <Link to="/login">
+          <Link to="/login">
+            <Button.Root>
               <Button.Text content="Fazer login" />
-            </Link>
-          </Button.Root>
-          <Button.Root variant="outlined">
-            <Link to="/signup">
+            </Button.Root>
+          </Link>
+          <Link to="/signup">
+            <Button.Root variant="outlined">
               <Button.Text content="Cadastrar-se" />
-            </Link>
-          </Button.Root>
+            </Button.Root>
+          </Link>
         </div>
       </Form.Root>
     </Modal>

@@ -1,7 +1,7 @@
 import { IPersonalizedBadge } from "./IBadge"
 
 export interface IPost {
-  id: string,
+  id: string, // No firebase, o id é o index, na hora de pegar os dados deve-se colocar o index neste campo
   imageUrl: string,
   imageAlt?: string,
   title: string,

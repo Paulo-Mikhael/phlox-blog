@@ -6,5 +6,10 @@ export interface IUser {
   avatarUrl?: string,
   posts?: IPost[],
   postsNumber?: number,
-  usersFavorited?: boolean
+  usersFavorited?: IUserFavorite[]
+}
+
+export interface IUserFavorite { 
+  id: string, // Mesma coisa
+  favorited: boolean 
 }
