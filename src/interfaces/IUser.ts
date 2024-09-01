@@ -6,5 +6,5 @@ export interface IUser {
   avatarUrl?: string,
   posts?: IPost[],
   postsNumber?: number,
-  usersSaved?: boolean
+  usersFavorited?: boolean
 }

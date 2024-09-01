@@ -1,13 +1,11 @@
-import { Bookmark, BookmarkCheck } from "lucide-react";
+import { Bookmark, BookmarkCheck, LoaderCircle } from "lucide-react";
 import { colors } from "../../styles/variables";
 import { ReactNode, useState } from "react";
 import clsx from "clsx";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../state/atom";
-import { Modal } from "../Modal";
-import { Button } from "../Button";
-import { Form } from "../Form";
-import { Link } from "react-router-dom";
+import { LoginModal } from "./LoginModal";
+import { createInDataBase } from "../../utils/firebase/functions/createInDatabase";
 
 interface UserCardRootProps {
   children: ReactNode,
@@ -15,7 +13,8 @@ interface UserCardRootProps {
 }
 interface UserCardHandleMarkProps {
   marked: boolean,
-  onClick?: () => void
+  onClick?: () => void,
+  userId: string | undefined
 }
 interface UserCardInfosProps {
   userName: string,
@@ -39,20 +38,32 @@ export function UserCardRoot({ children, variant = "transparent" }: UserCardRoot
   );
 }
 
-export function UserCardHandleMark({ marked, onClick }: UserCardHandleMarkProps) {
+export function UserCardHandleMark({ marked, onClick, userId }: UserCardHandleMarkProps) {
   const [handleMarked, setHandleMarked] = useState<boolean>(marked);
+  const [loading, setLoading] = useState<boolean>(false);
   const Icon = handleMarked ? BookmarkCheck : Bookmark;
   const actualUser = useRecoilValue(actualUserState);
   const [openModal, setOpenModal] = useState(false);
+
+  if (loading) return <LoaderCircle color={colors.redMain[300]} className="animate-spin" size={26} />;
 
   return (
     <>
       <Icon
         className="cursor-pointer"
-        color={colors.redMain[300]} size={26}
+        color={colors.redMain[300]} 
+        size={26}
         onClick={() => {
-          if (actualUser) {
-            setHandleMarked(!handleMarked);
+          if (actualUser && actualUser.data.id && userId) {
+            setLoading(true);
+            createInDataBase.UserFavorite(actualUser.data.id, userId, !handleMarked)
+              .then(() => {
+                setHandleMarked(!handleMarked);
+                setLoading(false);
+              })
+              .catch((err) => {
+                throw new Error(err);
+              });
             onClick && onClick();
           } else {
             setOpenModal(true);
@@ -60,23 +71,7 @@ export function UserCardHandleMark({ marked, onClick }: UserCardHandleMarkProps)
         }}
       />
       {openModal && (
-        <Modal openModal={openModal} setOpenModal={setOpenModal}>
-          <Form.Root className="gap-4">
-            <Form.Label className="max-w-64 text-center" text="Para favoritar usuários você precisa estar logado na plataforma" />
-            <div className="flex justify-between">
-              <Button.Root>
-                <Link to="/login">
-                  <Button.Text content="Fazer login" />
-                </Link>
-              </Button.Root>
-              <Button.Root variant="outlined">
-                <Link to="/signup">
-                  <Button.Text content="Cadastrar-se" />
-                </Link>
-              </Button.Root>
-            </div>
-          </Form.Root>
-        </Modal>
+        <LoginModal openModal={openModal} setOpenModal={setOpenModal} />
       )}
     </>
   );

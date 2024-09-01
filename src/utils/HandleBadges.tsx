@@ -6,7 +6,7 @@ import { useSetRecoilState } from "recoil";
 import { handleBadgeItemsState } from "../state/atom";
 import { Form } from "../components/Form";
 import { Button } from "../components/Button";
-import { BadgePlus, Trash, X } from "lucide-react";
+import { BadgePlus, Trash } from "lucide-react";
 import { Modal } from "../components/Modal";
 
 export function HandleBadges() {

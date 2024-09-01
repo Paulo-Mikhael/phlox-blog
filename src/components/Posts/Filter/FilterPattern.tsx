@@ -9,6 +9,8 @@ import { useSetFilterPostTitle } from "../../../state/hooks/useSetFilterPostTitl
 import { useFilteredUsers } from "../../../state/hooks/useFilteredUsers";
 import { useSetFilterUserEmail } from "../../../state/hooks/useSetFilterUserEmail";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { actualUserState } from "../../../state/atom";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (
@@ -24,14 +26,14 @@ export function FilterSearchPost() {
   return (
     <Form.Root>
       <Form.Label text="Pesquisar post:" />
-      <Form.Input 
+      <Form.Input
         onChange={(evt) => {
           const value = evt.target.value;
 
           value !== "" ? setFilterPostTitle(value) : setFilterPostTitle("");
-        }} 
-        placeholder="Digite o título do post..." 
-        iconRight={Search} 
+        }}
+        placeholder="Digite o título do post..."
+        iconRight={Search}
       />
     </Form.Root>
   );
@@ -42,9 +44,9 @@ export function FilterSearchUserInput() {
 
   return (
     <Form.Root>
-      <Form.Input 
-        placeholder="Pesquisar usuário..." 
-        iconRight={User} 
+      <Form.Input
+        placeholder="Pesquisar usuário..."
+        iconRight={User}
         onChange={(evt) => setFilterUserEmail(evt.target.value)}
       />
     </Form.Root>
@@ -53,22 +55,28 @@ export function FilterSearchUserInput() {
 
 export function FilterSearchUserCards() {
   const users = useFilteredUsers();
+  const actualUser = useRecoilValue(actualUserState);
   const navigate = useNavigate();
 
   return (
     <ScrollShadow className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">
       {users.map((item) => (
         <UserCard.Root variant="bordered" key={item.id}>
-          <UserCard.Infos 
-            userName={item.email} 
-            userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"} 
-            userPostsNumber={item.postsNumber ? item.postsNumber : 0} 
+          <UserCard.Infos
+            userName={item.email}
+            userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"}
+            userPostsNumber={item.postsNumber ? item.postsNumber : 0}
             onClick={() => {
               navigate(`/user?${item.id}`);
               window.scrollTo(0, 0);
             }}
           />
-          <UserCard.HandleMark marked={false} />
+          {actualUser && actualUser.data.id !== item.id && (
+            <UserCard.HandleMark
+              userId={item.id}
+              marked={false}
+            />
+          )}
         </UserCard.Root>
       ))}
     </ScrollShadow>
