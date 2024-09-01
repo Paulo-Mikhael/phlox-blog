@@ -17,7 +17,9 @@ export default function Posts() {
       </aside>
       <main className="w-[796px] flex flex-col gap-5 max-xl:w-[500px] pt-[7px]">
         <span className="flex justify-between">
-          <Filter.Date />
+          <div className="w-80">
+            <Filter.Date />
+          </div>
           <Post.FormatButton />
         </span>
         <Post.Cards />

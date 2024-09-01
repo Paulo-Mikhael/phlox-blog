@@ -4,7 +4,6 @@ import { Header } from "../components/Header";
 import { Filter } from "../components/Posts/Filter";
 import { Post } from "../components/Posts/Post";
 import { UserCard } from "../components/UserCard";
-import { usePosts } from "../state/hooks/usePosts";
 import { HandleBadges } from "../utils/HandleBadges";
 import { Link, useLocation } from "react-router-dom";
 import { getNavItem } from "../utils/getNavItem";
@@ -13,13 +12,14 @@ import { getUserById } from "../utils/getUserById";
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../state/atom";
+import { useFilteredUserPosts } from "../state/hooks/useFilteredUserPosts";
 
 export default function UserPerfil() {
   const location = useLocation();
   const userId = location.search.replace("?", "");
   const user = getUserById(userId);
   const actualUser = useRecoilValue(actualUserState);
-  const posts = usePosts();
+  const posts = useFilteredUserPosts(userId);
   const navItems = getNavItem("");
   const navItemsActualUser = getNavItem("Meu Perfil", [
     {
@@ -30,6 +30,7 @@ export default function UserPerfil() {
   ]);
 
   if (user.email === "invalid data") return <NotFound />;
+  if (!posts) return <NotFound />;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,8 +60,8 @@ export default function UserPerfil() {
           </Button.Root>
         </div>
         <div className="w-full h-[2px] bg-typo-200 mt-1 mb-10" />
-        <section className="flex gap-10">
-          <div className="w-[796px]">
+        <section className="flex justify-between gap-10">
+          <div className="xl:max-w-[70%]">
             <h1 className="text-section text-typo-700 mb-4">
               Minhas Postagens:
             </h1>
@@ -70,7 +71,7 @@ export default function UserPerfil() {
               ))}
             </Post.Root>
           </div>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 w-80">
             <Filter.SearchPost />
             <Filter.Date />
             <Filter.Root title="Categorias">

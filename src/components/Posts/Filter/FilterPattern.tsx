@@ -95,7 +95,7 @@ export function FilterDate() {
         <Checkbox.Input id="filter-checkbox" />
         <Checkbox.Label labelText="Filtrar por data" htmlFor="filter-checkbox" />
       </Checkbox.Root>
-      <Form.Root twWidth="w-[326px]">
+      <Form.Root>
         <Form.Input iconRight={Calendar} type="date" />
       </Form.Root>
     </div>
