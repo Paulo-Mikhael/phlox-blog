@@ -63,7 +63,7 @@ export default function UserPerfil() {
         <section className="flex justify-between gap-10">
           <div className="xl:max-w-[70%]">
             <h1 className="text-section text-typo-700 mb-4">
-              Minhas Postagens:
+              Postagens:
             </h1>
             <Post.Root format="list">
               {posts.map((item) => (
