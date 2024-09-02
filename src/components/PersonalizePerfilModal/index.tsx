@@ -18,14 +18,14 @@ export function PersonalizePerfilModal(
 
   if (!actualUser) return <NotFound />;
 
-  // function SignOut() {
-  //   signOut(auth).then(() => {
-  //     console.log("Sessão terminada");
-  //     navigate("/", { replace: true });
-  //   }).catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
+  function SignOut() {
+    signOut(auth).then(() => {
+      console.log("Sessão terminada");
+      navigate("/", { replace: true });
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
   function Delete(user: User) {
     deleteUser(user).then(() => {
       navigate("/", { replace: true });
@@ -48,7 +48,17 @@ export function PersonalizePerfilModal(
         </figcaption>
       </figure>
       <div className="mt-4 flex flex-col gap-2">
-        <Button.Root onClick={() => navigate("/login")} variant="outlined">
+        <Button.Root 
+          variant="outlined"
+          onClick={() => SignOut()} 
+        >
+          <Button.Text content="Trocar de Conta" />
+          <Button.Icon icon={ArrowRightLeft} />
+        </Button.Root>
+        <Button.Root 
+          variant="outlined"
+          onClick={() => navigate("/login")} 
+        >
           <Button.Text content="Trocar de Conta" />
           <Button.Icon icon={ArrowRightLeft} />
         </Button.Root>
