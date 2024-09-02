@@ -21,7 +21,7 @@ export default function UserPerfil() {
   const actualUser = useRecoilValue(actualUserState);
   const posts = useFilteredUserPosts(userId);
   const navItems = getNavItem("");
-  const navItemsActualUser = getNavItem("Meu Perfil", [
+  const navItemsActualUser = getNavItem(`${actualUser && userId === actualUser.data.id ? "Meu Perfil" : "" }`, [
     {
       name: "Meu Perfil",
       path: `${actualUser ? `/user?${actualUser.data.id}` : ""}`,
@@ -38,7 +38,7 @@ export default function UserPerfil() {
 
   return (
     <>
-      <Header userPerfil={actualUser !== null} navItems={actualUser && userId === actualUser.data.id ? navItemsActualUser : navItems}>
+      <Header userPerfil={actualUser !== null} navItems={actualUser ? navItemsActualUser : navItems}>
         <Link to="/add">
           <Button.Root variant="outlined">
             <Button.Text content="FAZER UM POST" />
@@ -55,15 +55,17 @@ export default function UserPerfil() {
               userPostsNumber={user.postsNumber}
             />
           </UserCard.Root>
-          <Button.Root>
-            <Button.Text content="PERSONALIZAR" />
-          </Button.Root>
+          {actualUser && userId === actualUser.data.id && (
+            <Button.Root>
+              <Button.Text content="PERSONALIZAR" />
+            </Button.Root>
+          )}
         </div>
         <div className="w-full h-[2px] bg-typo-200 mt-1 mb-10" />
         <section className="flex justify-between gap-10">
           <div className="xl:max-w-[70%]">
             <h1 className="text-section text-typo-700 mb-4">
-              Postagens:
+              {actualUser?.data.id === user.id ? "Minhas Postagens:" : "Postagens:"}
             </h1>
             <Post.Root format="list">
               {posts.map((item) => (

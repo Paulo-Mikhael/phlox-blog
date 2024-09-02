@@ -61,28 +61,30 @@ export function FilterSearchUserCards() {
   return (
     <ScrollShadow className="flex flex-col gap-[15px] max-h-[500px] overflow-y-scroll scrollbar scrollbar-none">
       {users.map((item) => (
-        <UserCard.Root variant="bordered" key={item.id}>
-          <UserCard.Infos
-            userName={item.email}
-            userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"}
-            userPostsNumber={item.postsNumber ? item.postsNumber : 0}
-            onClick={() => {
-              navigate(`/user?${item.id}`);
-              window.scrollTo(0, 0);
-            }}
-          />
-          {actualUser && actualUser.data.id !== item.id && (
-            <UserCard.HandleMark
-              userId={item.id}
-              marked={actualUser.data.usersFavorited?.find((userId) => userId.id === item.id && userId.favorited === true) ? true : false}
+        item.id !== actualUser?.data.id && (
+          <UserCard.Root variant="bordered" key={item.id}>
+            <UserCard.Infos
+              userName={item.email}
+              userAvatar={item.avatarUrl ? item.avatarUrl : "images/user.png"}
+              userPostsNumber={item.postsNumber ? item.postsNumber : 0}
+              onClick={() => {
+                navigate(`/user?${item.id}`);
+                window.scrollTo(0, 0);
+              }}
             />
-          )}
-          {!actualUser && (
-            <UserCard.HandleMark
-              marked={false}
-            />
-          )}
-        </UserCard.Root>
+            {actualUser && actualUser.data.id !== item.id && (
+              <UserCard.HandleMark
+                userId={item.id}
+                marked={actualUser.data.usersFavorited?.find((userId) => userId.id === item.id && userId.favorited === true) ? true : false}
+              />
+            )}
+            {!actualUser && (
+              <UserCard.HandleMark
+                marked={false}
+              />
+            )}
+          </UserCard.Root>
+        )
       ))}
     </ScrollShadow>
   );
