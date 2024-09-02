@@ -18,14 +18,14 @@ export function PersonalizePerfilModal(
 
   if (!actualUser) return <NotFound />;
 
-  function SignOut() {
-    signOut(auth).then(() => {
-      console.log("Sessão terminada");
-      navigate("/", { replace: true });
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
+  // function SignOut() {
+  //   signOut(auth).then(() => {
+  //     console.log("Sessão terminada");
+  //     navigate("/", { replace: true });
+  //   }).catch((error) => {
+  //     console.log(error);
+  //   });
+  // }
   function Delete(user: User) {
     deleteUser(user).then(() => {
       navigate("/", { replace: true });

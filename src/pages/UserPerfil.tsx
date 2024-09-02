@@ -5,7 +5,7 @@ import { Filter } from "../components/Posts/Filter";
 import { Post } from "../components/Posts/Post";
 import { UserCard } from "../components/UserCard";
 import { HandleBadges } from "../utils/HandleBadges";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { getNavItem } from "../utils/getNavItem";
 import NotFound from "./NotFound";
 import { getUserById } from "../utils/getUserById";
