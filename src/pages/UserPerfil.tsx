@@ -5,23 +5,25 @@ import { Filter } from "../components/Posts/Filter";
 import { Post } from "../components/Posts/Post";
 import { UserCard } from "../components/UserCard";
 import { HandleBadges } from "../utils/HandleBadges";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getNavItem } from "../utils/getNavItem";
 import NotFound from "./NotFound";
 import { getUserById } from "../utils/getUserById";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../state/atom";
 import { useFilteredUserPosts } from "../state/hooks/useFilteredUserPosts";
+import { PersonalizePerfilModal } from "../components/PersonalizePerfilModal";
 
 export default function UserPerfil() {
   const location = useLocation();
   const userId = location.search.replace("?", "");
   const user = getUserById(userId);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const actualUser = useRecoilValue(actualUserState);
   const posts = useFilteredUserPosts(userId);
   const navItems = getNavItem("");
-  const navItemsActualUser = getNavItem(`${actualUser && userId === actualUser.data.id ? "Meu Perfil" : "" }`, [
+  const navItemsActualUser = getNavItem(`${actualUser && userId === actualUser.data.id ? "Meu Perfil" : ""}`, [
     {
       name: "Meu Perfil",
       path: `${actualUser ? `/user?${actualUser.data.id}` : ""}`,
@@ -29,12 +31,12 @@ export default function UserPerfil() {
     }
   ]);
 
-  if (user.email === "invalid data") return <NotFound />;
-  if (!posts) return <NotFound />;
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  if (user.email === "invalid data") return <NotFound />;
+  if (!posts) return <NotFound />;
 
   return (
     <>
@@ -56,9 +58,14 @@ export default function UserPerfil() {
             />
           </UserCard.Root>
           {actualUser && userId === actualUser.data.id && (
-            <Button.Root>
+            <Button.Root
+              onClick={() => setOpenModal(true)}
+            >
               <Button.Text content="PERSONALIZAR" />
             </Button.Root>
+          )}
+          {openModal && (
+            <PersonalizePerfilModal openModal={openModal} setOpenModal={setOpenModal} />
           )}
         </div>
         <div className="w-full h-[2px] bg-typo-200 mt-1 mb-10" />

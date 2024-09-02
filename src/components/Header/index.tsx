@@ -39,7 +39,9 @@ export function Header({ items = true, navItems = navItemsData, children, userPe
 
   return (
     <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-between items-center p-4">
-      <img loading="eager" src="icons/phlox-logo.png" alt="" className="w-[140px] h-[25px]" />
+      <Link to="/">
+        <img loading="eager" src="icons/phlox-logo.png" alt="" className="w-[140px] h-[25px]" />
+      </Link>
       <nav>
         <ul className="flex gap-[30px]">
           {navItems.map((item, index) => (

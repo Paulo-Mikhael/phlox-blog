@@ -19,8 +19,8 @@ export default function Data() {
   }, []);
   
   return (
-    <div>
+    <span>
       <Outlet />
-    </div>
+    </span>
   );
 }
