@@ -8,6 +8,8 @@ import { Form } from "../components/Form";
 import { Button } from "../components/Button";
 import { BadgePlus, Trash } from "lucide-react";
 import { Modal } from "../components/Modal";
+import { useSetModalValue } from "../state/hooks/useSetModalValue";
+import { useCreateModal } from "../state/hooks/useCreateModal";
 
 export function HandleBadges() {
   const [storyPressed, setStoryPressed] = useState<boolean>(false);
@@ -18,8 +20,9 @@ export function HandleBadges() {
   const [opportunityPressed, setOpportunityPressed] = useState<boolean>(false);
   const [personalizedBadges, setPersonalizedBadges] = useState<IPersonalizedBadge[]>([]);
   const [previewBadge, setPreviewBadge] = useState<string>("");
-  const [openModal, setOpenModal] = useState<boolean>(false);
   const setHandleBadgeItems = useSetRecoilState(handleBadgeItemsState);
+  const createModal = useCreateModal();
+  const setOpenModal = useSetModalValue("HB");
 
   function addPersonalizedBadge() {
     setPersonalizedBadges(previous => [...previous, { id: uuidV4(), title: previewBadge, pressed: false }]);
@@ -28,17 +31,7 @@ export function HandleBadges() {
   }
 
   useEffect(() => {
-    setHandleBadgeItems({
-      defaultBadges: {
-        storyPressed: false,
-        tecnologyPressed: false,
-        newsPressed: false,
-        programationPressed: false,
-        opportunityPressed: false,
-        offerPressed: false,
-      },
-      personalizedBadges: []
-    });
+    createModal("HB");
   }, []);
 
   useEffect(() => {
@@ -103,7 +96,7 @@ export function HandleBadges() {
           </Button.Root>
         </div>
       )}
-      <Modal openModal={openModal} setOpenModal={setOpenModal} onClose={() => setPreviewBadge("")}>
+      <Modal modalKey="HB" onClose={() => setPreviewBadge("")}>
         <Form.Root
           twWidth="w-80"
           className="gap-2"

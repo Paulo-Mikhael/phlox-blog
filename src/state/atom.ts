@@ -49,3 +49,8 @@ export const usersFilterState = atom<IUserFilter>({
   key: "usersFilterState",
   default: { userEmail: "" }
 });
+
+export const modalsState = atom<{ key: string, opened: boolean }[]>({
+  key: "modalsState",
+  default: []
+});

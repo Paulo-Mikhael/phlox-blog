@@ -1,31 +1,18 @@
 import { ArrowRightLeft, Pencil, Trash } from "lucide-react";
-import { Modal } from "../Modal";
 import { colors } from "../../styles/variables";
 import { Button } from "../Button";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../state/atom";
 import NotFound from "../../pages/NotFound";
-import { deleteUser, signOut, User } from "firebase/auth";
-import { firebaseAuth } from "../../utils/firebase/firebase";
+import { deleteUser, User } from "firebase/auth";
 
-export function PersonalizePerfilModal(
-  { openModal, setOpenModal }: { openModal: boolean, setOpenModal: React.Dispatch<React.SetStateAction<boolean>> }
-) {
-  const auth = firebaseAuth;
+export function PersonalizePerfilModal() {
   const navigate = useNavigate();
   const actualUser = useRecoilValue(actualUserState);
 
   if (!actualUser) return <NotFound />;
 
-  function SignOut() {
-    signOut(auth).then(() => {
-      console.log("Sessão terminada");
-      navigate("/", { replace: true });
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
   function Delete(user: User) {
     deleteUser(user).then(() => {
       navigate("/", { replace: true });
@@ -35,7 +22,7 @@ export function PersonalizePerfilModal(
   }
 
   return (
-    <Modal openModal={openModal} setOpenModal={setOpenModal}>
+    <span>
       <figure className="w-full flex flex-col justify-center items-center gap-3">
         <img
           src={actualUser.data.avatarUrl ? actualUser.data.avatarUrl : "images/user.png"}
@@ -48,13 +35,6 @@ export function PersonalizePerfilModal(
         </figcaption>
       </figure>
       <div className="mt-4 flex flex-col gap-2">
-        <Button.Root 
-          variant="outlined"
-          onClick={() => SignOut()} 
-        >
-          <Button.Text content="Trocar de Conta" />
-          <Button.Icon icon={ArrowRightLeft} />
-        </Button.Root>
         <Button.Root 
           variant="outlined"
           onClick={() => navigate("/login")} 
@@ -72,6 +52,6 @@ export function PersonalizePerfilModal(
           <Button.Icon icon={Trash} />
         </Button.Root>
       </div>
-    </Modal>
+    </span>
   );
 }

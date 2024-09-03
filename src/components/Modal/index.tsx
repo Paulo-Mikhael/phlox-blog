@@ -2,15 +2,18 @@ import clsx from "clsx";
 import { X } from "lucide-react";
 import { ReactNode } from "react";
 import { colors } from "../../styles/variables";
+import { useModalValue } from "../../state/hooks/useModalValue";
+import { useSetModalValue } from "../../state/hooks/useSetModalValue";
 
 interface ModalProps {
   children: ReactNode,
   onClose?: () => void,
-  openModal: boolean,
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+  modalKey: string
 }
 
-export function Modal({ children, onClose, openModal, setOpenModal }: ModalProps) {
+export function Modal({ children, onClose, modalKey }: ModalProps) {
+  const openModal = useModalValue(modalKey);
+  const setOpenModal = useSetModalValue(modalKey);
 
   return (
     <div

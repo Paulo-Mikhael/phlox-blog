@@ -9,17 +9,21 @@ import { Link, useLocation } from "react-router-dom";
 import { getNavItem } from "../utils/getNavItem";
 import NotFound from "./NotFound";
 import { getUserById } from "../utils/getUserById";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../state/atom";
 import { useFilteredUserPosts } from "../state/hooks/useFilteredUserPosts";
-import { PersonalizePerfilModal } from "../components/PersonalizePerfilModal";
+import { PersonalizePerfilModal as PPM } from "../components/PersonalizePerfilModal";
+import { useSetModalValue } from "../state/hooks/useSetModalValue";
+import { Modal } from "../components/Modal";
+import { useCreateModal } from "../state/hooks/useCreateModal";
 
 export default function UserPerfil() {
   const location = useLocation();
   const userId = location.search.replace("?", "");
   const user = getUserById(userId);
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const createModal = useCreateModal();
+  const setOpenModal = useSetModalValue("PPM");
   const actualUser = useRecoilValue(actualUserState);
   const posts = useFilteredUserPosts(userId);
   const navItems = getNavItem("");
@@ -33,6 +37,7 @@ export default function UserPerfil() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    createModal("PPM");
   }, []);
 
   if (user.email === "invalid data") return <NotFound />;
@@ -64,9 +69,7 @@ export default function UserPerfil() {
               <Button.Text content="PERSONALIZAR" />
             </Button.Root>
           )}
-          {openModal && (
-            <PersonalizePerfilModal openModal={openModal} setOpenModal={setOpenModal} />
-          )}
+          <Modal children={<PPM />} modalKey="PPM" />
         </div>
         <div className="w-full h-[2px] bg-typo-200 mt-1 mb-10" />
         <section className="flex justify-between gap-10">
