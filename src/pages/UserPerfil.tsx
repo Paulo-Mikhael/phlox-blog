@@ -13,9 +13,8 @@ import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../state/atom";
 import { useFilteredUserPosts } from "../state/hooks/useFilteredUserPosts";
-import { PersonalizePerfilModal as PPM } from "../components/PersonalizePerfilModal";
+import { PersonalizePerfilModal } from "../components/PersonalizePerfilModal";
 import { useSetModalValue } from "../state/hooks/useSetModalValue";
-import { Modal } from "../components/Modal";
 
 export default function UserPerfil() {
   const location = useLocation();
@@ -42,7 +41,7 @@ export default function UserPerfil() {
 
   return (
     <>
-      <Modal children={<PPM />} modalKey="PPM" />
+      <PersonalizePerfilModal />
       <Header userPerfil={actualUser !== null} navItems={actualUser ? navItemsActualUser : navItems}>
         <Link to="/add">
           <Button.Root variant="outlined">
