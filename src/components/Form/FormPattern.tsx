@@ -170,7 +170,7 @@ export function FormInput(
   );
 }
 
-function FormInputIcon({ icon: Icon, size = 20, onClick }: FormInputIcon) {
+export function FormInputIcon({ icon: Icon, size = 20, onClick }: FormInputIcon) {
   const { variant } = useContext(VariantContext)
 
   return (
