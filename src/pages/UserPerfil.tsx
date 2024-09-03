@@ -16,14 +16,12 @@ import { useFilteredUserPosts } from "../state/hooks/useFilteredUserPosts";
 import { PersonalizePerfilModal as PPM } from "../components/PersonalizePerfilModal";
 import { useSetModalValue } from "../state/hooks/useSetModalValue";
 import { Modal } from "../components/Modal";
-import { useCreateModal } from "../state/hooks/useCreateModal";
 
 export default function UserPerfil() {
   const location = useLocation();
   const userId = location.search.replace("?", "");
   const user = getUserById(userId);
-  const createModal = useCreateModal();
-  const setOpenModal = useSetModalValue("PPM");
+  const setOpenModalPPM = useSetModalValue("PPM");
   const actualUser = useRecoilValue(actualUserState);
   const posts = useFilteredUserPosts(userId);
   const navItems = getNavItem("");
@@ -37,7 +35,6 @@ export default function UserPerfil() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    createModal("PPM");
   }, []);
 
   if (user.email === "invalid data") return <NotFound />;
@@ -45,6 +42,7 @@ export default function UserPerfil() {
 
   return (
     <>
+      <Modal children={<PPM />} modalKey="PPM" />
       <Header userPerfil={actualUser !== null} navItems={actualUser ? navItemsActualUser : navItems}>
         <Link to="/add">
           <Button.Root variant="outlined">
@@ -64,12 +62,13 @@ export default function UserPerfil() {
           </UserCard.Root>
           {actualUser && userId === actualUser.data.id && (
             <Button.Root
-              onClick={() => setOpenModal(true)}
+              onClick={() => {
+                setOpenModalPPM(true);
+              }}
             >
               <Button.Text content="PERSONALIZAR" />
             </Button.Root>
           )}
-          <Modal children={<PPM />} modalKey="PPM" />
         </div>
         <div className="w-full h-[2px] bg-typo-200 mt-1 mb-10" />
         <section className="flex justify-between gap-10">

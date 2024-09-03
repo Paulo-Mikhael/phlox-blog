@@ -1,9 +1,8 @@
-import { FormRoot, FormLabel, FormInput, FormHint, FormInputIcon } from "./FormPattern";
+import { FormRoot, FormLabel, FormInput, FormHint } from "./FormPattern";
 
 export const Form = {
   Root: FormRoot,
   Label: FormLabel,
   Input: FormInput,
-  Hint: FormHint,
-  InputIcon: FormInputIcon
+  Hint: FormHint
 }

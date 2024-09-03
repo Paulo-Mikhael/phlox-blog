@@ -6,6 +6,7 @@ import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../state/atom";
 import { LoginModal } from "./LoginModal";
 import { createInDataBase } from "../../utils/firebase/functions/createInDatabase";
+import { useSetModalValue } from "../../state/hooks/useSetModalValue";
 
 interface UserCardRootProps {
   children: ReactNode,
@@ -43,7 +44,7 @@ export function UserCardHandleMark({ marked, onClick, userId }: UserCardHandleMa
   const [loading, setLoading] = useState<boolean>(false);
   const Icon = handleMarked ? BookmarkCheck : Bookmark;
   const actualUser = useRecoilValue(actualUserState);
-  const [openModal, setOpenModal] = useState(false);
+  const setOpenModalLM = useSetModalValue("LM");
 
   if (loading) return <LoaderCircle color={colors.redMain[300]} className="animate-spin" size={26} />;
 
@@ -66,13 +67,11 @@ export function UserCardHandleMark({ marked, onClick, userId }: UserCardHandleMa
               });
             onClick && onClick();
           } else {
-            setOpenModal(true);
+            setOpenModalLM(true);
           }
         }}
       />
-      {openModal && (
-        <LoginModal openModal={openModal} setOpenModal={setOpenModal} />
-      )}
+      <LoginModal />
     </>
   );
 }
