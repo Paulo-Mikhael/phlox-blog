@@ -7,8 +7,6 @@ import { actualUserState } from "../../state/atom";
 import { LoginModal } from "./LoginModal";
 import { createInDataBase } from "../../utils/firebase/functions/createInDatabase";
 import { useSetModalValue } from "../../state/hooks/useSetModalValue";
-import { getUsers } from "../../utils/getUsers";
-import { useSetUsers } from "../../state/hooks/useSetUsers";
 
 interface UserCardRootProps {
   children: ReactNode,
