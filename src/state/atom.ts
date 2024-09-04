@@ -4,6 +4,7 @@ import { User } from "firebase/auth";
 import { IUser } from "../interfaces/IUser";
 import { IPostFilter } from "../interfaces/IPostFilter";
 import { IUserFilter } from "../interfaces/IUsersFilter";
+import { IActualUser } from "../interfaces/IActualUser";
 
 export const postsState = atom<IPost[]>({
   key: "postsState",
@@ -30,7 +31,7 @@ export const handleBadgeItemsState = atom<IPostBadges>({
   }
 });
 
-export const actualUserState = atom<{ auth: User | null, data: IUser } | null>({
+export const actualUserState = atom<IActualUser | null>({
   key: "actualUserState",
   default: null
 });

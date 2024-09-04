@@ -9,12 +9,13 @@ import { Button } from "../Button";
 import { Form } from "../Form";
 import { useSetUsers } from "../../state/hooks/useSetUsers";
 import { getUsers } from "../../utils/getUsers";
+import { setActualUser } from "../../utils/setActualUser";
 
 export function LoginForm({ signUp }: { signUp: boolean }) {
   const [userEmail, setUserEmail] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const setUser = useSetActualUser();
+  const setActualUserState = useSetActualUser();
   const navigate = useNavigate();
   const setUsers = useSetUsers();
 
@@ -48,10 +49,15 @@ export function LoginForm({ signUp }: { signUp: boolean }) {
 
     signInUserEmailPassword(email, password)
       .then((userCredentials) => {
-        setUser(userCredentials.user);
-        getUsers(setUsers);
-        setIsLoading(false);
-        navigate("/", { replace: true });
+        setActualUser(setActualUserState, userCredentials.user)
+          .then(() => {
+            getUsers(setUsers);
+            setIsLoading(false);
+            navigate("/", { replace: true });
+          })
+          .catch((err) => {
+            throw new Error(err);
+          });
       })
       .catch((error) => {
         const errorCode = error.code;

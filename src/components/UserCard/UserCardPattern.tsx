@@ -2,12 +2,11 @@ import { Bookmark, BookmarkCheck, LoaderCircle } from "lucide-react";
 import { colors } from "../../styles/variables";
 import { ReactNode, useState } from "react";
 import clsx from "clsx";
-import { useRecoilValue } from "recoil";
-import { actualUserState } from "../../state/atom";
 import { LoginModal } from "./LoginModal";
 import { createInDataBase } from "../../utils/firebase/functions/createInDatabase";
 import { useSetModalValue } from "../../state/hooks/useSetModalValue";
-import { useSetActualUser } from "../../state/hooks/useSetActualUser";
+import { useActualUser } from "../../state/hooks/useActualUser";
+import { useSetActualUserFavoriteValue } from "../../state/hooks/useSetActualUserFavoriteValue";
 
 interface UserCardRootProps {
   children: ReactNode,
@@ -44,9 +43,9 @@ export function UserCardHandleMark({ marked, onClick, userId }: UserCardHandleMa
   const [handleMarked, setHandleMarked] = useState<boolean>(marked);
   const [loading, setLoading] = useState<boolean>(false);
   const Icon = handleMarked ? BookmarkCheck : Bookmark;
-  const actualUser = useRecoilValue(actualUserState);
-  const setActualUser = useSetActualUser();
+  const actualUser = useActualUser();
   const setOpenModalLM = useSetModalValue("LM");
+  const setActualUserFavoriteValue = useSetActualUserFavoriteValue();
 
   if (loading) return <LoaderCircle color={colors.redMain[300]} className="animate-spin" size={26} />;
 
@@ -64,7 +63,7 @@ export function UserCardHandleMark({ marked, onClick, userId }: UserCardHandleMa
             createInDataBase.UserFavorite(actualUserId, userId, !handleMarked)
               .then(() => {
                 setHandleMarked(!handleMarked);
-                setActualUser(actualUser.auth!);
+                setActualUserFavoriteValue(!handleMarked, userId);
                 setLoading(false);
               })
               .catch((err) => {
