@@ -30,7 +30,7 @@ export function PersonalizePerfilModal() {
 
   return (
     <>
-      <ChangeEmailModal password={password} setPassword={setPassword} />
+      <ChangeEmailModal password={password} setPassword={setPassword} onContinue={() => actualUser.auth && Delete(actualUser.auth)} />
       <Modal modalKey="PPM">
         <figure className="w-full flex flex-col justify-center items-center gap-3">
           <img

@@ -1,8 +1,11 @@
 import { useSetRecoilState } from "recoil";
 import { usersState } from "../atom";
+import { IUser } from "../../interfaces/IUser";
 
 export function useSetUsers(){
   const setUsers = useSetRecoilState(usersState);
 
-  return setUsers;
+  return (users: IUser[]) => {
+    setUsers(users);
+  };
 }

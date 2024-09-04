@@ -7,6 +7,7 @@ import { actualUserState } from "../../state/atom";
 import { LoginModal } from "./LoginModal";
 import { createInDataBase } from "../../utils/firebase/functions/createInDatabase";
 import { useSetModalValue } from "../../state/hooks/useSetModalValue";
+import { useSetActualUser } from "../../state/hooks/useSetActualUser";
 
 interface UserCardRootProps {
   children: ReactNode,
@@ -44,6 +45,7 @@ export function UserCardHandleMark({ marked, onClick, userId }: UserCardHandleMa
   const [loading, setLoading] = useState<boolean>(false);
   const Icon = handleMarked ? BookmarkCheck : Bookmark;
   const actualUser = useRecoilValue(actualUserState);
+  const setActualUser = useSetActualUser();
   const setOpenModalLM = useSetModalValue("LM");
 
   if (loading) return <LoaderCircle color={colors.redMain[300]} className="animate-spin" size={26} />;
@@ -56,10 +58,13 @@ export function UserCardHandleMark({ marked, onClick, userId }: UserCardHandleMa
         size={26}
         onClick={() => {
           if (actualUser && actualUser.data.id && userId) {
+            const actualUserId = actualUser.data.id;
+
             setLoading(true);
-            createInDataBase.UserFavorite(actualUser.data.id, userId, !handleMarked)
+            createInDataBase.UserFavorite(actualUserId, userId, !handleMarked)
               .then(() => {
                 setHandleMarked(!handleMarked);
+                setActualUser(actualUser.auth!);
                 setLoading(false);
               })
               .catch((err) => {

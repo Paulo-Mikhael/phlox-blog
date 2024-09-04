@@ -7,7 +7,6 @@ export function setUserFavorite(userId: string, userFavoritedId: string, favorit
   return new Promise((resolve, reject) => {
     set(ref(db, `users/${userId}/usersFavorited/${userFavoritedId}`), { favorited: favorited === true })
       .then(() => {
-        console.log("requisição feita " + `${favorited === true}`);
         resolve();
       })
       .catch((err) => {

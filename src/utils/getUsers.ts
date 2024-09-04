@@ -1,8 +1,7 @@
-import { SetterOrUpdater } from "recoil";
 import { getFromDatabase } from "./firebase/functions/getFromDatabase";
 import { IUser } from "../interfaces/IUser";
 
-export function getUsers(setUsers: SetterOrUpdater<IUser[]>) {
+export function getUsers(setUsers: (users: IUser[]) => void) {
   getFromDatabase.Users()
     .then((users) => {
       setUsers(users);
