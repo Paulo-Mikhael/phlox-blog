@@ -15,6 +15,7 @@ import { actualUserState } from "../state/atom";
 import { useFilteredUserPosts } from "../state/hooks/useFilteredUserPosts";
 import { PersonalizePerfilModal } from "../components/PersonalizePerfilModal";
 import { useSetModalValue } from "../state/hooks/useSetModalValue";
+import LoadingScreen from "./LoadingScreen";
 
 export default function UserPerfil() {
   const location = useLocation();

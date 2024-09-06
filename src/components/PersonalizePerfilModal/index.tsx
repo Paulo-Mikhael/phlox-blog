@@ -4,7 +4,6 @@ import { Button } from "../Button";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../state/atom";
-import NotFound from "../../pages/NotFound";
 import { deleteUser, User } from "firebase/auth";
 import { useSetModalValue } from "../../state/hooks/useSetModalValue";
 import { ChangeEmailModal } from "../ChangeEmailModal";
@@ -18,7 +17,7 @@ export function PersonalizePerfilModal() {
   const setOpenModalPPM = useSetModalValue("PPM");
   const [password, setPassword] = useState<string>("");
 
-  if (!actualUser) return <NotFound />;
+  if (!actualUser) return;
 
   function Delete(user: User) {
     deleteUser(user).then(() => {
