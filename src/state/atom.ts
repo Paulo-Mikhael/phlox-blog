@@ -1,6 +1,5 @@
 import { atom } from "recoil";
 import { IPost, IPostBadges } from "../interfaces/IPost";
-import { User } from "firebase/auth";
 import { IUser } from "../interfaces/IUser";
 import { IPostFilter } from "../interfaces/IPostFilter";
 import { IUserFilter } from "../interfaces/IUsersFilter";

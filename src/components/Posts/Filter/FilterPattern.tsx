@@ -1,7 +1,7 @@
 import { Calendar, Search, User } from "lucide-react";
 import { Form } from "../../Form";
 import { SimpleCard } from "../../SimpleCard";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { UserCard } from "../../UserCard";
 import { Checkbox } from "../../Checkbox";
@@ -11,9 +11,6 @@ import { useSetFilterUserEmail } from "../../../state/hooks/useSetFilterUserEmai
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../../state/atom";
-import { useSetUsers } from "../../../state/hooks/useSetUsers";
-import { getUsers } from "../../../utils/getUsers";
-import { useSetActualUser } from "../../../state/hooks/useSetActualUser";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (

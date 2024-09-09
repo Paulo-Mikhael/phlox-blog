@@ -19,8 +19,6 @@ export function useSetActualUserFavoriteValue(){
         },
       }
 
-      console.log(updatedActualUser);
-
       return updatedActualUser;
     });
   };
