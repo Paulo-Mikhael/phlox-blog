@@ -11,7 +11,7 @@ import { useSetFilterUserEmail } from "../../../state/hooks/useSetFilterUserEmai
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../../state/atom";
-import { IUser, IUserFavorite } from "../../../interfaces/IUser";
+import { IUser } from "../../../interfaces/IUser";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (
