@@ -15,19 +15,17 @@ import { actualUserState } from "../state/atom";
 import { useFilteredUserPosts } from "../state/hooks/useFilteredUserPosts";
 import { PersonalizePerfilModal } from "../components/PersonalizePerfilModal";
 import { useSetModalValue } from "../state/hooks/useSetModalValue";
-import { getUserFavorites } from "../utils/getUserFavorites";
-import { useUsers } from "../state/hooks/useUsers";
+import { useUserFavorites } from "../state/hooks/useUserFavorites";
 
 export default function UserPerfil() {
   const location = useLocation();
   const userId = location.search.replace("?", "");
   const user = getUserById(userId);
-  const users = useUsers();
-  const userFavorites = getUserFavorites(userId, users);
   const setOpenModalPPM = useSetModalValue("PPM");
   const actualUser = useRecoilValue(actualUserState);
   const posts = useFilteredUserPosts(userId);
   const navItems = getNavItem("");
+  const userFavorites = useUserFavorites(userId);
   const navItemsActualUser = getNavItem(`${actualUser && userId === actualUser.data.id ? "Meu Perfil" : ""}`, [
     {
       name: "Meu Perfil",
@@ -93,7 +91,7 @@ export default function UserPerfil() {
             </Filter.Root>
             <Filter.Root title="Usuários Favoritados">
               <Filter.SearchUser.Input />
-              <Filter.SearchUser.FavoritesCard usersFavorited={userFavorites} />
+              <Filter.SearchUser.FavoritesCard usersFavorited={userFavorites()} />
             </Filter.Root>
           </div>
         </section>
