@@ -15,11 +15,15 @@ import { actualUserState } from "../state/atom";
 import { useFilteredUserPosts } from "../state/hooks/useFilteredUserPosts";
 import { PersonalizePerfilModal } from "../components/PersonalizePerfilModal";
 import { useSetModalValue } from "../state/hooks/useSetModalValue";
+import { getUserFavorites } from "../utils/getUserFavorites";
+import { useUsers } from "../state/hooks/useUsers";
 
 export default function UserPerfil() {
   const location = useLocation();
   const userId = location.search.replace("?", "");
   const user = getUserById(userId);
+  const users = useUsers();
+  const userFavorites = getUserFavorites(userId, users);
   const setOpenModalPPM = useSetModalValue("PPM");
   const actualUser = useRecoilValue(actualUserState);
   const posts = useFilteredUserPosts(userId);
@@ -36,7 +40,7 @@ export default function UserPerfil() {
     window.scrollTo(0, 0);
   }, []);
 
-  if (user.email === "invalid data") return <NotFound />;
+  if (!user) return <NotFound />;
   if (!posts) return <NotFound />;
 
   return (
@@ -89,7 +93,7 @@ export default function UserPerfil() {
             </Filter.Root>
             <Filter.Root title="Usuários Favoritados">
               <Filter.SearchUser.Input />
-              <Filter.SearchUser.Cards />
+              <Filter.SearchUser.FavoritesCard usersFavorited={userFavorites} />
             </Filter.Root>
           </div>
         </section>

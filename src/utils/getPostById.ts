@@ -35,7 +35,7 @@ export function getPostById(postId: string): IPost{
   
   const requestedPost = posts.find((item) => item.id === postId);
 
-  if (!requestedPost) return invalidPost;;
+  if (!requestedPost) return invalidPost;
 
   return requestedPost;
 };
