@@ -1,5 +1,5 @@
-import { setUserFavorite } from "./setUserFavorite";
+import { updateUserFavorite } from "./updateUserFavorite";
 
 export const createInDataBase = {
-  UserFavorite: setUserFavorite
+  UserFavorite: updateUserFavorite
 }

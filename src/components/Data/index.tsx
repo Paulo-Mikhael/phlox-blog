@@ -19,7 +19,6 @@ export default function Data() {
   useEffect(() => {
     getData();
     createModal("PPM"); // Personalize Perfil Modal
-    createModal("CEM"); // Change Email Modal
     createModal("LM"); // Login Modal
     createModal("HBM"); // Handle Badges Modal
   }, []);

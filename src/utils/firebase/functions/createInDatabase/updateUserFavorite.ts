@@ -1,7 +1,7 @@
 import { ref, set } from "firebase/database";
 import { firebaseRealtimeDatabase } from "../../firebase";
 
-export function setUserFavorite(userId: string, userFavoritedId: string, favorited?: boolean): Promise<void> {
+export function updateUserFavorite(userId: string, userFavoritedId: string, favorited?: boolean): Promise<void> {
   const db = firebaseRealtimeDatabase;
 
   return new Promise((resolve, reject) => {

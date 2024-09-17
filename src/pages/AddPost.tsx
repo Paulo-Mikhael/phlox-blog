@@ -24,6 +24,7 @@ import { getPosts } from "../utils/getPosts";
 import { getUsers } from "../utils/getUsers";
 import { useNavigate } from "react-router-dom";
 import NotFound from "./NotFound";
+import { submitImageToStorage } from "../utils/firebase/functions/submitImageToStorage";
 
 interface IPostContentImage {
   localUrl: string,
@@ -82,17 +83,10 @@ export default function AddPost() {
 
   function submitPostImage(image: File) {
     if (!image) return;
-    const path = `images/${image.name.trim()}`;
-
-    insertToStorage(path, image)
-      .then(() => {
-        getUrlFromStorage(path)
-          .then((url) => {
-            setPostImageUrl(url);
-          })
-          .catch((err) => {
-            throw new Error(err);
-          });
+    
+    submitImageToStorage(image)
+      .then((url) => {
+        setPostImageUrl(url);
       })
       .catch((err) => {
         throw new Error(err);
@@ -103,17 +97,10 @@ export default function AddPost() {
     if (!postContentImage) return;
 
     setPostContent(prv => prv + ` ![${postContentImage.file.name}](${postContentImage.localUrl})`);
-    const path = `images/${postContentImage.file.name.trim()}`;
 
-    insertToStorage(path, postContentImage.file)
-      .then(() => {
-        getUrlFromStorage(path)
-          .then((url) => {
-            setPostContentImages(prv => [...prv, { ...postContentImage, databaseUrl: url }]);
-          })
-          .catch((err) => {
-            throw new Error(err);
-          });
+    submitImageToStorage(postContentImage.file)
+      .then((url) => {
+        setPostContentImages(prv => [...prv, { ...postContentImage, databaseUrl: url }]);
       })
       .catch((err) => {
         throw new Error(err);
