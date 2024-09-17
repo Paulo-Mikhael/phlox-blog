@@ -11,7 +11,7 @@ import { useSetPosts } from "../../state/hooks/useSetPosts";
 import { useSetUsers } from "../../state/hooks/useSetUsers";
 import { getUsers } from "../../utils/getUsers";
 import { getPosts } from "../../utils/getPosts";
-import { Loader, LoaderCircle } from "lucide-react";
+import { Loader } from "lucide-react";
 
 export function PersonalizePerfilModal() {
   const actualUser = useRecoilValue(actualUserState);
