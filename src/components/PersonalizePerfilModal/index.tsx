@@ -32,6 +32,7 @@ export function PersonalizePerfilModal() {
       .then((url) => {
         const updatedData: IUser = {
           ...actualUser.data,
+          posts: actualUser.data.posts ? actualUser.data.posts : [],
           avatarUrl: url
         }
 
