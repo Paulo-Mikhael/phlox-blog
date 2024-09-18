@@ -4,12 +4,9 @@ import { getLocalTimeZone, parseDate, today } from "@internationalized/date";
 import { Button } from "../Button";
 import { Filter, FilterX } from "lucide-react";
 import dayjs from "dayjs";
-import ptBR from "dayjs/locale/pt-BR";
 import { useRecoilValue } from "recoil";
 import { postsFilterState } from "../../state/atom";
 import { useSetPostFilterDate } from "../../state/hooks/useSetFilterPostDate";
-
-dayjs.locale(ptBR);
 
 export function CalendarModal() {
   const filterDate = useRecoilValue(postsFilterState);
