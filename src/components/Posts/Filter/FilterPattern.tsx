@@ -73,29 +73,29 @@ export function FilterSearchUserFavoritesCard({ usersFavorited }: { usersFavorit
 
 export function FilterDate() {
   const setCalendarOpen = useSetModalValue("OCM");
-  const [filterOn, setFilterOn] = useState<boolean>(false);
+  const [filterDisabled, setFilterDisabled] = useState<boolean>(true);
 
   return (
     <div className="flex flex-col gap-2 w-[330px]">
       <Checkbox.Root>
         <Checkbox.Input 
           id="filter-checkbox" 
-          checked={filterOn}
-          onClick={() => setFilterOn(!filterOn)} 
+          checked={!filterDisabled}
+          onClick={() => setFilterDisabled(!filterDisabled)} 
         />
         <Checkbox.Label labelText="Filtrar por data" htmlFor="filter-checkbox" />
       </Checkbox.Root>
-      <Form.Root disabled={filterOn}>
+      <Form.Root disabled={filterDisabled}>
         <Form.Input type="date">
           <Calendar 
             size={20} 
             onClick={() => {
-              !filterOn && setCalendarOpen(true);
+              !filterDisabled && setCalendarOpen(true);
             }} 
             className={clsx(
               {
-                "text-main-red-300 cursor-pointer": filterOn === false,
-                "text-typo-700 cursor-not-allowed": filterOn === true
+                "text-main-red-300 cursor-pointer": filterDisabled === false,
+                "text-typo-700 cursor-not-allowed": filterDisabled === true
               }
             )} 
           />

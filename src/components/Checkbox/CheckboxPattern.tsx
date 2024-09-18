@@ -12,7 +12,7 @@ interface CheckboxLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
 }
 interface CheckboxInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string,
-  checked?: boolean,
+  checkedValue?: boolean,
   onClick?: () => void
 }
 
@@ -37,6 +37,7 @@ export function CheckboxInput({ id, checked = false, onClick }: CheckboxInputPro
       type="checkbox"
       disabled={disabled}
       checked={checked}
+      onChange={() => null}
       onClick={() => {
         onClick && onClick();
       }}
