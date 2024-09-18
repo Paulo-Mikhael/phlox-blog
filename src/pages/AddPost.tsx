@@ -194,8 +194,9 @@ export default function AddPost() {
             twMinHeightTextArea="min-h-[480px]"
             onChangeTextarea={(evt) => setPostContent(evt.target.value)}
             value={postContent}
+            className="relative"
           >
-            <Form.InputIcon size={24} icon={htmlPreview ? EyeOff : Eye} onClick={() => setHtmlPreview(!htmlPreview)} />
+            <Form.InputIcon absolute size={24} icon={htmlPreview ? EyeOff : Eye} onClick={() => setHtmlPreview(!htmlPreview)} />
           </Form.Input>
           <StyledMarkdown>
             <ScrollShadow className={htmlPreview ? "w-[430px] 2xl:w-[700px]" : "hidden"}>

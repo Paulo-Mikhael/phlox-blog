@@ -29,7 +29,8 @@ interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
 interface FormInputIcon {
   icon: ElementType,
   size?: number,
-  onClick?: () => void
+  onClick?: () => void,
+  absolute?: boolean
 }
 
 const VariantContext = createContext<{ variant?: FormInputVariant }>({});
@@ -95,7 +96,7 @@ export function FormHint({ hintText, className }: { hintText: string, className?
 }
 
 export function FormInput(
-  { 
+  {
     twPaddingX = "px-[16px]",
     twPaddingY = "py-[10px]",
     iconLeft: IconLeft,
@@ -103,8 +104,8 @@ export function FormInput(
     type = "text",
     textarea,
     onChangeTextarea,
-    children, 
-    ...rest 
+    children,
+    ...rest
   }: FormInputProps
 ) {
   const { variant } = useContext(VariantContext);
@@ -117,7 +118,7 @@ export function FormInput(
   return (
     <div
       className={clsx(
-        `${twPaddingX} ${twPaddingY} w-full rounded-[6px] flex gap-4 justify-between bg-typo-100 ${rest.className}`,
+        `${twPaddingX} ${twPaddingY} w-full rounded-[6px] flex gap-4 justify-between items-center bg-typo-100 ${rest.className}`,
         {
           "text-typo-700 border-typo-500 focus-within:border-main-red-200 caret-main-red-300": variant === "default",
           "text-feedback-success border-feedback-success": variant === "success",
@@ -158,9 +159,7 @@ export function FormInput(
         />
       )}
       {type === "date" && (
-        <StyledInput
-          type={type}
-          className="w-full"
+        <DateInput 
           {...rest}
         />
       )}
@@ -170,7 +169,7 @@ export function FormInput(
   );
 }
 
-export function FormInputIcon({ icon: Icon, size = 20, onClick }: FormInputIcon) {
+export function FormInputIcon({ icon: Icon, size = 20, onClick, absolute }: FormInputIcon) {
   const { variant } = useContext(VariantContext)
 
   return (
@@ -180,6 +179,7 @@ export function FormInputIcon({ icon: Icon, size = 20, onClick }: FormInputIcon)
       className={clsx(
         `${onClick ? "cursor-pointer" : "cursor-default"}`,
         {
+          "absolute top-2 right-2 bg-typo-100 rounded-full p-1 size-8": absolute,
           "text-main-red-300": variant === "default",
           "text-feedback-success": variant === "success",
           "text-feedback-warning": variant === "warning",
@@ -188,6 +188,23 @@ export function FormInputIcon({ icon: Icon, size = 20, onClick }: FormInputIcon)
           "text-typo-500": variant === "disabled"
         }
       )}
+    />
+  );
+}
+
+function DateInput({ ...rest }: InputHTMLAttributes<HTMLInputElement>) {
+  function openCalendar(){
+    alert("Abriu");
+  };
+
+  return (
+    <StyledInput
+      onClick={() => {
+        openCalendar();
+      }}
+      type="date"
+      className="bg-white file-input-xs file-input-bordered border-none file-input-error file-input w-full"
+      {...rest}
     />
   );
 }
