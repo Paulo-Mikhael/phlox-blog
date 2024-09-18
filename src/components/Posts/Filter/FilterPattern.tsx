@@ -62,8 +62,10 @@ export function FilterSearchUserCards() {
   );
 }
 export function FilterSearchUserFavoritesCard({ usersFavorited }: { usersFavorited: IUser[] }) {
+  const filteredUsersFavorite = useFilteredUsers(usersFavorited);
+
   return (
-    <CardUser users={usersFavorited} handleMark={false} />
+    <CardUser users={filteredUsersFavorite} handleMark={false} />
   );
 }
 
