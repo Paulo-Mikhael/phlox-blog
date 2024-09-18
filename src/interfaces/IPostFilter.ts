@@ -1,3 +1,4 @@
 export interface IPostFilter {
-  postTitle: string
+  postTitle: string,
+  postDate?: string | null
 }

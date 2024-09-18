@@ -42,7 +42,7 @@ export const postCardFormatState = atom<"table" | "list">({
 
 export const postsFilterState = atom<IPostFilter>({
   key: "postsFilterState",
-  default: { postTitle: "" }
+  default: { postTitle: "", postDate: null }
 });
 
 export const usersFilterState = atom<IUserFilter>({

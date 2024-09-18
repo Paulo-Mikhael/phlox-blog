@@ -26,9 +26,8 @@ export function Modal({ children, onClose, modalKey }: ModalProps) {
       )}
     >
       <div className="relative p-6 bg-typo-100 rounded-[10px] min-w-80">
-        {children}
         <span
-          className="rounded-full bg-main-red-300 p-2 flex items-center justify-center absolute -top-3 -right-3 cursor-pointer"
+          className="rounded-full bg-main-red-300 p-2 flex items-center justify-center absolute -top-3 -right-3 cursor-pointer z-20"
           onClick={() => {
             setOpenModal(false);
             onClose && onClose();
@@ -38,6 +37,7 @@ export function Modal({ children, onClose, modalKey }: ModalProps) {
             color={colors.typo[100]}
           />
         </span>
+        {children}
       </div>
     </div>
   );

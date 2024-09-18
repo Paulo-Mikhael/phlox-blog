@@ -1,6 +1,12 @@
 import clsx from "clsx";
 import { createContext, ElementType, FormHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
 import { StyledInput } from "../../styles/StyledInput";
+import { CalendarModal } from "../CalendarModal";
+import { useModalValue } from "../../state/hooks/useModalValue";
+import { getLocalTimeZone, today } from "@internationalized/date";
+import { useRecoilValue } from "recoil";
+import { postsFilterState } from "../../state/atom";
+import { useSetPostFilterDate } from "../../state/hooks/useSetFilterPostDate";
 
 type FormInputVariant = "default" | "success" | "warning" | "danger" | "info" | "disabled"
 
@@ -159,7 +165,7 @@ export function FormInput(
         />
       )}
       {type === "date" && (
-        <DateInput 
+        <DateInput
           {...rest}
         />
       )}
@@ -193,18 +199,28 @@ export function FormInputIcon({ icon: Icon, size = 20, onClick, absolute }: Form
 }
 
 function DateInput({ ...rest }: InputHTMLAttributes<HTMLInputElement>) {
-  function openCalendar(){
-    alert("Abriu");
-  };
+  const calendarOpened = useModalValue("OCM");
+  const filterDate = useRecoilValue(postsFilterState);
+  const setFilterDate = useSetPostFilterDate();
 
   return (
-    <StyledInput
-      onClick={() => {
-        openCalendar();
-      }}
-      type="date"
-      className="bg-white file-input-xs file-input-bordered border-none file-input-error file-input w-full"
-      {...rest}
-    />
+    <>
+      <span
+        className="relative w-full cursor-pointer"
+      >
+        <StyledInput
+          type="date"
+          value={filterDate.postDate ? filterDate.postDate : today(getLocalTimeZone()).toString()}
+          className="bg-white file-input-xs file-input-bordered border-none file-input-error file-input w-full text-normal"
+          {...rest}
+          onChange={(evt) => {
+            setFilterDate(evt.target.value);
+          }}
+        />
+      </span>
+      {calendarOpened && (
+        <CalendarModal />
+      )}
+    </>
   );
 }

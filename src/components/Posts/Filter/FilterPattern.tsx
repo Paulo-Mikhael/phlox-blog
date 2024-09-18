@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../../state/atom";
 import { IUser } from "../../../interfaces/IUser";
+import { useSetModalValue } from "../../../state/hooks/useSetModalValue";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (
@@ -70,14 +71,18 @@ export function FilterSearchUserFavoritesCard({ usersFavorited }: { usersFavorit
 }
 
 export function FilterDate() {
+  const setCalendarOpen = useSetModalValue("OCM");
+
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 w-[330px]">
       <Checkbox.Root>
         <Checkbox.Input id="filter-checkbox" />
         <Checkbox.Label labelText="Filtrar por data" htmlFor="filter-checkbox" />
       </Checkbox.Root>
       <Form.Root>
-        <Form.Input iconRight={Calendar} type="date" />
+        <Form.Input type="date">
+          <Calendar size={20} className="text-main-red-300 cursor-pointer" onClick={() => setCalendarOpen(true)} />
+        </Form.Input>
       </Form.Root>
     </div>
   );

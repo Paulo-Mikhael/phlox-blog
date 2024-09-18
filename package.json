@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@internationalized/date": "^3.5.5",
     "@nextui-org/react": "^2.4.6",
     "@nextui-org/scroll-shadow": "^2.1.19",
     "axios": "^1.7.4",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "firebase": "^10.13.0",
     "framer-motion": "^11.3.24",
     "json-server": "^1.0.0-beta.1",
