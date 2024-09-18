@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { createContext, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
+import { createContext, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext, useState } from "react";
 
 interface CheckboxRootProps {
   children: ReactNode,
@@ -11,7 +11,9 @@ interface CheckboxLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
   htmlFor: string
 }
 interface CheckboxInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  id: string
+  id: string,
+  onCheck?: () => void,
+  onUnCheck?: () => void
 }
 
 const DisabledContext = createContext<boolean>(false);
@@ -26,15 +28,21 @@ export function CheckboxRoot({ children, twWidth = "w-full", disabled = false }:
   );
 }
 
-export function CheckboxInput({ id }: CheckboxInputProps) {
+export function CheckboxInput({ id, onCheck, onUnCheck }: CheckboxInputProps) {
   const disabled = useContext(DisabledContext);
+  const [checked, setChecked] = useState<boolean>(false);
 
   return (
     <input
       id={id}
       type="checkbox"
-      defaultChecked
       disabled={disabled}
+      checked={checked}
+      onClick={() => {
+        setChecked(!checked);
+        !checked && onCheck && onCheck();
+        checked && onUnCheck && onUnCheck();
+      }}
       // Mudar o valor de --chkbg por template string não está funcionando por algum motivo
       className={clsx(
         "checkbox rounded-[6px] border-typo-500",

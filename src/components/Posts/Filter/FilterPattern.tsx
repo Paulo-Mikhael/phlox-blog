@@ -1,7 +1,7 @@
 import { Calendar, Search, User } from "lucide-react";
 import { Form } from "../../Form";
 import { SimpleCard } from "../../SimpleCard";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { UserCard } from "../../UserCard";
 import { Checkbox } from "../../Checkbox";
@@ -13,6 +13,7 @@ import { useRecoilValue } from "recoil";
 import { actualUserState } from "../../../state/atom";
 import { IUser } from "../../../interfaces/IUser";
 import { useSetModalValue } from "../../../state/hooks/useSetModalValue";
+import clsx from "clsx";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (
@@ -72,16 +73,32 @@ export function FilterSearchUserFavoritesCard({ usersFavorited }: { usersFavorit
 
 export function FilterDate() {
   const setCalendarOpen = useSetModalValue("OCM");
+  const [filterDisabled, setFilterDisabled] = useState<boolean>(true);
 
   return (
     <div className="flex flex-col gap-2 w-[330px]">
       <Checkbox.Root>
-        <Checkbox.Input id="filter-checkbox" />
+        <Checkbox.Input 
+          id="filter-checkbox" 
+          onCheck={() => setFilterDisabled(false)} 
+          onUnCheck={() => setFilterDisabled(true)}
+        />
         <Checkbox.Label labelText="Filtrar por data" htmlFor="filter-checkbox" />
       </Checkbox.Root>
-      <Form.Root>
+      <Form.Root disabled={filterDisabled}>
         <Form.Input type="date">
-          <Calendar size={20} className="text-main-red-300 cursor-pointer" onClick={() => setCalendarOpen(true)} />
+          <Calendar 
+            size={20} 
+            onClick={() => {
+              !filterDisabled && setCalendarOpen(true);
+            }} 
+            className={clsx(
+              {
+                "text-main-red-300 cursor-pointer": filterDisabled === false,
+                "text-typo-700 cursor-not-allowed": filterDisabled === true
+              }
+            )} 
+          />
         </Form.Input>
       </Form.Root>
     </div>

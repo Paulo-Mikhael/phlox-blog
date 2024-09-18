@@ -6,7 +6,7 @@ export interface IPost {
   imageAlt?: string,
   title: string,
   content: string,
-  postDate: string,
+  postDate: string, // Exemplo: Sat Aug 31 2024 13:24:21 GMT-0400 (Horário Padrão do Amazonas)
   userAuthorId: string,
   badges: IPostBadges
 }

@@ -160,6 +160,7 @@ export function FormInput(
       {type === "file" && (
         <StyledInput
           type={type}
+          disabled={variant === "disabled"}
           className="bg-white file-input-xs file-input-bordered file-input-error file-input w-full"
           {...rest}
         />
@@ -209,9 +210,15 @@ function DateInput({ ...rest }: InputHTMLAttributes<HTMLInputElement>) {
         className="relative w-full cursor-pointer"
       >
         <StyledInput
+          disabled={rest.disabled}
           type="date"
           value={filterDate.postDate ? filterDate.postDate : today(getLocalTimeZone()).toString()}
-          className="bg-white file-input-xs file-input-bordered border-none file-input-error file-input w-full text-normal"
+          className={clsx(
+            "bg-transparent w-full text-normal",
+            {
+              "cursor-not-allowed": !rest.disabled
+            }
+          )}
           {...rest}
           onChange={(evt) => {
             setFilterDate(evt.target.value);
