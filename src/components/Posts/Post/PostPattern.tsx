@@ -6,13 +6,23 @@ import { StyledMarkdown } from "../../../styles/StyledMarkdown";
 import { DateInfo } from "../../../utils/DateInfo";
 import { Badge } from "../../Bagde";
 import { SwitchButton } from "../../SwitchButton";
-import { List, Table } from "lucide-react";
+import { List, Table, Trash2 } from "lucide-react";
 import { postCardFormatState } from "../../../state/atom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Post } from ".";
 import { Link } from "react-router-dom";
 import { useFilteredPosts } from "../../../state/hooks/useFilteredPosts";
 import { getUserById } from "../../../utils/getUserById";
+import { insertToDatabase } from "../../../utils/firebase/functions/insertToDatabase";
+import { useActualUser } from "../../../state/hooks/useActualUser";
+import { useSetPosts } from "../../../state/hooks/useSetPosts";
+import { useSetUsers } from "../../../state/hooks/useSetUsers";
+import { getUsers } from "../../../utils/getUsers";
+import { getPosts } from "../../../utils/getPosts";
+
+interface IPostCard extends IPost {
+  deleteButton?: boolean
+}
 
 export function PostRoot({ format = "table", children }: { format?: "table" | "list", children: ReactNode }) {
   const setFormat = useSetRecoilState(postCardFormatState);
@@ -28,24 +38,24 @@ export function PostRoot({ format = "table", children }: { format?: "table" | "l
   );
 }
 
-export function PostCard({ ...post }: IPost) {
+export function PostCard({ deleteButton = false, ...post }: IPostCard) {
   const format = useRecoilValue(postCardFormatState);
 
   return (
-    format === "table" ? <CardTable {...post} /> : <CardList {...post} />
+    format === "table" ? <CardTable {...post} deleteButton={deleteButton} /> : <CardList {...post} deleteButton={deleteButton} />
   );
 }
 
-function CardTable({ ...post }: IPost) {
+function CardTable({ ...post }: IPostCard) {
   const user = getUserById(post.userAuthorId);
   if (!user) return;
 
   return (
-    <article className="w-[375px] max-xl:w-full shadow-xl bg-transparent rounded-[10px]">
+    <article className="w-[375px] max-xl:w-full shadow-xl bg-transparent rounded-[10px] relative">
       <figure className="h-[251px] max-xl:h-auto w-full">
         <Link to={`/view?${post.id}`} className="relative">
-          <img 
-            src={user.avatarUrl ? user.avatarUrl : "images/user.png"} 
+          <img
+            src={user.avatarUrl ? user.avatarUrl : "images/user.png"}
             className="w-14 h-14 z-[2] rounded-full border border-main-red-300 absolute bottom-2 left-2"
           />
           <img src={post.imageUrl} alt={post.imageAlt} className="rounded-t-[10px] h-full w-full z-[1]" />
@@ -67,18 +77,35 @@ function CardTable({ ...post }: IPost) {
   );
 }
 
-function CardList({ ...post }: IPost) {
+function CardList({ ...post }: IPostCard) {
   const user = getUserById(post.userAuthorId);
+  const actualUser = useActualUser();
+  const setUsers = useSetUsers();
+  const setPosts = useSetPosts();
   if (!user) return;
 
   return (
-    <div className="w-full dark">
+    <div className="w-full dark relative">
+      {post.deleteButton && (
+        <button 
+          className="absolute -top-3 -right-3 bg-main-red-300 p-2 rounded-full cursor-pointer z-10"
+          onClick={() => {
+            insertToDatabase(`users/${actualUser?.data.id}/posts/${post.id}`, null)
+              .then(() => {
+                getUsers(setUsers);
+                getPosts(setPosts);
+              });
+          }}
+        >
+          <Trash2 className="size-5 text-typo-100" />
+        </button>
+      )}
       <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
         <figure className="w-[326px] max-xl:hidden">
           <Link to={`/view?${post.id}`} className="relative">
-            <img 
-              src={user.avatarUrl ? user.avatarUrl : "images/user.png"} 
-              className="w-12 h-12 z-[2] rounded-full border border-main-red-300 absolute bottom-2 left-2" 
+            <img
+              src={user.avatarUrl ? user.avatarUrl : "images/user.png"}
+              className="w-12 h-12 z-[2] rounded-full border border-main-red-300 absolute bottom-2 left-2"
             />
             <img src={post.imageUrl} alt={post.imageAlt} className="w-full h-full rounded-l-[10px]" />
           </Link>
