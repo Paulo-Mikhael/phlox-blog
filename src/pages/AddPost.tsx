@@ -15,8 +15,6 @@ import { Button } from "../components/Button";
 import { Form } from "../components/Form";
 import { Header } from "../components/Header";
 import { insertToDatabase } from "../utils/firebase/functions/insertToDatabase";
-import { insertToStorage } from "../utils/firebase/functions/insertToStorage";
-import { getUrlFromStorage } from "../utils/firebase/functions/getUrlFromStorage";
 import { UserCard } from "../components/UserCard";
 import { useSetUsers } from "../state/hooks/useSetUsers";
 import { useSetPosts } from "../state/hooks/useSetPosts";

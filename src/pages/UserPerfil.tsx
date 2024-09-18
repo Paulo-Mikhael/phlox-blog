@@ -16,7 +16,6 @@ import { useFilteredUserPosts } from "../state/hooks/useFilteredUserPosts";
 import { PersonalizePerfilModal } from "../components/PersonalizePerfilModal";
 import { useSetModalValue } from "../state/hooks/useSetModalValue";
 import { useUserFavorites } from "../state/hooks/useUserFavorites";
-import { useSetUsers } from "../state/hooks/useSetUsers";
 
 export default function UserPerfil() {
   const location = useLocation();
