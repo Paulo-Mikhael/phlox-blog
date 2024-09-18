@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { createContext, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext, useState } from "react";
+import { createContext, InputHTMLAttributes, LabelHTMLAttributes, ReactNode, useContext } from "react";
 
 interface CheckboxRootProps {
   children: ReactNode,
