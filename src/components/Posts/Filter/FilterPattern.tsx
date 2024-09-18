@@ -80,7 +80,7 @@ export function FilterDate() {
       <Checkbox.Root>
         <Checkbox.Input 
           id="filter-checkbox" 
-          checked={filterOn}
+          checkedValue={filterOn}
           onClick={() => setFilterOn(!filterOn)} 
         />
         <Checkbox.Label labelText="Filtrar por data" htmlFor="filter-checkbox" />

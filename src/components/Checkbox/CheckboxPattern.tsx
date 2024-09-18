@@ -12,8 +12,8 @@ interface CheckboxLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
 }
 interface CheckboxInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string,
-  checked?: boolean,
-  onClick?: () => void
+  checkedValue?: boolean,
+  onChange?: () => void
 }
 
 const DisabledContext = createContext<boolean>(false);
@@ -28,7 +28,7 @@ export function CheckboxRoot({ children, twWidth = "w-full", disabled = false }:
   );
 }
 
-export function CheckboxInput({ id, checked = false, onClick }: CheckboxInputProps) {
+export function CheckboxInput({ id, checkedValue = false, onChange }: CheckboxInputProps) {
   const disabled = useContext(DisabledContext);
 
   return (
@@ -36,9 +36,10 @@ export function CheckboxInput({ id, checked = false, onClick }: CheckboxInputPro
       id={id}
       type="checkbox"
       disabled={disabled}
-      checked={checked}
+      checked={checkedValue}
+      onChange={() => null}
       onClick={() => {
-        onClick && onClick();
+        onChange && onChange();
       }}
       // Mudar o valor de --chkbg por template string não está funcionando por algum motivo
       className={clsx(
