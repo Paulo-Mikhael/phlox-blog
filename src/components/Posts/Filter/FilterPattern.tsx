@@ -1,7 +1,7 @@
 import { Calendar, Search, User } from "lucide-react";
 import { Form } from "../../Form";
 import { SimpleCard } from "../../SimpleCard";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { UserCard } from "../../UserCard";
 import { Checkbox } from "../../Checkbox";
@@ -16,12 +16,11 @@ import { useSetModalValue } from "../../../state/hooks/useSetModalValue";
 import clsx from "clsx";
 import { useSetPostFilterDate } from "../../../state/hooks/useSetFilterPostDate";
 
-export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
-  return (
-    <SimpleCard title={title}>
-      {children}
-    </SimpleCard>
-  );
+export function FilterRoot({
+  title,
+  children,
+}: { title: string; children: ReactNode }) {
+  return <SimpleCard title={title}>{children}</SimpleCard>;
 }
 
 export function FilterSearchPost() {
@@ -60,16 +59,14 @@ export function FilterSearchUserInput() {
 export function FilterSearchUserCards() {
   const users = useFilteredUsers();
 
-  return (
-    <CardUser users={users} />
-  );
+  return <CardUser users={users} />;
 }
-export function FilterSearchUserFavoritesCard({ usersFavorited }: { usersFavorited: IUser[] }) {
+export function FilterSearchUserFavoritesCard({
+  usersFavorited,
+}: { usersFavorited: IUser[] }) {
   const filteredUsersFavorite = useFilteredUsers(usersFavorited);
 
-  return (
-    <CardUser users={filteredUsersFavorite} handleMark={false} />
-  );
+  return <CardUser users={filteredUsersFavorite} handleMark={false} />;
 }
 
 export function FilterDate() {
@@ -77,32 +74,37 @@ export function FilterDate() {
   const [filterDisabled, setFilterDisabled] = useState<boolean>(true);
   const setFilterDate = useSetPostFilterDate();
 
+  useEffect(() => {
+    setFilterDate(undefined);
+  }, []);
+
   return (
     <div className="flex flex-col gap-2 w-[330px]">
       <Checkbox.Root>
-        <Checkbox.Input 
-          id="filter-checkbox" 
+        <Checkbox.Input
+          id="filter-checkbox"
           checked={!filterDisabled}
           onClick={() => {
             setFilterDisabled(!filterDisabled);
             !filterDisabled && setFilterDate(undefined);
-          }} 
+          }}
         />
-        <Checkbox.Label labelText="Filtrar por data" htmlFor="filter-checkbox" />
+        <Checkbox.Label
+          labelText="Filtrar por data"
+          htmlFor="filter-checkbox"
+        />
       </Checkbox.Root>
       <Form.Root disabled={filterDisabled}>
         <Form.Input type="date">
-          <Calendar 
-            size={20} 
+          <Calendar
+            size={20}
             onClick={() => {
               !filterDisabled && setCalendarOpen(true);
-            }} 
-            className={clsx(
-              {
-                "text-main-red-300 cursor-pointer": filterDisabled === false,
-                "text-typo-700 cursor-not-allowed": filterDisabled === true
-              }
-            )} 
+            }}
+            className={clsx({
+              "text-main-red-300 cursor-pointer": filterDisabled === false,
+              "text-typo-700 cursor-not-allowed": filterDisabled === true,
+            })}
           />
         </Form.Input>
       </Form.Root>
@@ -110,7 +112,10 @@ export function FilterDate() {
   );
 }
 
-function CardUser({ users, handleMark = true }: { users: IUser[], handleMark?: boolean }) {
+function CardUser({
+  users,
+  handleMark = true,
+}: { users: IUser[]; handleMark?: boolean }) {
   const actualUser = useRecoilValue(actualUserState);
   const navigate = useNavigate();
 
@@ -132,18 +137,20 @@ function CardUser({ users, handleMark = true }: { users: IUser[], handleMark?: b
               {actualUser && actualUser.data.id !== item.id && (
                 <UserCard.HandleMark
                   userId={item.id}
-                  marked={actualUser.data.usersFavorited?.find((userId) => userId.id === item.id && userId.favorited === true) ? true : false}
+                  marked={
+                    actualUser.data.usersFavorited?.find(
+                      (userId) =>
+                        userId.id === item.id && userId.favorited === true
+                    )
+                      ? true
+                      : false
+                  }
                 />
               )}
-              {!actualUser && (
-                <UserCard.HandleMark
-                  marked={false}
-                />
-              )}
+              {!actualUser && <UserCard.HandleMark marked={false} />}
             </>
           )}
         </UserCard.Root>
-
       ))}
     </ScrollShadow>
   );

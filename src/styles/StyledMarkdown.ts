@@ -92,13 +92,17 @@ export const StyledMarkdown = styled.div`
       font-size: ${sizes.font.imageSubtitle};
       color: ${colors.typo[300]};
     }
-    ${languages.map(({ abbreviation, name }) => `
+    ${languages
+      .map(
+        ({ abbreviation, name }) => `
       &.lang-${abbreviation} {
         &::after {
           content: "${name}";
         }
       }
-    `).join('')}
+    `
+      )
+      .join("")}
   }
   table {
     min-width: 500px;
@@ -120,4 +124,4 @@ export const StyledMarkdown = styled.div`
       overflow-wrap: break-word;
     }
   }
-`
+`;

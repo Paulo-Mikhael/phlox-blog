@@ -11,34 +11,43 @@ import { User } from "lucide-react";
 
 const StyledLi = styled.li<{ $active: boolean }>`
   a{
-    color: ${props => props.$active ? colors.redMain[300] : colors.typo[700]};
+    color: ${(props) => (props.$active ? colors.redMain[300] : colors.typo[700])};
     font-size: ${sizes.font.sectionSubtitle};
     font-style: italic;
-    font-weight: ${props => props.$active ? "bold" : "normal"};
+    font-weight: ${(props) => (props.$active ? "bold" : "normal")};
 
     &:hover{
       color: ${colors.redMain[200]};
     }
   }
-`
+`;
 
 interface HeaderProps {
-  items?: boolean,
-  navItems?: INavItems[],
-  children?: ReactNode,
-  userPerfil?: boolean
+  items?: boolean;
+  navItems?: INavItems[];
+  children?: ReactNode;
+  userPerfil?: boolean;
 }
 
-export function Header({ items = true, navItems = navItemsData, children, userPerfil = false }: HeaderProps) {
+export function Header({
+  items = true,
+  navItems = navItemsData,
+  children,
+  userPerfil = false,
+}: HeaderProps) {
   const navigate = useNavigate();
   const user = useRecoilValue(actualUserState);
 
   if (!items) {
-    return <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-center items-center p-4">{children}</div>
+    return (
+      <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-center items-center p-4">
+        {children}
+      </div>
+    );
   }
 
   return (
-    <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-between items-center p-4">
+    <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-between items-center p-4 sticky z-20">
       <Link to="/">
         <img loading="eager" src="icons/phlox-logo.png" alt="" className="w-[140px] h-[25px]" />
       </Link>
@@ -53,22 +62,15 @@ export function Header({ items = true, navItems = navItemsData, children, userPe
           ))}
         </ul>
       </nav>
-      {userPerfil && (
-        children
-      )}
+      {userPerfil && children}
       {!userPerfil && (
         <div className="flex gap-[10px]">
           {user === null && (
             <>
-              <Button.Root
-                variant="outlined"
-                onClick={() => navigate("/signup")}
-              >
+              <Button.Root variant="outlined" onClick={() => navigate("/signup")}>
                 <Button.Text content="Cadastrar" />
               </Button.Root>
-              <Button.Root
-                onClick={() => navigate("/login")}
-              >
+              <Button.Root onClick={() => navigate("/login")}>
                 <Button.Text content="Login" />
               </Button.Root>
             </>

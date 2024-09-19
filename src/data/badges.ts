@@ -6,32 +6,38 @@ export const badges: IBadge[] = [
   {
     icon: Album,
     title: "Histórias",
-    backgroundColor: colors.badge.history
+    backgroundColor: colors.badge.history,
+    badgeKey: "story",
   },
   {
     icon: Tag,
     title: "Ofertas",
-    backgroundColor: colors.badge.offer
+    backgroundColor: colors.badge.offer,
+    badgeKey: "offer",
   },
   {
     icon: Cpu,
     title: "Tecnologia",
-    backgroundColor: colors.badge.tecnology
+    backgroundColor: colors.badge.tecnology,
+    badgeKey: "tecnology",
   },
   {
     icon: Newspaper,
     title: "Notícias",
-    backgroundColor: colors.badge.news
+    backgroundColor: colors.badge.news,
+    badgeKey: "news",
   },
   {
     icon: HandHelping,
     title: "Oportunidades",
-    backgroundColor: colors.badge.oportunity
+    backgroundColor: colors.badge.oportunity,
+    badgeKey: "opportunity",
   },
   {
     icon: Code,
     title: "Programação",
     backgroundColor: colors.badge.programation,
-    twBackgroundColor: "bg-badge-programation"
+    badgeKey: "programation",
+    twBackgroundColor: "bg-badge-programation",
   },
-]
+];

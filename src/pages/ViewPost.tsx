@@ -40,7 +40,13 @@ export default function ViewPost() {
           <h1 className="text-highlight text-main-red-300 font-bold">
             {post && post.title}
           </h1>
-          {post && <img className="h-[358px] w-full rounded-[10px]" src={post.imageUrl} alt="" />}
+          {post && (
+            <img
+              className="h-[358px] w-full rounded-[10px]"
+              src={post.imageUrl}
+              alt=""
+            />
+          )}
           {!post && (
             <div className="h-[358px] w-full rounded-[10px] bg-typo-200 animate-pulse flex items-center justify-center">
               <p className="text-typo-700 w-[50px] h-[50px] animate-pulse">
@@ -54,27 +60,31 @@ export default function ViewPost() {
             <UserCard.Root>
               <UserCard.Infos
                 userName={userAuthor?.email}
-                userAvatar={userAuthor.avatarUrl ? userAuthor.avatarUrl : "images/user.png"}
+                userAvatar={
+                  userAuthor.avatarUrl
+                    ? userAuthor.avatarUrl
+                    : "images/user.png"
+                }
                 userPostsNumber={userAuthor.postsNumber}
               />
               {actualUser && actualUser.data.id !== userAuthor.id && (
-                <UserCard.HandleMark 
+                <UserCard.HandleMark
                   userId={userAuthor.id}
                   marked={
-                    Boolean(actualUser.data.usersFavorited?.find((item) => item.id === userAuthor.id && item.favorited === true))
-                    && actualUser.data.id !== userAuthor.id
+                    Boolean(
+                      actualUser.data.usersFavorited?.find(
+                        (item) =>
+                          item.id === userAuthor.id && item.favorited === true
+                      )
+                    ) && actualUser.data.id !== userAuthor.id
                   }
                 />
               )}
-              {!actualUser && (
-                <UserCard.HandleMark 
-                  marked={false} 
-                />
-              )}
+              {!actualUser && <UserCard.HandleMark marked={false} />}
             </UserCard.Root>
           </div>
         )}
-        <section className="px-[30px] py-[30px] flex justify-between gap-[30px]">
+        <section className="px-[30px] py-[30px] flex justify-between gap-[30px] w-full">
           <article className="w-full">
             <div className="flex justify-between w-full">
               <span className="flex gap-2">
@@ -84,9 +94,7 @@ export default function ViewPost() {
               <DateInfo onlyWeek date={post ? post.postDate : ""} />
             </div>
             <StyledMarkdown>
-              <Markdown>
-                {post ? post.content : ""}
-              </Markdown>
+              <Markdown>{post ? post.content : ""}</Markdown>
             </StyledMarkdown>
           </article>
         </section>
