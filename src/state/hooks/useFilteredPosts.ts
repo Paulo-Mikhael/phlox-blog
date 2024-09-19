@@ -5,6 +5,7 @@ import { postsFilterState } from "../atom";
 import { postsFilteredByBadges } from "../../utils/postsFilteredByBadges";
 import { postsFilteredByTitle } from "../../utils/postsFilteredByTitle";
 import { postsFilteredByDate } from "../../utils/postsFilteredByDate";
+import { sortPostsByDate } from "../../utils/sortPostsByDate";
 
 export function useFilteredPosts(): IPost[] {
   const posts = usePosts();
@@ -13,18 +14,18 @@ export function useFilteredPosts(): IPost[] {
   const postTitle = filters.postTitle;
   const postDate = filters.postDate;
 
-  let filteredPosts = [
-    ...posts
-  ];
+  let filteredPosts = [...posts];
 
   if (postTitle) {
     filteredPosts = postsFilteredByTitle(filteredPosts, postTitle);
   }
-  if (postDate){
+  if (postDate) {
     filteredPosts = postsFilteredByDate(filteredPosts, postDate);
   }
 
   filteredPosts = postsFilteredByBadges(filteredPosts);
+
+  filteredPosts = sortPostsByDate(filteredPosts);
 
   return filteredPosts;
 }
