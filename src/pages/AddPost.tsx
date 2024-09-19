@@ -32,6 +32,7 @@ interface IPostContentImage {
 
 export default function AddPost() {
   const fileInput = useRef<HTMLInputElement>(null);
+  const dropzone = useRef<HTMLDivElement>(null);
   const [postTitle, setPostTitle] = useState<string>("");
   const [postImageUrl, setPostImageUrl] = useState<string>("");
   const [postContent, setPostContent] = useState<string>("");
@@ -81,7 +82,7 @@ export default function AddPost() {
 
   function submitPostImage(image: File) {
     if (!image) return;
-    
+
     submitImageToStorage(image)
       .then((url) => {
         setPostImageUrl(url);
@@ -111,19 +112,40 @@ export default function AddPost() {
     for (let i = 0; i < postContentImages.length; i++) {
       const localUrl = postContentImages[i].localUrl;
       const databaseUrl = postContentImages[i].databaseUrl;
-      
+
       if (!databaseUrl) return "";
-      
+
       updatedContent = updatedContent.replace(localUrl, databaseUrl);
     };
 
     return updatedContent;
   }
 
+  function submitDroppedImage(evt: DragEvent){
+    evt.preventDefault();
+
+    if (!evt.dataTransfer) return;
+
+    const file = evt.dataTransfer.files[0];
+
+    const postContentImage: IPostContentImage = {
+      localUrl: URL.createObjectURL(file),
+      file: file
+    }
+
+    submitPostContentImage(postContentImage);
+
+    dropzone.current?.removeEventListener(("drop"), submitDroppedImage);
+  }
+
   useEffect(() => {
     if (postContent.trim() === "") {
       setHighlightedTxt("");
     }
+    dropzone.current?.addEventListener(("dragover"), (evt) => {
+      evt.preventDefault();
+    });
+    dropzone.current?.addEventListener(("drop"), submitDroppedImage);
   }, [postContent]);
 
   return (
@@ -188,16 +210,18 @@ export default function AddPost() {
           )}
           twFlexDirection="flex-row"
         >
-          <Form.Input
-            textarea
-            placeholder="Qual o assunto de hoje?"
-            twMinHeightTextArea="min-h-[480px]"
-            onChangeTextarea={(evt) => setPostContent(evt.target.value)}
-            value={postContent}
-            className="relative"
-          >
-            <Form.InputIcon absolute size={24} icon={htmlPreview ? EyeOff : Eye} onClick={() => setHtmlPreview(!htmlPreview)} />
-          </Form.Input>
+          <div ref={dropzone} className="w-full">
+            <Form.Input
+              textarea
+              placeholder="Qual o assunto de hoje?"
+              twMinHeightTextArea="min-h-[480px]"
+              onChangeTextarea={(evt) => setPostContent(evt.target.value)}
+              value={postContent}
+              className="relative"
+            >
+              <Form.InputIcon absolute size={24} icon={htmlPreview ? EyeOff : Eye} onClick={() => setHtmlPreview(!htmlPreview)} />
+            </Form.Input>
+          </div>
           <StyledMarkdown>
             <ScrollShadow className={htmlPreview ? "w-[430px] 2xl:w-[700px]" : "hidden"}>
               <Markdown>
