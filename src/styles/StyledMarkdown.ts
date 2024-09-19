@@ -100,4 +100,24 @@ export const StyledMarkdown = styled.div`
       }
     `).join('')}
   }
+  table {
+    min-width: 500px;
+    width: 100%;
+    border: 2px solid ${colors.typo[500]};
+    
+    th {
+      background-color: ${colors.typo[700]};
+      padding: 10px 0px;
+      color: ${colors.typo[150]};
+    }
+    td {
+      border: 2px solid ${colors.redMain[300]};
+      background-color: ${colors.typo[150]};
+      color: ${colors.typo[700]};
+      text-align: center;
+      padding: 6px 10px;
+      max-width: 100px;
+      overflow-wrap: break-word;
+    }
+  }
 `
