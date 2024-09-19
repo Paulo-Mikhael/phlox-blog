@@ -14,6 +14,7 @@ import { actualUserState } from "../../../state/atom";
 import { IUser } from "../../../interfaces/IUser";
 import { useSetModalValue } from "../../../state/hooks/useSetModalValue";
 import clsx from "clsx";
+import { useSetPostFilterDate } from "../../../state/hooks/useSetFilterPostDate";
 
 export function FilterRoot({ title, children }: { title: string, children: ReactNode }) {
   return (
@@ -74,6 +75,7 @@ export function FilterSearchUserFavoritesCard({ usersFavorited }: { usersFavorit
 export function FilterDate() {
   const setCalendarOpen = useSetModalValue("OCM");
   const [filterDisabled, setFilterDisabled] = useState<boolean>(true);
+  const setFilterDate = useSetPostFilterDate();
 
   return (
     <div className="flex flex-col gap-2 w-[330px]">
@@ -81,7 +83,10 @@ export function FilterDate() {
         <Checkbox.Input 
           id="filter-checkbox" 
           checked={!filterDisabled}
-          onClick={() => setFilterDisabled(!filterDisabled)} 
+          onClick={() => {
+            setFilterDisabled(!filterDisabled);
+            !filterDisabled && setFilterDate(undefined);
+          }} 
         />
         <Checkbox.Label labelText="Filtrar por data" htmlFor="filter-checkbox" />
       </Checkbox.Root>

@@ -7,30 +7,60 @@ import dayjs from "dayjs";
 import { useRecoilValue } from "recoil";
 import { postsFilterState } from "../../state/atom";
 import { useSetPostFilterDate } from "../../state/hooks/useSetFilterPostDate";
+import { useEffect, useState } from "react";
+import { useSetModalValue } from "../../state/hooks/useSetModalValue";
 
 export function CalendarModal() {
   const filterDate = useRecoilValue(postsFilterState);
   const setFilterDate = useSetPostFilterDate();
-  const date = dayjs(filterDate.postDate);
+  const setCalendarModalValue = useSetModalValue("OCM");
+  const [currentDate, setCurrentDate] = useState<string>("");
+  const date = dayjs(currentDate);
   const formatedDate = `${date.format("DD")}/${date.format("MM")}/${date.format("YYYY")}`;
+  const [invalidDate, setInvalidDate] = useState<boolean>(false);
+
+  useEffect(() => {
+    currentDate !== "" && setInvalidDate(false);
+  }, [currentDate]);
+  useEffect(() => {
+    filterDate.postDate && setCurrentDate(filterDate.postDate);
+  }, []);
 
   return (
     <Modal modalKey="OCM">
       <Calendar
+        visibleMonths={2}
         onChange={(evt) => {
-          setFilterDate(evt.toString());
+          setCurrentDate(evt.toString());
         }}
-        value={filterDate.postDate ? parseDate(filterDate.postDate) : today(getLocalTimeZone())}
-        defaultValue={filterDate.postDate ? parseDate(filterDate.postDate) : today(getLocalTimeZone())}
+        value={currentDate !== "" ? parseDate(currentDate) : today(getLocalTimeZone())}
+        defaultValue={currentDate !== "" ? parseDate(currentDate) : today(getLocalTimeZone())}
       />
-      {filterDate.postDate && (
+      {currentDate !== "" && (
         <h2 className="w-full text-center mt-3">
           A partir de {formatedDate}
         </h2>
       )}
+      {invalidDate && (
+        <p role="alert" className="w-full text-center mt-3 text-feedback-danger">
+          Selecione uma data
+        </p>
+      )}
       <div className="flex gap-2 mt-3">
         <div className="flex-1">
-          <Button.Root twWidth="w-full">
+          <Button.Root 
+            twWidth="w-full"
+            onClick={() => {
+              if (currentDate === "") {
+                setInvalidDate(true);
+                return;
+              };
+
+              setFilterDate(currentDate);
+              setCurrentDate("");
+              setCalendarModalValue(false);
+            }}
+          >
             <Button.Text content="Filtrar" />
             <Button.Icon icon={Filter} />
           </Button.Root>
@@ -40,7 +70,8 @@ export function CalendarModal() {
             twWidth="w-full"
             variant="outlined"
             onClick={() => {
-              setFilterDate(null);
+              setFilterDate(undefined);
+              setCurrentDate("");
             }}
           >
             <Button.Text content="Limpar" />

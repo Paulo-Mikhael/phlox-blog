@@ -3,7 +3,6 @@ import { createContext, ElementType, FormHTMLAttributes, InputHTMLAttributes, La
 import { StyledInput } from "../../styles/StyledInput";
 import { CalendarModal } from "../CalendarModal";
 import { useModalValue } from "../../state/hooks/useModalValue";
-import { getLocalTimeZone, today } from "@internationalized/date";
 import { useRecoilValue } from "recoil";
 import { postsFilterState } from "../../state/atom";
 import { useSetPostFilterDate } from "../../state/hooks/useSetFilterPostDate";
@@ -160,7 +159,6 @@ export function FormInput(
       {type === "file" && (
         <StyledInput
           type={type}
-          disabled={variant === "disabled"}
           className="bg-white file-input-xs file-input-bordered file-input-error file-input w-full"
           {...rest}
         />
@@ -203,20 +201,22 @@ function DateInput({ ...rest }: InputHTMLAttributes<HTMLInputElement>) {
   const calendarOpened = useModalValue("OCM");
   const filterDate = useRecoilValue(postsFilterState);
   const setFilterDate = useSetPostFilterDate();
+  const { variant } = useContext(VariantContext);
 
   return (
     <>
       <span
-        className="relative w-full cursor-pointer"
+        className="relative w-full"
       >
         <StyledInput
-          disabled={rest.disabled}
+          disabled={variant === "disabled"}
           type="date"
-          value={filterDate.postDate ? filterDate.postDate : today(getLocalTimeZone()).toString()}
+          value={filterDate.postDate ? filterDate.postDate : ""}
           className={clsx(
             "bg-transparent w-full text-normal",
             {
-              "cursor-not-allowed": !rest.disabled
+              "cursor-not-allowed": variant === "disabled",
+              "cursor-default": variant !== "disabled"
             }
           )}
           {...rest}

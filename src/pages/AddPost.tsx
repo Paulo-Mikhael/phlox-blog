@@ -128,6 +128,8 @@ export default function AddPost() {
 
     const file = evt.dataTransfer.files[0];
 
+    if (Boolean(file.type.startsWith("image/")) === false) return;
+
     const postContentImage: IPostContentImage = {
       localUrl: URL.createObjectURL(file),
       file: file
