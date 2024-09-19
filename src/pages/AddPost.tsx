@@ -121,7 +121,7 @@ export default function AddPost() {
     return updatedContent;
   }
 
-  function submitDroppedImage(evt: DragEvent){
+  function submitDroppedImage(evt: DragEvent) {
     evt.preventDefault();
 
     if (!evt.dataTransfer) return;
@@ -129,8 +129,6 @@ export default function AddPost() {
     const file = evt.dataTransfer.files[0];
 
     if (!String(file.type).startsWith("image")) return;
-
-    alert("passou");
 
     const postContentImage: IPostContentImage = {
       localUrl: URL.createObjectURL(file),
@@ -140,17 +138,49 @@ export default function AddPost() {
     submitPostContentImage(postContentImage);
 
     dropzone.current?.removeEventListener(("drop"), submitDroppedImage);
+    dropzone.current?.addEventListener(("drop"), submitDroppedImage);
+  }
+
+  function submitPastedImage(evt: ClipboardEvent) {
+    if (!evt.clipboardData) return;
+
+    const clipboardItems = evt.clipboardData.items;
+    const items: DataTransferItem[] = [].slice.call(clipboardItems).filter(function (item: DataTransferItem) {
+      return /^image\//.test(item.type);
+    });
+    if (items.length === 0) {
+      return;
+    }
+
+    const item = items[0];
+    const file = item.getAsFile();
+
+    if (file) {
+      const postContentImage: IPostContentImage = {
+        localUrl: URL.createObjectURL(file),
+        file: file
+      }
+
+      submitPostContentImage(postContentImage);
+    };
+
+    dropzone.current?.removeEventListener(("paste"), submitPastedImage);
+    dropzone.current?.addEventListener(("paste"), submitPastedImage);
   }
 
   useEffect(() => {
     if (postContent.trim() === "") {
       setHighlightedTxt("");
     }
+  }, [postContent]);
+
+  useEffect(() => {
+    dropzone.current?.addEventListener(("paste"), submitPastedImage);
     dropzone.current?.addEventListener(("dragover"), (evt) => {
       evt.preventDefault();
     });
     dropzone.current?.addEventListener(("drop"), submitDroppedImage);
-  }, [postContent]);
+  }, [dropzone]);
 
   return (
     <>
