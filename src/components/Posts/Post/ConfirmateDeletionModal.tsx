@@ -20,7 +20,7 @@ export function ConfirmateDeletionModal({ postId }: { postId: string }) {
   return (
     <Modal modalKey={postId}>
       <Form.Root>
-        <Form.Label className="w-full text-center mb-5" text={`Deseja excluir o post ${postId}?`} />
+        <Form.Label className="w-full text-center mb-5" text={`Deseja excluir esse post?`} />
         {deletingPost === false && (
           <div className="flex w-full gap-3">
             <span className="flex-1">

@@ -110,7 +110,6 @@ function CardList({ ...post }: IPostCard) {
     <>
       <ConfirmateDeletionModal postId={postId} />
       <div className="w-full relative">
-        <p>{postId}</p>
         {post.deleteButton && (
           <div className="absolute transition-all -top-3 right-7">
             <button
