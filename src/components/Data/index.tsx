@@ -22,7 +22,6 @@ export default function Data() {
     createModal("LM"); // Login Modal
     createModal("HBM"); // Handle Badges Modal
     createModal("OCM"); // Open Calendar Modal
-    createModal("CDM"); // Confirm Deletion Modal
   }, []);
 
   return (

@@ -13,16 +13,9 @@ import { Post } from ".";
 import { Link, useNavigate } from "react-router-dom";
 import { useFilteredPosts } from "../../../state/hooks/useFilteredPosts";
 import { getUserById } from "../../../utils/getUserById";
-import { useActualUser } from "../../../state/hooks/useActualUser";
-import { useSetPosts } from "../../../state/hooks/useSetPosts";
-import { useSetUsers } from "../../../state/hooks/useSetUsers";
-import { Modal } from "../../Modal";
-import { Form } from "../../Form";
-import { Button } from "../../Button";
 import { useSetModalValue } from "../../../state/hooks/useSetModalValue";
-import { insertToDatabase } from "../../../utils/firebase/functions/insertToDatabase";
-import { getPosts } from "../../../utils/getPosts";
-import { getUsers } from "../../../utils/getUsers";
+import { ConfirmateDeletionModal } from "./ConfirmateDeletionModal";
+import { useCreateModal } from "../../../state/hooks/useCreateModal";
 
 interface IPostCard extends IPost {
   deleteButton?: boolean;
@@ -98,66 +91,26 @@ function CardTable({ ...post }: IPostCard) {
 
 function CardList({ ...post }: IPostCard) {
   const user = getUserById(post.userAuthorId);
+  const postId = post.id;
   const navigate = useNavigate();
   const [helpPressed, setHelpPressed] = useState<boolean>(false);
-  const [deletingPost, setDeletingPost] = useState<boolean>(false);
-  const setDeleteConfimationModal = useSetModalValue("CDM");
-  const actualUser = useActualUser();
-  const setUsers = useSetUsers();
-  const setPosts = useSetPosts();
+  const createModal = useCreateModal();
+  const setDeleteConfimationModal = useSetModalValue(postId);
   if (!user) return;
 
   const floatButtonStyle = `absolute bg-main-red-300 rounded-full p-2 cursor-pointer transition-all`;
   const floatButtonIconStyle = "size-5 text-typo-100";
   const HelpButton = helpPressed === false ? Book : BookOpen;
 
+  useEffect(() => {
+    createModal(postId);
+  });
+
   return (
     <>
-      <Modal modalKey="CDM">
-        <Form.Root>
-          <Form.Label className="w-full text-center mb-5" text="Deseja excluir o post?" />
-          {deletingPost === false && (
-            <div className="flex w-full gap-3">
-              <span className="flex-1">
-                <Button.Root
-                  twWidth="w-full"
-                  onClick={() => {
-                    setDeletingPost(true);
-                    insertToDatabase(`users/${actualUser?.data.id}/posts/${post.id}`, null).then(
-                      () => {
-                        getUsers(setUsers);
-                        getPosts(setPosts).then(() => {
-                          setDeleteConfimationModal(false);
-                          setDeletingPost(false);
-                        });
-                      }
-                    );
-                  }}
-                >
-                  <Button.Text content="SIM" />
-                </Button.Root>
-              </span>
-              <span className="flex-1">
-                <Button.Root
-                  twWidth="w-full"
-                  variant="outlined"
-                  onClick={() => {
-                    setDeleteConfimationModal(false);
-                  }}
-                >
-                  <Button.Text content="NÃO" />
-                </Button.Root>
-              </span>
-            </div>
-          )}
-          {deletingPost === true && (
-            <p className="w-full text-section-subtitle text-feedback-danger text-center">
-              Excluindo...
-            </p>
-          )}
-        </Form.Root>
-      </Modal>
+      <ConfirmateDeletionModal postId={postId} />
       <div className="w-full relative">
+        <p>{postId}</p>
         {post.deleteButton && (
           <div className="absolute transition-all -top-3 right-7">
             <button
@@ -169,7 +122,7 @@ function CardList({ ...post }: IPostCard) {
             <button
               className={`${floatButtonStyle} ${helpPressed === true ? "-top-10 -left-6" : ""}`}
               onClick={() => {
-                navigate(`/edit?${post.id}`);
+                navigate(`/edit?${postId}`);
               }}
             >
               <Pencil className={floatButtonIconStyle} />
@@ -187,7 +140,7 @@ function CardList({ ...post }: IPostCard) {
         )}
         <article className="w-full h-[202px] bg-typo-100 rounded-[10px] shadow-xl shadow-typo-700/10 flex">
           <figure className="w-[326px] max-xl:hidden">
-            <Link to={`/view?${post.id}`} className="relative">
+            <Link to={`/view?${postId}`} className="relative">
               <img
                 src={user.avatarUrl ? user.avatarUrl : "images/user.png"}
                 className="w-12 h-12 z-[2] rounded-full border border-main-red-300 absolute bottom-2 left-2"
