@@ -10,7 +10,7 @@ import { Book, BookOpen, List, Pencil, Table, Trash2 } from "lucide-react";
 import { postCardFormatState } from "../../../state/atom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Post } from ".";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFilteredPosts } from "../../../state/hooks/useFilteredPosts";
 import { getUserById } from "../../../utils/getUserById";
 import { useActualUser } from "../../../state/hooks/useActualUser";
@@ -98,6 +98,7 @@ function CardTable({ ...post }: IPostCard) {
 
 function CardList({ ...post }: IPostCard) {
   const user = getUserById(post.userAuthorId);
+  const navigate = useNavigate();
   const [helpPressed, setHelpPressed] = useState<boolean>(false);
   const [deletingPost, setDeletingPost] = useState<boolean>(false);
   const setDeleteConfimationModal = useSetModalValue("CDM");
@@ -167,6 +168,9 @@ function CardList({ ...post }: IPostCard) {
             </button>
             <button
               className={`${floatButtonStyle} ${helpPressed === true ? "-top-10 -left-6" : ""}`}
+              onClick={() => {
+                navigate(`/edit?${post.id}`);
+              }}
             >
               <Pencil className={floatButtonIconStyle} />
             </button>

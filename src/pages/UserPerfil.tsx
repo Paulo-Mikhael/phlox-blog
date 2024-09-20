@@ -26,13 +26,16 @@ export default function UserPerfil() {
   const posts = useFilteredUserPosts(userId);
   const navItems = getNavItem("");
   const userFavorites = useUserFavorites(userId);
-  const navItemsActualUser = getNavItem(`${actualUser && userId === actualUser.data.id ? "Meu Perfil" : ""}`, [
-    {
-      name: "Meu Perfil",
-      path: `${actualUser ? `/user?${actualUser.data.id}` : ""}`,
-      current: false
-    }
-  ]);
+  const navItemsActualUser = getNavItem(
+    `${actualUser && userId === actualUser.data.id ? "Meu Perfil" : ""}`,
+    [
+      {
+        name: "Meu Perfil",
+        path: `${actualUser ? `/user?${actualUser.data.id}` : ""}`,
+        current: false,
+      },
+    ]
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -44,7 +47,10 @@ export default function UserPerfil() {
   return (
     <>
       <PersonalizePerfilModal />
-      <Header userPerfil={actualUser !== null} navItems={actualUser ? navItemsActualUser : navItems}>
+      <Header
+        userPerfil={actualUser !== null}
+        navItems={actualUser ? navItemsActualUser : navItems}
+      >
         <Link to="/add">
           <Button.Root variant="outlined">
             <Button.Text content="FAZER UM POST" />
@@ -67,7 +73,7 @@ export default function UserPerfil() {
                 setOpenModalPPM(true);
               }}
             >
-              <Button.Text content="PERSONALIZAR" />
+              <Button.Text content="PERFIL" />
             </Button.Root>
           )}
         </div>

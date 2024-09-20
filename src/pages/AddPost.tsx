@@ -20,17 +20,21 @@ import { useSetUsers } from "../state/hooks/useSetUsers";
 import { useSetPosts } from "../state/hooks/useSetPosts";
 import { getPosts } from "../utils/getPosts";
 import { getUsers } from "../utils/getUsers";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import NotFound from "./NotFound";
 import { submitImageToStorage } from "../utils/firebase/functions/submitImageToStorage";
+import { getPostById } from "../utils/getPostById";
 
 interface IPostContentImage {
-  localUrl: string,
-  file: File,
-  databaseUrl?: string
+  localUrl: string;
+  file: File;
+  databaseUrl?: string;
 }
 
-export default function AddPost() {
+export default function AddPost({ editing }: { editing?: boolean }) {
+  const location = useLocation();
+  const postId = location.search.replace("?", "");
+  const userPost = getPostById(postId);
   const fileInput = useRef<HTMLInputElement>(null);
   const dropzone = useRef<HTMLDivElement>(null);
   const [postTitle, setPostTitle] = useState<string>("");
@@ -53,9 +57,9 @@ export default function AddPost() {
     if (!user || !user.auth || !user.data.id) {
       console.log("sem usuário");
       return;
-    };
+    }
 
-    const newPostId = uuidV4();
+    const newPostId = editing ? postId : uuidV4();
     const newPost: IPost = {
       id: newPostId,
       title: postTitle,
@@ -63,8 +67,8 @@ export default function AddPost() {
       imageUrl: postImageUrl,
       postDate: new Date().toString(),
       userAuthorId: user.data.id,
-      badges: handleBadgesItems
-    }
+      badges: handleBadgesItems,
+    };
 
     insertToDatabase(`users/${user.data.id}/posts/${newPost.id}`, newPost)
       .catch((err) => {
@@ -95,11 +99,13 @@ export default function AddPost() {
   function submitPostContentImage(postContentImage: IPostContentImage) {
     if (!postContentImage) return;
 
-    setPostContent(prv => prv + ` ![${postContentImage.file.name}](${postContentImage.localUrl})`);
+    setPostContent(
+      (prv) => prv + ` ![${postContentImage.file.name}](${postContentImage.localUrl})`
+    );
 
     submitImageToStorage(postContentImage.file)
       .then((url) => {
-        setPostContentImages(prv => [...prv, { ...postContentImage, databaseUrl: url }]);
+        setPostContentImages((prv) => [...prv, { ...postContentImage, databaseUrl: url }]);
       })
       .catch((err) => {
         throw new Error(err);
@@ -116,7 +122,7 @@ export default function AddPost() {
       if (!databaseUrl) return "";
 
       updatedContent = updatedContent.replace(localUrl, databaseUrl);
-    };
+    }
 
     return updatedContent;
   }
@@ -132,20 +138,22 @@ export default function AddPost() {
 
     const postContentImage: IPostContentImage = {
       localUrl: URL.createObjectURL(file),
-      file: file
-    }
+      file: file,
+    };
 
     submitPostContentImage(postContentImage);
 
-    dropzone.current?.removeEventListener(("drop"), submitDroppedImage);
-    dropzone.current?.addEventListener(("drop"), submitDroppedImage);
+    dropzone.current?.removeEventListener("drop", submitDroppedImage);
+    dropzone.current?.addEventListener("drop", submitDroppedImage);
   }
 
   function submitPastedImage(evt: ClipboardEvent) {
     if (!evt.clipboardData) return;
 
     const clipboardItems = evt.clipboardData.items;
-    const items: DataTransferItem[] = [].slice.call(clipboardItems).filter(function (item: DataTransferItem) {
+    const items: DataTransferItem[] = [].slice.call(clipboardItems).filter(function (
+      item: DataTransferItem
+    ) {
       return /^image\//.test(item.type);
     });
     if (items.length === 0) {
@@ -158,14 +166,14 @@ export default function AddPost() {
     if (file) {
       const postContentImage: IPostContentImage = {
         localUrl: URL.createObjectURL(file),
-        file: file
-      }
+        file: file,
+      };
 
       submitPostContentImage(postContentImage);
-    };
+    }
 
-    dropzone.current?.removeEventListener(("paste"), submitPastedImage);
-    dropzone.current?.addEventListener(("paste"), submitPastedImage);
+    dropzone.current?.removeEventListener("paste", submitPastedImage);
+    dropzone.current?.addEventListener("paste", submitPastedImage);
   }
 
   useEffect(() => {
@@ -175,12 +183,20 @@ export default function AddPost() {
   }, [postContent]);
 
   useEffect(() => {
-    dropzone.current?.addEventListener(("paste"), submitPastedImage);
-    dropzone.current?.addEventListener(("dragover"), (evt) => {
+    dropzone.current?.addEventListener("paste", submitPastedImage);
+    dropzone.current?.addEventListener("dragover", (evt) => {
       evt.preventDefault();
     });
-    dropzone.current?.addEventListener(("drop"), submitDroppedImage);
-  }, [dropzone]);
+    dropzone.current?.addEventListener("drop", submitDroppedImage);
+
+    if (editing) {
+      if (userPost.id !== "invalid data") {
+        setPostContent(userPost.content);
+        setPostImageUrl(userPost.imageUrl);
+        setPostTitle(userPost.title);
+      }
+    }
+  }, []);
 
   return (
     <>
@@ -192,8 +208,8 @@ export default function AddPost() {
           // Aqui é criado uma url local apenas para ficar "legível" ao usuário, não é necessário trabalhar com esta linha
           const postContentImage: IPostContentImage = {
             localUrl: URL.createObjectURL(file),
-            file: file
-          }
+            file: file,
+          };
 
           submitPostContentImage(postContentImage);
         }}
@@ -205,7 +221,11 @@ export default function AddPost() {
         <div className="w-full px-[161px] flex justify-between">
           {user && (
             <UserCard.Root>
-              <UserCard.Infos userName={user.data.email} userAvatar={user.data.avatarUrl ? user.data.avatarUrl : "images/user.png"} userPostsNumber={user.data.postsNumber ? user.data.postsNumber : 0} />
+              <UserCard.Infos
+                userName={user.data.email}
+                userAvatar={user.data.avatarUrl ? user.data.avatarUrl : "images/user.png"}
+                userPostsNumber={user.data.postsNumber ? user.data.postsNumber : 0}
+              />
               <DateInfo date={new Date().toDateString()} />
             </UserCard.Root>
           )}
@@ -231,17 +251,23 @@ export default function AddPost() {
         </Form.Root>
         <Form.Root className="">
           <Form.Label text="Título do post:" id="" />
-          <Form.Input value={postTitle} onChange={(evt) => setPostTitle(evt.target.value)} placeholder="Digite o título do post" />
+          <Form.Input
+            value={postTitle}
+            onChange={(evt) => setPostTitle(evt.target.value)}
+            placeholder="Digite o título do post"
+          />
           <Form.Hint hintText="Essa será a frase que será filtrada ao pesquisar por esta postagem" />
         </Form.Root>
-        <Toolbar fileInput={fileInput} highlightedTxt={highlightedTxt} setHighlightedTxt={setHighlightedTxt} setContent={setPostContent} />
+        <Toolbar
+          fileInput={fileInput}
+          highlightedTxt={highlightedTxt}
+          setHighlightedTxt={setHighlightedTxt}
+          setContent={setPostContent}
+        />
         <Form.Root
-          className={clsx(
-            "mt-[10px]",
-            {
-              "gap-3": htmlPreview
-            }
-          )}
+          className={clsx("mt-[10px]", {
+            "gap-3": htmlPreview,
+          })}
           twFlexDirection="flex-row"
         >
           <div ref={dropzone} className="w-full">
@@ -253,22 +279,19 @@ export default function AddPost() {
               value={postContent}
               className="relative"
             >
-              <Form.InputIcon absolute size={24} icon={htmlPreview ? EyeOff : Eye} onClick={() => setHtmlPreview(!htmlPreview)} />
+              <Form.InputIcon
+                absolute
+                size={24}
+                icon={htmlPreview ? EyeOff : Eye}
+                onClick={() => setHtmlPreview(!htmlPreview)}
+              />
             </Form.Input>
           </div>
           <StyledMarkdown>
             <ScrollShadow className={htmlPreview ? "w-[430px] 2xl:w-[700px]" : "hidden"}>
-              <Markdown>
-                {`${postTitle !== "" ? "#" : ""} ${postTitle}`}
-              </Markdown>
-              {postImageUrl !== "" && (
-                <Markdown>
-                  {`![imagem do post](${postImageUrl})`}
-                </Markdown>
-              )}
-              <Markdown>
-                {postContent}
-              </Markdown>
+              <Markdown>{`${postTitle !== "" ? "#" : ""} ${postTitle}`}</Markdown>
+              {postImageUrl !== "" && <Markdown>{`![imagem do post](${postImageUrl})`}</Markdown>}
+              <Markdown>{postContent}</Markdown>
             </ScrollShadow>
           </StyledMarkdown>
         </Form.Root>

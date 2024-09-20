@@ -18,6 +18,7 @@ export default function AppRouter() {
             <Route path="/" element={<Data />}>
               <Route index element={<Home />} />
               <Route path="add" element={<AddPost />} />
+              <Route path="edit" element={<AddPost editing />} />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<Login signUp />} />
               <Route path="view" element={<ViewPost />} />
