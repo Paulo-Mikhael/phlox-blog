@@ -37,21 +37,11 @@ export default function ViewPost() {
       <Header navItems={navItems} />
       <main className="pb-10 flex flex-col items-center">
         <div className="w-full px-[160px] py-[40px] flex flex-col gap-[30px]">
-          <h1 className="text-highlight text-main-red-300 font-bold">
-            {post && post.title}
-          </h1>
-          {post && (
-            <img
-              className="h-[358px] w-full rounded-[10px]"
-              src={post.imageUrl}
-              alt=""
-            />
-          )}
+          <h1 className="text-highlight text-main-red-300 font-bold">{post && post.title}</h1>
+          {post && <img className="h-[358px] w-full rounded-[10px]" src={post.imageUrl} alt="" />}
           {!post && (
             <div className="h-[358px] w-full rounded-[10px] bg-typo-200 animate-pulse flex items-center justify-center">
-              <p className="text-typo-700 w-[50px] h-[50px] animate-pulse">
-                Carregando...
-              </p>
+              <p className="text-typo-700 w-[50px] h-[50px] animate-pulse">Carregando...</p>
             </div>
           )}
         </div>
@@ -60,11 +50,7 @@ export default function ViewPost() {
             <UserCard.Root>
               <UserCard.Infos
                 userName={userAuthor?.email}
-                userAvatar={
-                  userAuthor.avatarUrl
-                    ? userAuthor.avatarUrl
-                    : "images/user.png"
-                }
+                userAvatar={userAuthor.avatarUrl ? userAuthor.avatarUrl : "images/user.png"}
                 userPostsNumber={userAuthor.postsNumber}
               />
               {actualUser && actualUser.data.id !== userAuthor.id && (
@@ -73,8 +59,7 @@ export default function ViewPost() {
                   marked={
                     Boolean(
                       actualUser.data.usersFavorited?.find(
-                        (item) =>
-                          item.id === userAuthor.id && item.favorited === true
+                        (item) => item.id === userAuthor.id && item.favorited === true
                       )
                     ) && actualUser.data.id !== userAuthor.id
                   }

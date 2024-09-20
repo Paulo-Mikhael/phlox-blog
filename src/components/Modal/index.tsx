@@ -6,9 +6,9 @@ import { useModalValue } from "../../state/hooks/useModalValue";
 import { useSetModalValue } from "../../state/hooks/useSetModalValue";
 
 interface ModalProps {
-  children: ReactNode,
-  onClose?: () => void,
-  modalKey: string
+  children: ReactNode;
+  onClose?: () => void;
+  modalKey: string;
 }
 
 export function Modal({ children, onClose, modalKey }: ModalProps) {
@@ -18,10 +18,10 @@ export function Modal({ children, onClose, modalKey }: ModalProps) {
   return (
     <div
       className={clsx(
-        "fixed bg-typo-700/20 w-full h-full top-0 left-0 items-center justify-center z-10",
+        "fixed bg-typo-700/20 w-full h-full top-0 left-0 items-center justify-center z-20",
         {
-          "hidden": !openModal,
-          "flex": openModal
+          hidden: !openModal,
+          flex: openModal,
         }
       )}
     >
@@ -33,9 +33,7 @@ export function Modal({ children, onClose, modalKey }: ModalProps) {
             onClose && onClose();
           }}
         >
-          <X
-            color={colors.typo[100]}
-          />
+          <X color={colors.typo[100]} />
         </span>
         {children}
       </div>

@@ -47,7 +47,7 @@ export function Header({
   }
 
   return (
-    <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-between items-center p-4 sticky z-20">
+    <div className="bg-typo-150 w-full h-[80px] shadow-xl flex justify-between items-center p-4">
       <Link to="/">
         <img loading="eager" src="icons/phlox-logo.png" alt="" className="w-[140px] h-[25px]" />
       </Link>
