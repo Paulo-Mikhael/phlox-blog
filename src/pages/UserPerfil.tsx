@@ -79,7 +79,7 @@ export default function UserPerfil() {
         </div>
         <div className="w-full h-[2px] bg-typo-200 mt-1 mb-10" />
         <section className="flex justify-between gap-10">
-          <div className="xl:max-w-[70%]">
+          <div className="xl:min-w-[830px] w-full">
             <h1 className="text-section text-typo-700 mb-4">
               {actualUser?.data.id === user.id ? "Minhas Postagens:" : "Postagens:"}
             </h1>

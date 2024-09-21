@@ -9,9 +9,10 @@ import { insertToDatabase } from "../../../utils/firebase/functions/insertToData
 import { getPosts } from "../../../utils/getPosts";
 import { getUsers } from "../../../utils/getUsers";
 import { useSetModalValue } from "../../../state/hooks/useSetModalValue";
+import { LogOut, Trash } from "lucide-react";
 
 export function ConfirmateDeletionModal({ postId }: { postId: string }) {
-  const setDeleteConfimationModal = useSetModalValue("CDM");
+  const setDeleteConfimationModal = useSetModalValue(postId);
   const [deletingPost, setDeletingPost] = useState<boolean>(false);
   const actualUser = useActualUser();
   const setUsers = useSetUsers();
@@ -32,14 +33,15 @@ export function ConfirmateDeletionModal({ postId }: { postId: string }) {
                     () => {
                       getUsers(setUsers);
                       getPosts(setPosts).then(() => {
-                        setDeleteConfimationModal(false);
                         setDeletingPost(false);
+                        setDeleteConfimationModal(false);
                       });
                     }
                   );
                 }}
               >
                 <Button.Text content="SIM" />
+                <Button.Icon icon={Trash} />
               </Button.Root>
             </span>
             <span className="flex-1">
@@ -51,6 +53,7 @@ export function ConfirmateDeletionModal({ postId }: { postId: string }) {
                 }}
               >
                 <Button.Text content="NÃO" />
+                <Button.Icon icon={LogOut} />
               </Button.Root>
             </span>
           </div>

@@ -33,6 +33,7 @@ interface IPostContentImage {
 
 export default function AddPost({ editing }: { editing?: boolean }) {
   const location = useLocation();
+  const [sending, setSending] = useState<boolean>(false);
   const postId = location.search.replace("?", "");
   const userPost = getPostById(postId);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -54,17 +55,37 @@ export default function AddPost({ editing }: { editing?: boolean }) {
   }
 
   async function submitPost() {
+    setSending(true);
+
     if (!user || !user.auth || !user.data.id) {
       console.log("sem usuário");
       return;
     }
+    if (postTitle === "") {
+      alert("Insira o título do post");
+      setSending(false);
+      return;
+    }
+    if (postImageUrl === "") {
+      const imagemPadrao = confirm(
+        "O post está sem uma imagem para demonstração, caso prossiga, será usada uma imagem padrão"
+      );
+
+      if (imagemPadrao === false) {
+        setSending(false);
+        return;
+      }
+    }
+
+    const imagemPadrao =
+      "https://firebasestorage.googleapis.com/v0/b/phlox-99daa.appspot.com/o/images%2Fimagem-post-padrao.jfif?alt=media&token=2031d89a-5040-4ae4-95a1-f2453ac5d8f1";
 
     const newPostId = editing ? postId : uuidV4();
     const newPost: IPost = {
       id: newPostId,
       title: postTitle,
       content: changeContentUrls(postContent),
-      imageUrl: postImageUrl,
+      imageUrl: postImageUrl === "" ? imagemPadrao : postImageUrl,
       postDate: new Date().toString(),
       userAuthorId: user.data.id,
       badges: handleBadgesItems,
@@ -295,21 +316,21 @@ export default function AddPost({ editing }: { editing?: boolean }) {
             </ScrollShadow>
           </StyledMarkdown>
         </Form.Root>
-        <SubmitPostButton submitPostFunction={submitPost} />
+        <SubmitPostButton sending={sending} submitPostFunction={submitPost} />
       </main>
     </>
   );
 }
 
-function SubmitPostButton({ submitPostFunction }: { submitPostFunction: () => void }) {
-  const [sending, setSending] = useState<boolean>(false);
-
+function SubmitPostButton({
+  submitPostFunction,
+  sending,
+}: { submitPostFunction: () => void; sending: boolean }) {
   return (
     <Button.Root
       disabled={sending}
       type="submit"
       onClick={() => {
-        setSending(true);
         submitPostFunction();
       }}
     >
