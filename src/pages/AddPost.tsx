@@ -265,7 +265,7 @@ export default function AddPost({ editing }: { editing?: boolean }) {
           setContent={setPostContent}
         />
         <Form.Root
-          className={clsx("mt-[10px]", {
+          className={clsx("mt-[10px] mb-[16px]", {
             "gap-3": htmlPreview,
           })}
           twFlexDirection="flex-row"
@@ -295,12 +295,25 @@ export default function AddPost({ editing }: { editing?: boolean }) {
             </ScrollShadow>
           </StyledMarkdown>
         </Form.Root>
-        <Form.Root className="mt-3" onSubmit={() => submitPost()}>
-          <Button.Root type="submit">
-            <Button.Text content="Enviar" />
-          </Button.Root>
-        </Form.Root>
+        <SubmitPostButton submitPostFunction={submitPost} />
       </main>
     </>
+  );
+}
+
+function SubmitPostButton({ submitPostFunction }: { submitPostFunction: () => void }) {
+  const [sending, setSending] = useState<boolean>(false);
+
+  return (
+    <Button.Root
+      disabled={sending}
+      type="submit"
+      onClick={() => {
+        setSending(true);
+        submitPostFunction();
+      }}
+    >
+      <Button.Text content="Enviar" />
+    </Button.Root>
   );
 }

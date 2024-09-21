@@ -146,7 +146,7 @@ export function FormInput({
       )}
     >
       {IconLeft && <FormInputIcon icon={IconLeft} />}
-      {type === "text" && !textarea && (
+      {(type === "text" || type === "password") && !textarea && (
         <StyledInput
           className={`outline-none h-full w-full text-normal bg-transparent ${variant === "disabled" ? "cursor-not-allowed" : "cursor-text"}`}
           type={type}
