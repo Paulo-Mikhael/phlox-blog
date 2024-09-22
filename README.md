@@ -2,7 +2,7 @@
 [![página principal da aplicação](public/images/phlox-blog.png)](https://phlox-blog.vercel.app/)
 
 ## Sobre ✏️
-### Este projeto é um blog de uma empresa fictícia de tecnologia, onde além da própria poder postar o conteúdo da loja, também funciona como uma rede social onde os clientes podem interagir se tiverem uma conta.
+### Este projeto é um blog de uma empresa fictícia de tecnologia, onde além da própria poder postar o conteúdo da loja, também funciona como uma rede social onde os clientes podem interagir se tiverem uma conta. Ao escrever um post, é possível usar markdown para personalizar ainda mais o conteúdo, adicionando links, tabelas, listas etc, e caso o usuário não saiba/queira usar markdown, existe uma toolbar, com interface super intuitiva, que o auxiliará nessa tarefa.
 
 ## Tecnologias 💻
 <div>
@@ -91,6 +91,8 @@ src
 - utils - Ficam funções comuns que são utilizadas em toda a aplicação, e na pasta firebase ficam as que são relacionadas ao firebase, que são guardadas na subpasta functions, e em firebase.ts, a conexão com o firebase e seus serviços;
 - index.css - Arquivo padrão do React, ficam os estilos css globais;
 - main.tsx - Arquivo padrão do React, fica o componente principal que vai ser carregado;
+- routes.tsx - Ficam as rotas da aplicação;
+- vite-env.d.ts - Arquivo padrão do vite, ficam os tipos de dados aceitos como importações.
 
 ## Design Pattern
 ### No projeto está sendo utilizado o [Compound Pattern](https://www.patterns.dev/react/compound-pattern/), que define a estrutura do código de maneira que ele seja reutilizável e flexível, para isso, dividindo o componente em diferentes partes. Para entender melhor, confira o exemplo a seguir:
@@ -110,19 +112,20 @@ src
 ```bash
   cd phlox-blog
 ```
-### Entre no diretório do projeto
-```bash
-  cd phlox-blog
-```
 ### Instale as dependências
 ```bash
   npm install
 ```
-### Criar um projeto Firebase com as funções 'Authentication' e 'Realtime Database', e conectar à aplicação rodando o comando abaixo e seguindo as instruções dadas [(Documentação de Auxílio)](https://firebase.google.com/docs/cli?hl=pt-br#initialize_a_firebase_project)
+### Instale a CLI do firebase e faça login na sua conta
+```bash
+  npm install -g firebase-tools
+  firebase login
+```
+### Crie um projeto Firebase com as funções 'Authentication' e 'Realtime Database', e conecte à aplicação rodando o comando abaixo e seguindo as instruções dadas [(Documentação de Auxílio)](https://firebase.google.com/docs/cli?hl=pt-br#initialize_a_firebase_project)
 ```bash
   firebase init
 ```
-### Colocar as configs do seu projeto Firebase nesta variável de ambiente no arquivo .env na raíz do projeto
+### Colocar as configs do seu projeto Firebase nesta variável de ambiente no arquivo .env na raíz do projeto (entre aspas)
 ```bash
   VITE_FIREBASE_CONFIG='{
   "apiKey": "Sua API key",
