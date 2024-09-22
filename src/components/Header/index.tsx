@@ -55,7 +55,7 @@ export function Header({
         <ul className="flex gap-[30px]">
           {navItems.map((item, index) => (
             <StyledLi key={index} $active={item.current}>
-              <Link to={item.path} target={item.target}>
+              <Link onClick={item.onClick} to={item.path} target={item.target}>
                 {item.name}
               </Link>
             </StyledLi>

@@ -1,133 +1,131 @@
-# in.orbit back-end
+# [PHLOX Blog](https://phlox-blog.vercel.app/)
+[![página principal da aplicação](public/images/phlox-blog.png)](https://phlox-blog.vercel.app/)
 
 ## Sobre ✏️
-### Este é o servidor de uma aplicação chamada [in.orbit](https://github.com/Paulo-Mikhael/in-orbit-frontend?tab=readme-ov-file#readme), responsável por guardar e gerenciar as metas do usuário através de rotas que podem ser acessadas pelo front-end, as metas são armazenadas em um banco de dados postgres por um container docker e gerenciadas pelo framework back-end fastify.
+### Este projeto é um blog de uma empresa fictícia de tecnologia, onde além da própria poder postar o conteúdo da loja, também funciona como uma rede social onde os clientes podem interagir se tiverem uma conta.
 
 ## Tecnologias 💻
 <div>
-  <abbr title="Node.js - Runtime Javascript">
-    <img src="https://img.shields.io/badge/Node.js-5FA04E.svg?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="badge do Node.js" />
+  <abbr title="React - Framework Javascript" >
+    <img src="https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black" alt="badge do framework React" />
+  </abbr>
+  <abbr title="Vite - Framework Javascript" >
+    <img src="https://img.shields.io/badge/Vite-646CFF.svg?style=for-the-badge&logo=Vite&logoColor=white" alt="badge do framework Vite" />
   </abbr>
   <abbr title="Typescript - Linguagem fortemente tipada">
     <img src="https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white" alt="badge da linguagem Typescript" />
-  </abbr>
-  <abbr title="Fastify - Framework back-end" >
-    <img src="https://img.shields.io/badge/Fastify-000000.svg?style=for-the-badge&logo=Fastify&logoColor=white" alt="badge do framework Fastify" />
-  </abbr>
-  <abbr title="Docker - Serviço de containers" >
-    <img src="https://img.shields.io/badge/Docker-2496ED.svg?style=for-the-badge&logo=Docker&logoColor=white" alt="badge do aplicativo Docker" />
-  </abbr>
-  <abbr title="Postgres - Banco de dados relacional" >
-    <img src="https://img.shields.io/badge/PostgreSQL-4169E1.svg?style=for-the-badge&logo=PostgreSQL&logoColor=white" alt="badge do banco de dados Postgres" />
   </abbr>
 </div>
 
 ## Bibliotecas 📚
 <div>
-  <abbr title="Drizzle - ORM (Object-Relational Mapping), para manipular dados do banco" >
-    <img src="https://img.shields.io/badge/Drizzle-C5F74F.svg?style=for-the-badge&logo=Drizzle&logoColor=black" alt="badge da biblioteca e ORM Drizzle" />
+  <abbr title="Next UI - Biblioteca de componentes (Design System)">
+    <img src="https://img.shields.io/badge/NextUI-000000.svg?style=for-the-badge&logo=NextUI&logoColor=white" alt="badge da biblioteca Next UI" />
   </abbr>
-  <abbr title="ZOD - Validação de dados" >
-    <img src="https://img.shields.io/badge/Zod-3E67B1.svg?style=for-the-badge&logo=Zod&logoColor=white" alt="badge da biblioteca zod" />
+  <abbr title="DaisyUI - Biblioteca de componentes (Design System)">
+    <img src="https://img.shields.io/badge/DaisyUI-5A0EF8.svg?style=for-the-badge&logo=DaisyUI&logoColor=white" alt="badge da biblioteca DaisyUI" />
   </abbr>
-  <abbr title="Biome - Formatação de código automática">
-    <img src="https://img.shields.io/badge/Biome-60A5FA.svg?style=for-the-badge&logo=Biome&logoColor=white" alt="badge da biblioteca zod" />
+  <abbr title="Tailwind CSS - Biblioteca de estilização">
+    <img src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4.svg?style=for-the-badge&logo=Tailwind-CSS&logoColor=white" alt="badge do Tailwind CSS" />
+  </abbr>
+  <abbr title="Styled Components - Biblioteca para fazer componentes estilizados" >
+    <img src="https://img.shields.io/badge/styledcomponents-DB7093.svg?style=for-the-badge&logo=styled-components&logoColor=white" alt="badge da biblioteca Styled Components" />
+  </abbr>
+  <abbr title="Lucide - Biblioteca de ícones">
+    <img src="https://img.shields.io/badge/Lucide-F56565.svg?style=for-the-badge&logo=Lucide&logoColor=white" alt="badge da biblioteca Lucide" />
+  </abbr>
+  <abbr title="Recoil - Biblioteca de gerenciamento de estados">
+    <img src="https://img.shields.io/badge/Recoil-3578E5.svg?style=for-the-badge&logo=Recoil&logoColor=white" alt="badge da biblioteca Recoil" />
+  </abbr>
+  <abbr title="React Router Dom - Biblioteca para criar rotas">
+    <img src="https://img.shields.io/badge/React%20Router-CA4245.svg?style=for-the-badge&logo=React-Router&logoColor=white" alt="badge da biblioteca React Router Dom" />
+  </abbr>
+  <abbr title="Markdown-To-Jsx - Biblioteca para renderizar markdown como componentes">
+    <img src="https://img.shields.io/badge/Markdown-000000.svg?style=for-the-badge&logo=Markdown&logoColor=white" alt="badge da biblioteca Markdown-To-Jsx" />
+  </abbr>
+</div>
+
+## Serviço Backend 📥
+<div>
+  <abbr title="Firebase - Plataforma backend para guardar informações">
+    <img src="https://img.shields.io/badge/Firebase-DD2C00.svg?style=for-the-badge&logo=Firebase&logoColor=white" alt="badge da biblioteca Firebase" />
   </abbr>
 </div>
 
 ## Estrutura principal do Projeto 🗃️
 ```plaintext
 src
-├── db/
-│   ├── index.ts
-│   ├── schema.ts
-│   └── seed.ts
-├── functions/
+├── components/
 │   └── ...
-├── http/
-│   ├── routes/
+├── data/
+│   └── ...
+├── interfaces/
+│   └── ...
+├── pages/
+│   └── ...
+├── state/
+│   ├── hooks
 │   │   └── ...
-│   └── server.ts
-└── env.ts
+│   └── atom.ts
+├── styles/
+│   └── ...
+├── utils/
+│   ├── firebase
+│   │   ├── functions
+│   │   │   └── ...
+│   │   └── firebase.ts
+│   └── ...
+├── index.css
+├── main.tsx
+├── routes.tsx
+└── vite-env.d.ts
 ```
 ### Descrição:
-- src - Contém todos os componentes da aplicação;
-- db - Contém os arquivos que conectam a aplicação ao banco de dados, em index.ts fica a conexão ao banco, em schema.ts, as tabelas, e em seed.ts, uma função que insere alguns dados inicias no banco;
-- functions - as funções que inserem e retornam dados ao banco;
-- http - dentro de routes, ficam os arquivos responsáveis por cada rota individual, e são agrupadas dentro de server.ts;
-- env.ts - fica as variáveis que pegam seus valores do arquivo .env da raíz do projeto, com ajuda da biblioteca ZOD;
+- src - Pasta raíz da aplicação;
+- components - Ficam os componentes;
+- data - Ficam os dados básicos, que são usados por um ou mais componentes;
+- interfaces - Ficam as interfaces, que definem a estrutura dos dados;
+- pages - Ficam as páginas, que são as rotas principais, como a tela de login, home etc;
+- state - Ficam os estados globais, definidos em atom.ts, e na pasta hook, ficam os hooks personalizados, usados para obter ou definir um estado;
+- styles - Ficam as definições de estilo usadas em toda a aplicação, como as variáveis e os componentes estilizados;
+- utils - Ficam funções comuns que são utilizadas em toda a aplicação, e na pasta firebase ficam as que são relacionadas ao firebase, que são guardadas na subpasta functions, e em firebase.ts, a conexão com o firebase e seus serviços;
+- index.css - Arquivo padrão do React, ficam os estilos css globais;
+- main.tsx - Arquivo padrão do React, fica o componente principal que vai ser carregado;
 
 ## Rodando Localmente (Prompt) 📟
-### Caso não tenha, instale o [docker desktop](https://www.docker.com/products/docker-desktop/), e deixe-o aberto/segundo plano (importante)
 ### Clone o projeto
 ```bash
-  git clone https://github.com/Paulo-Mikhael/in-orbit-backend
+  git clone https://github.com/Paulo-Mikhael/phlox-blog
 ```
 ### Entre no diretório do projeto
 ```bash
-  cd in-orbit-backend
+  cd phlox-blog
 ```
-### Inse as dependências
+### Entre no diretório do projeto
+```bash
+  cd phlox-blog
+```
+### Instale as dependências
 ```bash
   npm install
 ```
-### Execute o container docker (caso não funcione, certifique-se de estar no diretório do projeto e de estar seguindo o passo 1)
-```bashtal
-  docker compose up
-```
-### Insira alguns dados iniciais (opcional)
+### Criar um projeto Firebase com as funções 'Authentication' e 'Realtime Database', e conectar à aplicação rodando o comando abaixo e seguindo as instruções dadas [(Documentação de Auxílio)](https://firebase.google.com/docs/cli?hl=pt-br#initialize_a_firebase_project)
 ```bash
-  npm run seed
+  firebase init
+```
+### Colocar as configs do seu projeto Firebase nesta variável de ambiente no arquivo .env na raíz do projeto
+```bash
+  VITE_FIREBASE_CONFIG='{
+  "apiKey": "Sua API key",
+  "authDomain": "Dominío do projeto",
+  "projectId": "ID do projeto",
+  //... outras configurações
+  "databaseURL": "URL do Realtime Database do projeto"
+}'
 ```
 ### Inicie o servidor
 ```bash
   npm run dev
-```
-
-## Rotas 🗺️
-### [Rodando documentação swagger](SWAGGER.md)
-
-### Criar meta:
-```bash
-  POST "/goals"
-  Content-Type: application.json
-  body: {
-    title: string,
-    desiredWeeklyFrequency: number,
-  }
-```
-### Completar meta:
-```bash
-  POST "/completions"
-  Content-Type: application.json
-  body: {
-    goalId: string
-  }
-```
-### Retornar metas pendentes da semana:
-```bash
-  GET "/pending-goals"
-  // retorna:
-  {
-    id: string;
-    title: string;
-    desiredWeeklyFrequency: number;
-    completionCount: number;
-  }[]
-```
-### Retornar sumário da semana:
-```bash
-  GET "/week"
-  // retorna:
-  {
-    completed: number;
-    total: number;
-    goalsPerDay: Record<string, {
-        id: string;
-        title: string;
-        completedAt: string;
-    }[]>;
-  }
 ```
 
 ## Talvez você queira ver 💡
@@ -136,7 +134,7 @@ src
 
 ## Confira meus outros projetos 🛠️
   - [in.orbit (front-end) - Aplicação de metas pessoais](https://github.com/Paulo-Mikhael/in-orbit-frontend?tab=readme-ov-file#readme)
-  - [XWriter - Poste seus momentos](https://github.com/Paulo-Mikhael/XWriter?tab=readme-ov-file#readme)
+  - [in.orbit (back-end) - API de metas](https://github.com/Paulo-Mikhael/in-orbit-backend?tab=readme-ov-file#readme)
   - [Fastask - Gerenciador de Tarefas](https://github.com/Paulo-Mikhael/fastask?tab=readme-ov-file#readme)
   - [Landing Page para uma academia](https://github.com/Paulo-Mikhael/academia-landing-page?tab=readme-ov-file#readme)
   - [Landing Page para um e-commerce de tech](https://github.com/Paulo-Mikhael/phlox?tab=readme-ov-file#readme)
