@@ -92,6 +92,15 @@ src
 - index.css - Arquivo padrão do React, ficam os estilos css globais;
 - main.tsx - Arquivo padrão do React, fica o componente principal que vai ser carregado;
 
+## Design Pattern
+### No projeto está sendo utilizado o [Compound Pattern](https://www.patterns.dev/react/compound-pattern/), que define a estrutura do código de maneira que ele seja reutilizável e flexível, para isso, dividindo o componente em diferentes partes. Para entender melhor, confira o exemplo a seguir:
+### Button - Esse componente foi dividido em Root, Text e Icon, assim, além de facilitar a personalização que, por estar dividida, é só remover o subcomponente não desejado, caso seja necessário mudar apenas o texto ou o ícone, a propriedade deve ser passada para o subcomponente, e não para o componente pai que na maioria das vezes apenas passa para o filho, evitando esse processo chamado de prop-drilling.
+<div style="display: flex; align-items: center; justify-content: center; gap: 40px; overflow-x: scroll;">
+  <img src="public/images/button-pattern.png" />
+  <img src="public/images/button-component.png" />
+  <img src="public/images/button-home.png" />
+</div>
+
 ## Rodando Localmente (Prompt) 📟
 ### Clone o projeto
 ```bash
